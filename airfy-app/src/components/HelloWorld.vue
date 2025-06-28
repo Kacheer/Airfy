@@ -1,5 +1,5 @@
     <script>
-    import { useStore } from "/store/store.js"
+    import { useStore } from "../store/store.js"
     
     export default {
       name: "HelloWorld",
@@ -26,7 +26,7 @@
       }
     }
     </script>
-    
+
 <template>
   <h1>{{ msg }}</h1>
 
