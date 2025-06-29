@@ -4,5 +4,5 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 
 const app = createApp(App)
-app.use(createPinia())  // <-- Активируем Pinia
+app.use(createPinia())  // <-- Регистрируем Pinia :3
 app.mount('#app')
