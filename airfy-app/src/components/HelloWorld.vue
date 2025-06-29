@@ -33,6 +33,7 @@
   <div class="card">
     <button type="button" @click="increment">count is {{ count }}</button>
     <button type="button">double count is {{ double }}</button>
+    
     <p>
       Edit
       <code>components/HelloWorld.vue</code> to test HMR
