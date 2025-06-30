@@ -3,11 +3,11 @@ import { defineStore } from "pinia";
 export const useStore = defineStore ('store', {
 
     state: () => (
-    { value: 0 }
+      { value: 0 }
     ),
 
     actions: {
-        increment() {
+        setCurrentCity() {
             this.value++
         }
     },
