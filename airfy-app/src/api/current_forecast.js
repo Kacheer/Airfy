@@ -2,29 +2,38 @@
 import axios from 'axios'
 
 export default {
-    async fetchForecast(city) {
-    const lang = "ru"
-      const units = "metric"
-      const key = "6fdcdee5063bbdb836d094f2762d3f8f"
 
-      const url = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${key}&lang=${lang}&units=${units}`
-      try {
-        const response = await axios.get(url)
-        console.log('data:', response.data)
-        if(response.status >= 200 && response.status < 300) {
-          console.log(response.data);
-        }else {
-          throw new Error(`Статус: ${response.status}`)
-        }
-      }catch (err) {
-        if(err.response) {
-          console.error(`${err.response.status}:`, err.response.data)
-        }else {
-          console.error('Ошибка при выполнении запроса:', err.message)
-        }
-        throw err
+  async fetchForecast(city) {
+    
+    const api = axios.create({
+      baseURL: 'http://api.openweathermap.org/',
+      timeout: 5000
+    })
+
+    const lang = "ru"
+    const units = "metric"
+    const key = "6fdcdee5063bbdb836d094f2762d3f8f"
+    
+    api.get('/data/2.5/forecast', {
+      params: {
+        q: city,
+        appid: key,
+        lang: lang,
+        units: units
       }
-    }
+    })
+    .then(response => {
+      console.log(response.data);
+    })
+    .catch(error => {
+      if (error.code === 'ECONNABORTED') {
+        console.error('Запрос превысил время ожидания ответа')
+      }
+      else if (error.code === '401') {
+        console.error('[API] 401 Unauthorized')
+      }
+    })
+  }
 
 }
 
