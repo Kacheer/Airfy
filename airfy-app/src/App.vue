@@ -1,5 +1,34 @@
-<script setup>
+<script>
+import currentForecast from './api/current_forecast.js'
 import HelloWorld from './components/HelloWorld.vue'
+import { useStore } from './store/store.js'
+
+export default {
+  components: {HelloWorld},
+  data() {
+    return {
+      currentCity: 'London',
+      cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin']
+    }
+  },
+  created() {
+    this.store = useStore()
+    currentForecast.fetchForecast(this.currentCity)
+  },
+  methods: {
+    increment(index) {
+      this.currentCity = this.cities[index]
+      this.setStore()
+    },
+    setStore() {
+      this.store.setCurrentCity(this.currentCity)
+      console.log('Store city:', this.store.currentCity)
+    },
+  }
+}
+
+
+
 </script>
 
 <template>
@@ -7,6 +36,7 @@ import HelloWorld from './components/HelloWorld.vue'
     <a href="https://vite.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
     </a>
+    <button type="button" @click="increment()">Привет</button>
     <a href="https://vuejs.org/" target="_blank">
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
@@ -28,3 +58,4 @@ import HelloWorld from './components/HelloWorld.vue'
   filter: drop-shadow(0 0 2em #42b883aa);
 }
 </style>
+
