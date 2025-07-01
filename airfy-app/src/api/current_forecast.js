@@ -13,7 +13,7 @@ export default {
     const lang = "ru"
     const units = "metric"
     const key = "6fdcdee5063bbdb836d094f2762d3f8f"
-    
+
     api.get('/data/2.5/forecast', {
       params: {
         q: city,

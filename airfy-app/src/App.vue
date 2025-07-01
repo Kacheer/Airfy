@@ -3,7 +3,7 @@ import currentForecast from './api/current_forecast.js'
 import HelloWorld from './components/HelloWorld.vue'
 import CurrentForecast from './components/CurrentForecast.vue'
 import { useStore } from './store/store.js'
-
+import apiBrowser  from '../src/browser_api/apiBrowser.js'
 export default {
 	components: { HelloWorld, CurrentForecast },
 	data() {
@@ -15,6 +15,7 @@ export default {
 	created() {
 		this.store = useStore()
 		currentForecast.fetchForecast(this.currentCity)
+		apiBrowser.getPos()
 	},
 	methods: {
 		increment(index) {
