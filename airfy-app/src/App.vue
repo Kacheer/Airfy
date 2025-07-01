@@ -2,10 +2,11 @@
 import currentForecast from './api/current_forecast.js'
 import HelloWorld from './components/HelloWorld.vue'
 import CurrentForecast from './components/CurrentForecast.vue'
+import Header from './components/Header.vue'
 import { useStore } from './store/store.js'
 
 export default {
-	components: { HelloWorld, CurrentForecast },
+	components: { HelloWorld, CurrentForecast, Header },
 	data() {
 		return {
 			currentCity: 'London',
@@ -46,6 +47,8 @@ export default {
 		:humidity="humidity"
 	/>
 	<HelloWorld msg="Hello World !!!! Helooooooo" />
+
+	<Header :city="currentCity" language="RU" theme="Темная" />
 </template>
 
 <style scoped>
