@@ -37,7 +37,7 @@
 	</div>
 </template>
 <script>
-import SvgIcon from './SvgIcon.vue'
+import SvgIcon from '../../public/SvgIcon.vue'
 export default {
 	name: 'CurrentForecastDetails',
 	components: {

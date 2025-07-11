@@ -1,17 +1,31 @@
 <template>
 	<div class="forecast-container">
 		<div class="weather-info">
-			<p class="city">Город: {{ city }}</p>
-			<p class="temperature">Температура: {{ temperature }}°C</p>
-			<p class="condition">Состояние: {{ condition }}</p>
+			<div class="city">
+				Лондон
+				<div class="country">Великобритания</div>
+			</div>
+
+			<div class="temperature-wrapper">
+				<SvgIcon class="cloud-icon" name="cloud-v3 (Stroke)" /><span
+					class="temperature"
+					>{{ temperature }}23°C</span
+				>
+			</div>
+
+			<p class="condition">Небольшая облачность{{ condition }}</p>
 		</div>
 		<p class="now">Сейчас</p>
 	</div>
 </template>
 
 <script>
+import SvgIcon from '../../public/SvgIcon.vue'
 export default {
 	name: 'CurrentForecast',
+	components: {
+		SvgIcon,
+	},
 	props: {
 		city: {
 			type: String,
@@ -39,51 +53,64 @@ export default {
 	border-radius: 12px;
 	padding: 2rem;
 	color: white;
-	max-width: 500px;
+	max-width: 100%;
 	margin: 50px auto;
 	backdrop-filter: blur(6px);
 	position: relative;
 	text-align: center;
 	height: 400px;
+	width: 70em;
 }
 
-.city {
-	position: absolute;
-	top: 20px;
-	left: 20px;
-	font-size: 1.4rem;
-	font-weight: bold;
+.cloud-icon {
+	width: 9em;
+	height: 10em;
+	fill: white;
 }
-.now {
-	top: 5px;
-	font-size: 2.2rem;
-	font-weight: bold;
-	color: white;
-}
-
-.temperature {
+.temperature-wrapper {
 	position: absolute;
 	top: 130px;
 	left: 50%;
 	transform: translateX(-50%);
-	font-size: 2.5rem;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.city {
+	position: absolute;
+	top: 29px;
+	left: 20px;
+	padding-left: 29px;
+	font-size: 1.8rem;
 	font-weight: bold;
+	text-align: left;
+}
+.country {
+	font-size: 1rem;
+	font-weight: normal;
+	opacity: 0.7;
+	margin-top: 0.2rem;
+}
+.now {
+	font-size: 2.6rem;
+	font-weight: bold;
+	color: white;
+	margin-top: -3px;
+}
+
+.temperature {
+	font-size: 3.5rem;
+	font-weight: bold;
+	line-height: 1;
+	margin-top: -40px;
 }
 
 .condition {
 	position: absolute;
-	top: 300px;
-	left: 50%;
-	transform: translateX(-50%);
-	font-size: 1.2rem;
-}
-
-.humidity {
-	position: absolute;
 	top: 270px;
 	left: 50%;
 	transform: translateX(-50%);
-	font-size: 1rem;
-	opacity: 0.7;
+	font-size: 1.6rem;
 }
 </style>
