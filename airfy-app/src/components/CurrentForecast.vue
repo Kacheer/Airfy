@@ -1,14 +1,31 @@
 <template>
 	<div class="forecast-container">
-		<p>Город: {{ city }}</p>
-		<p>Температура: {{ temperature }}°C</p>
-		<p>Состояние: {{ condition }}</p>
-		<p>Влажность: {{ humidity }}%</p>
+		<div class="weather-info">
+			<div class="city">
+				Лондон
+				<div class="country">Великобритания</div>
+			</div>
+
+			<div class="temperature-wrapper">
+				<SvgIcon class="cloud-icon" name="cloud-v3 (Stroke)" /><span
+					class="temperature"
+					>{{ temperature }}23°C</span
+				>
+			</div>
+
+			<p class="condition">Небольшая облачность{{ condition }}</p>
+		</div>
+		<p class="now">Сейчас</p>
 	</div>
 </template>
+
 <script>
+import SvgIcon from '../../public/SvgIcon.vue'
 export default {
 	name: 'CurrentForecast',
+	components: {
+		SvgIcon,
+	},
 	props: {
 		city: {
 			type: String,
@@ -22,41 +39,78 @@ export default {
 			type: String,
 			required: true,
 		},
-		humidity: {
-			type: Number,
+		now: {
+			type: String,
 			required: true,
 		},
 	},
 }
 </script>
+
 <style scoped>
 .forecast-container {
 	background: rgba(0, 0, 0, 0.4);
 	border-radius: 12px;
-	padding: 1.5rem;
+	padding: 2rem;
 	color: white;
-	text-align: center;
-	max-width: 300px;
-	margin: auto;
+	max-width: 100%;
+	margin: 50px auto;
 	backdrop-filter: blur(6px);
+	position: relative;
+	text-align: center;
+	height: 400px;
+	width: 70em;
+}
+
+.cloud-icon {
+	width: 9em;
+	height: 10em;
+	fill: white;
+}
+.temperature-wrapper {
+	position: absolute;
+	top: 130px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	align-items: center;
+	gap: 12px;
 }
 
 .city {
-	font-size: 1.4rem;
+	position: absolute;
+	top: 29px;
+	left: 20px;
+	padding-left: 29px;
+	font-size: 1.8rem;
 	font-weight: bold;
+	text-align: left;
+}
+.country {
+	font-size: 1rem;
+	font-weight: normal;
+	opacity: 0.7;
+	margin-top: 0.2rem;
+}
+.now {
+	font-size: 2.6rem;
+	font-weight: bold;
+	color: white;
+	margin-top: -3px;
 }
 
-.icon {
-	margin-right: 0.5rem;
+.temperature {
+	font-size: 3.5rem;
+	font-weight: bold;
+	line-height: 1;
+	margin-top: -40px;
 }
 
 .condition {
-	font-size: 1.1rem;
-	margin-bottom: 0.3rem;
-}
-
-.humidity {
-	font-size: 0.9rem;
-	opacity: 0.7;
+	position: absolute;
+	top: 270px;
+	left: 50%;
+	transform: translateX(-50%);
+	font-size: 1.6rem;
 }
 </style>
