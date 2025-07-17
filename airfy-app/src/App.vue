@@ -4,9 +4,10 @@ import HelloWorld from './components/HelloWorld.vue'
 import CurrentForecast from './components/CurrentForecast.vue'
 import Header from './components/Header.vue'
 import { useStore } from './store/store.js'
+import CurrentForecastDetails from './components/CurrentForecastDetails.vue'
 import apiBrowser  from '../src/browser_api/apiBrowser.js'
 export default {
-	components: { HelloWorld, CurrentForecast, Header },
+	components: { HelloWorld, CurrentForecast, Header, CurrentForecastDetails },
 	data() {
 		return {
 			currentCity: 'London',
@@ -45,11 +46,12 @@ export default {
 		:city="currentCity"
 		:temperature="temperature"
 		:condition="condition"
-		:humidity="humidity"
 	/>
 	<HelloWorld msg="Hello World !!!! Helooooooo" />
 
 	<Header :city="currentCity" language="RU" theme="Темная" />
+
+	<CurrentForecastDetails />
 </template>
 
 <style scoped>
