@@ -12,6 +12,10 @@ export default {
 		return {
 			currentCity: 'London',
 			cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
+			selectedLanguage: 'Русский',
+			temperature: 23,
+			condition: 'Partly Cloudy',
+			now: 'Now',
 		}
 	},
 	created() {
@@ -27,6 +31,9 @@ export default {
 			this.store.setCurrentCity(this.currentCity)
 			console.log('Store city:', this.store.currentCity)
 		},
+		updateLanguage(newLang) {
+			this.selectedLanguage = newLang
+		},
 	},
 }
 </script>
@@ -40,17 +47,20 @@ export default {
 		<a href="https://vuejs.org/" target="_blank">
 			<img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
 		</a>
+		<Header
+			:city="currentCity"
+			:language="selectedLanguage"
+			:theme="'Темная'"
+			@update:language="updateLanguage"
+		/><CurrentForecast
+			:city="currentCity"
+			:temperature="temperature"
+			:condition="condition"
+			:now="now"
+			:language="selectedLanguage"
+		/><HelloWorld msg="Hello World !!!! Helooooooo" />
+		<CurrentForecastDetails :language="selectedLanguage" />
 	</div>
-	<CurrentForecast
-		:city="currentCity"
-		:temperature="temperature"
-		:condition="condition"
-	/>
-	<HelloWorld msg="Hello World !!!! Helooooooo" />
-
-	<Header :city="currentCity" language="RU" theme="Темная" />
-
-	<CurrentForecastDetails />
 </template>
 
 <style scoped>

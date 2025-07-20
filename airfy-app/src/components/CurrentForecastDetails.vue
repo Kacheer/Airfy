@@ -1,47 +1,101 @@
 <template>
 	<div class="CurrentForecastDetails">
-		<h2>Подробная информация</h2>
+		<h2>{{ translations.forecastDetails.title }}</h2>
 		<ul>
-			<li><SvgIcon name="v2 (Stroke) (1)" />Утром</li>
-			<li><SvgIcon name="Vector" />Днём</li>
-			<li><SvgIcon name="v2 (Stroke)" />Вечером</li>
-			<li><SvgIcon name="Subtract (Stroke)" />Ночью</li>
+			<li>
+				<SvgIcon name="v2 (Stroke) (1)" />{{
+					translations.forecastDetails.morning
+				}}
+			</li>
+			<li><SvgIcon name="Vector" />{{ translations.forecastDetails.day }}</li>
+			<li>
+				<SvgIcon name="v2 (Stroke)" />{{ translations.forecastDetails.evening }}
+			</li>
+			<li>
+				<SvgIcon name="Subtract (Stroke)" />{{
+					translations.forecastDetails.night
+				}}
+			</li>
 		</ul>
 
 		<hr />
 
-		<h2>Дополнительные сведения</h2>
+		<h2>{{ translations.forecastDetails.additionalInfo }}</h2>
 		<ul>
-			<li><SvgIcon class="icon" name="Vector (1)" />Ощущается как</li>
-			<li><SvgIcon name="moisture" />Влажность</li>
-			<li><SvgIcon name="Vector (Stroke)" />Скорость ветра</li>
-			<li><SvgIcon name="Vector (2)" />Видимость</li>
-			<li><SvgIcon name="Union" />Давление</li>
+			<li>
+				<SvgIcon name="Vector (1)" />{{
+					translations.forecastDetails.feelsLike
+				}}
+			</li>
+			<li>
+				<SvgIcon name="moisture" />{{ translations.forecastDetails.humidity }}
+			</li>
+			<li>
+				<SvgIcon name="Vector (Stroke)" />{{
+					translations.forecastDetails.windSpeed
+				}}
+			</li>
+			<li>
+				<SvgIcon name="Vector (2)" />{{
+					translations.forecastDetails.visibility
+				}}
+			</li>
+			<li>
+				<SvgIcon name="Union" />{{ translations.forecastDetails.pressure }}
+			</li>
 		</ul>
 
 		<hr />
 
-		<h2>Давление</h2>
+		<h2>{{ translations.forecastDetails.pressure }}</h2>
 		<ul>
-			<li><SvgIcon name="Union (1)" />Давление над ур. моря</li>
-			<li><SvgIcon name="Union (2)" />Давление на ур. земли</li>
+			<li>
+				<SvgIcon name="Union (1)" />{{
+					translations.forecastDetails.seaLevelPressure
+				}}
+			</li>
+			<li>
+				<SvgIcon name="Union (2)" />{{
+					translations.forecastDetails.groundLevelPressure
+				}}
+			</li>
 		</ul>
 
 		<hr />
 
-		<h2>Восход / Закат</h2>
+		<h2>{{ translations.forecastDetails.sunriseSunset }}</h2>
 		<ul>
-			<li><SvgIcon name="v2 (Stroke)" />Время заката</li>
-			<li><SvgIcon name="v2 (Stroke) (1)" />Время восхода</li>
+			<li>
+				<SvgIcon name="v2 (Stroke)" />{{
+					translations.forecastDetails.sunsetTime
+				}}
+			</li>
+			<li>
+				<SvgIcon name="v2 (Stroke) (1)" />{{
+					translations.forecastDetails.sunriseTime
+				}}
+			</li>
 		</ul>
 	</div>
 </template>
 <script>
 import SvgIcon from '../../public/SvgIcon.vue'
+import language from '../lang/language.js'
 export default {
 	name: 'CurrentForecastDetails',
 	components: {
 		SvgIcon,
+	},
+	props: {
+		language: {
+			type: String,
+			required: true,
+		},
+	},
+	computed: {
+		translations() {
+			return language[this.language] || language['Русский']
+		},
 	},
 }
 </script>
@@ -75,6 +129,8 @@ li {
 	align-items: center;
 	gap: 12px;
 	margin: 10px 0;
+	font-size: 16px;
+	line-height: 1;
 }
 hr {
 	border: none;

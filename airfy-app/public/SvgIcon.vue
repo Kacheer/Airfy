@@ -37,9 +37,12 @@ li svg {
 	flex-shrink: 0;
 }
 .svg-icon {
-	width: 36px;
+	width: 32px;
 	height: 32px;
-	display: block;
-	object-fit: contain;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	transform: translateY(-2.4px);
 }
 </style>
