@@ -116,7 +116,7 @@ export default {
 	font-size: 3.5rem;
 	font-weight: bold;
 	line-height: 1;
-	margin-top: -40px;
+	margin-top: 1px;
 }
 
 .condition {
