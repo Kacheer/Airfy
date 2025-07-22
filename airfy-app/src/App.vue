@@ -11,12 +11,12 @@ export default {
 		return {
 			currentCity: 'London',
 			cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
-			userPos: {
-				lat: null,
-				long: null
-			},
-			temperature: 20,
-			condition: 'Небольшая облачность'
+
+			selectedLanguage: 'Русский',
+			temperature: 23,
+			condition: 'Partly Cloudy',
+			now: 'Now',
+
 		}
 	},
 	methods: {
@@ -28,27 +28,49 @@ export default {
 		apiBrowser.getPos()
 		apiForecast.fetchForecast()
 	},
+	methods: {
+		increment(index) {
+			this.currentCity = this.cities[index]
+			this.setStore()
+		},
+		setStore() {
+			this.store.setCurrentCity(this.currentCity)
+			console.log('Store city:', this.store.currentCity)
+		},
+		updateLanguage(newLang) {
+			this.selectedLanguage = newLang
+		},
+	},
 	computed: {
-		getUserPos() {
-			// Используем правильное имя хранилища 'userStore'
-			const userPos = this.$store?.userStore?.userPos;
-			console.log('Computed response:', userPos);
-			return userPos; 
-		}
+
 	}
+
 }
 </script>
 
 <template>
-	<Header :city="currentCity" language="RU" theme="Темная" />
-	<CurrentForecast
-		:city="currentCity"
-		:temperature="temperature"
-		:condition="condition"
-	/>
-	<CurrentForecastDetails />
-	<p>{{ getUserPos }}</p>
-	<!-- <button @click="getResponse">Обновить данные</button> -->
+	<div>
+		<a href="https://vite.dev" target="_blank">
+			<img src="/vite.svg" class="logo" alt="Vite logo" />
+		</a>
+		<button type="button" @click="increment()">Привет</button>
+		<a href="https://vuejs.org/" target="_blank">
+			<img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
+		</a>
+		<Header
+			:city="currentCity"
+			:language="selectedLanguage"
+			:theme="'Темная'"
+			@update:language="updateLanguage"
+		/><CurrentForecast
+			:city="currentCity"
+			:temperature="temperature"
+			:condition="condition"
+			:now="now"
+			:language="selectedLanguage"
+		/><HelloWorld msg="Hello World !!!! Helooooooo" />
+		<CurrentForecastDetails :language="selectedLanguage" />
+	</div>
 </template>
 
 <style scoped>

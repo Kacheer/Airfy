@@ -2,8 +2,8 @@
 	<div class="forecast-container">
 		<div class="weather-info">
 			<div class="city">
-				Лондон
-				<div class="country">Великобритания</div>
+				{{ translations.cities[city] || city }}
+				<div class="country">{{ translations.country }}</div>
 			</div>
 
 			<div class="temperature-wrapper">
@@ -13,18 +13,23 @@
 				>
 			</div>
 
-			<p class="condition">{{ condition }}</p>
+			<p class="condition">{{ translations.condition }}</p>
+
 		</div>
-		<p class="now">Сейчас</p>
+		<p class="now">{{ translations.now || now }}</p>
 	</div>
 </template>
 
 <script>
 import SvgIcon from '../../public/SvgIcon.vue'
+import Header from './Header.vue'
+import language from '../lang/language.js'
 export default {
 	name: 'CurrentForecast',
+
 	components: {
 		SvgIcon,
+		Header,
 	},
 	props: {
 		city: {
@@ -42,6 +47,15 @@ export default {
 		now: {
 			type: String,
 			required: true,
+		},
+		language: {
+			type: String,
+			required: true,
+		},
+	},
+	computed: {
+		translations() {
+			return language[this.language] || language['Русский']
 		},
 	},
 }
