@@ -1,12 +1,11 @@
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 import CurrentForecast from './components/CurrentForecast.vue'
 import Header from './components/Header.vue'
 import CurrentForecastDetails from './components/CurrentForecastDetails.vue'
 import apiBrowser from './browser_api/apiBrowser'
 import apiForecast from './api/apiForecast'
 export default {
-	components: { HelloWorld, CurrentForecast, Header, CurrentForecastDetails },
+	components: { CurrentForecast, Header, CurrentForecastDetails },
 	data() {
 		return {
 			currentCity: 'London',
@@ -18,11 +17,6 @@ export default {
 			now: 'Now',
 
 		}
-	},
-	methods: {
-		// getResponse() { 
-		// 	DataService.setStore({data: 'test data'})
-		// }
 	},
 	created() {
 		apiBrowser.getPos()
@@ -50,13 +44,6 @@ export default {
 
 <template>
 	<div>
-		<a href="https://vite.dev" target="_blank">
-			<img src="/vite.svg" class="logo" alt="Vite logo" />
-		</a>
-		<button type="button" @click="increment()">Привет</button>
-		<a href="https://vuejs.org/" target="_blank">
-			<img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-		</a>
 		<Header
 			:city="currentCity"
 			:language="selectedLanguage"
