@@ -14,6 +14,7 @@
 			</div>
 
 			<p class="condition">{{ translations.condition }}</p>
+
 		</div>
 		<p class="now">{{ translations.now || now }}</p>
 	</div>

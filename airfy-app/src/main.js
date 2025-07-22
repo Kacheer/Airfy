@@ -1,9 +1,10 @@
 import { createApp } from 'vue'
 import './styles/style.css'
-import { createPinia } from 'pinia'
+import pinia from './store/index.js'
 import App from './App.vue'
 
 const app = createApp(App)
-app.use(createPinia()) // <-- Регистрируем Pinia :3
+app.config.globalProperties.$store = pinia.state.value
+app.use(pinia) // <-- Регистрируем Pinia :3
 app.mount('#app')
 // gg

@@ -1,27 +1,32 @@
 <script>
-import currentForecast from './api/current_forecast.js'
 import HelloWorld from './components/HelloWorld.vue'
 import CurrentForecast from './components/CurrentForecast.vue'
 import Header from './components/Header.vue'
-import { useStore } from './store/store.js'
 import CurrentForecastDetails from './components/CurrentForecastDetails.vue'
-import apiBrowser  from '../src/browser_api/apiBrowser.js'
+import apiBrowser from './browser_api/apiBrowser'
+import apiForecast from './api/apiForecast'
 export default {
 	components: { HelloWorld, CurrentForecast, Header, CurrentForecastDetails },
 	data() {
 		return {
 			currentCity: 'London',
 			cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
+
 			selectedLanguage: 'Русский',
 			temperature: 23,
 			condition: 'Partly Cloudy',
 			now: 'Now',
+
 		}
 	},
+	methods: {
+		// getResponse() { 
+		// 	DataService.setStore({data: 'test data'})
+		// }
+	},
 	created() {
-		this.store = useStore()
-		currentForecast.fetchForecast(this.currentCity)
 		apiBrowser.getPos()
+		apiForecast.fetchForecast()
 	},
 	methods: {
 		increment(index) {
@@ -36,6 +41,10 @@ export default {
 			this.selectedLanguage = newLang
 		},
 	},
+	computed: {
+
+	}
+
 }
 </script>
 
@@ -77,4 +86,5 @@ export default {
 .logo.vue:hover {
 	filter: drop-shadow(0 0 2em #42b883aa);
 }
+
 </style>
