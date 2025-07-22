@@ -1,57 +1,54 @@
 <script>
-import currentForecast from './api/current_forecast.js'
 import HelloWorld from './components/HelloWorld.vue'
 import CurrentForecast from './components/CurrentForecast.vue'
 import Header from './components/Header.vue'
-import { useStore } from './store/store.js'
 import CurrentForecastDetails from './components/CurrentForecastDetails.vue'
-import apiBrowser  from '../src/browser_api/apiBrowser.js'
+import apiBrowser from './browser_api/apiBrowser'
+import apiForecast from './api/apiForecast'
 export default {
 	components: { HelloWorld, CurrentForecast, Header, CurrentForecastDetails },
 	data() {
 		return {
 			currentCity: 'London',
 			cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
+			userPos: {
+				lat: null,
+				long: null
+			},
+			temperature: 20,
+			condition: 'Небольшая облачность'
 		}
 	},
-	created() {
-		this.store = useStore()
-		currentForecast.fetchForecast(this.currentCity)
-		apiBrowser.getPos()
-	},
 	methods: {
-		increment(index) {
-			this.currentCity = this.cities[index]
-			this.setStore()
-		},
-		setStore() {
-			this.store.setCurrentCity(this.currentCity)
-			console.log('Store city:', this.store.currentCity)
-		},
+		// getResponse() { 
+		// 	DataService.setStore({data: 'test data'})
+		// }
 	},
+	created() {
+		apiBrowser.getPos()
+		apiForecast.fetchForecast()
+	},
+	computed: {
+		getUserPos() {
+			// Используем правильное имя хранилища 'userStore'
+			const userPos = this.$store?.userStore?.userPos;
+			console.log('Computed response:', userPos);
+			return userPos; 
+		}
+	}
 }
 </script>
 
 <template>
-	<div>
-		<a href="https://vite.dev" target="_blank">
-			<img src="/vite.svg" class="logo" alt="Vite logo" />
-		</a>
-		<button type="button" @click="increment()">Привет</button>
-		<a href="https://vuejs.org/" target="_blank">
-			<img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-		</a>
-	</div>
+	<Header :city="currentCity" language="RU" theme="Темная" />
 	<CurrentForecast
 		:city="currentCity"
 		:temperature="temperature"
 		:condition="condition"
 	/>
-	<HelloWorld msg="Hello World !!!! Helooooooo" />
-
-	<Header :city="currentCity" language="RU" theme="Темная" />
-
 	<CurrentForecastDetails />
+	<p>{{ getUserPos }}</p>
+	<!-- <button @click="getResponse">Обновить данные</button> -->
 </template>
 
 <style scoped>
@@ -67,4 +64,5 @@ export default {
 .logo.vue:hover {
 	filter: drop-shadow(0 0 2em #42b883aa);
 }
+
 </style>

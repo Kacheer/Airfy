@@ -1,5 +1,4 @@
     <script>
-    import { useStore } from "../store/store.js"
     
     export default {
       name: "HelloWorld",

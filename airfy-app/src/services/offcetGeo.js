@@ -6,10 +6,10 @@ export default {
 
         const latOffset = distance * Math.cos(angle);
         const lngOffset = distance * Math.sin(angle) / Math.cos(lat * Math.PI / 180);
-
+        console.log("[OFFSET] ", lat+latOffset, lng+lngOffset)
         return {
             lat: lat + latOffset,
-            lng: lng + lngOffset
+            long: lng + lngOffset
         };
     }
 }

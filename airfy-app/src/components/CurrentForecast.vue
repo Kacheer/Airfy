@@ -9,11 +9,11 @@
 			<div class="temperature-wrapper">
 				<SvgIcon class="cloud-icon" name="cloud-v3 (Stroke)" /><span
 					class="temperature"
-					>{{ temperature }}23°C</span
+					>{{ temperature }}°C</span
 				>
 			</div>
 
-			<p class="condition">Небольшая облачность{{ condition }}</p>
+			<p class="condition">{{ condition }}</p>
 		</div>
 		<p class="now">Сейчас</p>
 	</div>
