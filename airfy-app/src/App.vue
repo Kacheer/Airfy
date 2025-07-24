@@ -12,6 +12,9 @@ export default {
 		CurrentForecastDetails,
 		ForecastContainer,
 	},
+
+	components: { CurrentForecast, Header, CurrentForecastDetails },
+
 	data() {
 		return {
 			currentCity: 'London',
@@ -23,11 +26,13 @@ export default {
 			now: 'Now',
 		}
 	},
+
 	// methods: {
 	// getResponse() {
 	// 	DataService.setStore({data: 'test data'})
 	// }
 	// },
+
 	created() {
 		apiBrowser.getPos()
 		apiForecast.fetchForecast()
