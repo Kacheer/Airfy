@@ -12,7 +12,6 @@ export default {
 		CurrentForecastDetails,
 		ForecastContainer,
 	},
-
 	data() {
 		return {
 			currentCity: 'London',
@@ -25,16 +24,29 @@ export default {
 		}
 	},
 
-	// methods: {
-	// getResponse() {
-	// 	DataService.setStore({data: 'test data'})
-	// }
-	// },
-
 	created() {
 		apiBrowser.getPos()
 		apiForecast.fetchForecast()
 	},
+ async mounted() {
+        console.log("Начало получения позиции")
+        
+        try {
+            const userPos = await apiBrowser.getPos()
+            
+            DataService.addPosToStore(userPos.lat, userPos.long)
+            
+            console.log("Координаты получены и сохранены")
+            
+            await apiForecast.fetchForecast()
+            
+            console.log("Прогноз получен")
+        } catch (error) {
+            console.error("Ошибка при получении данных:", error)
+            this.currentCity = 'Moscow'
+            await apiForecast.fetchForecast()
+        }
+    },
 	methods: {
 		increment(index) {
 			this.currentCity = this.cities[index]
@@ -47,6 +59,9 @@ export default {
 		updateLanguage(newLang) {
 			this.selectedLanguage = newLang
 		},
+   // getResponse() {
+	// 	DataService.setStore({data: 'test data'})
+	// }
 	},
 	computed: {},
 }
@@ -65,6 +80,7 @@ export default {
 			:now="now"
 			:language="selectedLanguage"
 		/>
+		<CurrentForecastDetails :language="selectedLanguage" />
 	</div>
 </template>
 
