@@ -1,22 +1,18 @@
 <template>
-	<div class="forecast-container">
-		<div class="weather-info">
-			<div class="city">
-				{{ translations.cities[city] || city }}
-				<div class="country">{{ translations.country }}</div>
+	<div class="CurrentForecast">
+		<div class="group">
+			<div class="text-wrapper">Сегодня</div>
+			<div class="div">
+				<SvgIcon class="cloud-icon" name="cloud-v3 (Stroke)" />
+				<div class="group-2">
+					<div class="temperature">{{ temperature }}</div>
+					<div class="text-wrapper-2">°C</div>
+				</div>
 			</div>
-
-			<div class="temperature-wrapper">
-				<SvgIcon class="cloud-icon" name="cloud-v3 (Stroke)" /><span
-					class="temperature"
-					>{{ temperature }}°C</span
-				>
+			<div class="text-wrapper-3">
+				{{ translations.condition }}
 			</div>
-
-			<p class="condition">{{ translations.condition }}</p>
-
 		</div>
-		<p class="now">{{ translations.now || now }}</p>
 	</div>
 </template>
 
@@ -24,18 +20,16 @@
 import SvgIcon from '../../public/SvgIcon.vue'
 import Header from './Header.vue'
 import language from '../lang/language.js'
+
 export default {
 	name: 'CurrentForecast',
 
 	components: {
 		SvgIcon,
+
 		Header,
 	},
 	props: {
-		city: {
-			type: String,
-			required: true,
-		},
 		temperature: {
 			type: Number,
 			required: true,
@@ -62,69 +56,69 @@ export default {
 </script>
 
 <style scoped>
-.forecast-container {
-	background: rgba(0, 0, 0, 0.4);
-	border-radius: 12px;
-	padding: 2rem;
-	color: white;
-	max-width: 100%;
-	margin: 50px auto;
-	backdrop-filter: blur(6px);
-	position: relative;
-	text-align: center;
-	height: 400px;
-	width: 70em;
-}
-
-.cloud-icon {
-	width: 9em;
-	height: 10em;
-	fill: white;
-}
-.temperature-wrapper {
-	position: absolute;
-	top: 130px;
-	left: 50%;
-	transform: translateX(-50%);
+.div {
 	display: flex;
 	align-items: center;
-	gap: 12px;
+	gap: 20px;
+}
+.CurrentForecast {
+	margin: 134px 751px 1112px 162px; /* Устанавливаем отступы */
+	width: 973px; /* Ширина блока */
+	height: 432px; /* Высота блока */
+	padding: 30px;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	border-radius: 20px;
+	box-sizing: border-box;
+}
+.CurrentForecast .group {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: auto;
+}
+.CurrentForecast .text-wrapper {
+	color: #ffffff;
+	font-family: 'Inter-Bold', Helvetica;
+	font-size: 64px;
+	font-weight: 700;
+	height: 76px;
+	text-align: center;
+	font-size: 64px;
+	margin-bottom: 20px;
+	letter-spacing: 0;
+	line-height: normal;
+
+	white-space: nowrap;
+	width: 626px;
 }
 
-.city {
-	position: absolute;
-	top: 29px;
-	left: 20px;
-	padding-left: 29px;
-	font-size: 1.8rem;
-	font-weight: bold;
-	text-align: left;
+.CurrentForecast .cloud-icon {
+	height: 126.07px;
+	position: relative;
+	width: 200.95px;
 }
-.country {
-	font-size: 1rem;
-	font-weight: normal;
-	opacity: 0.7;
-	margin-top: 0.2rem;
+.group-2 {
+	display: flex;
+	align-items: flex-start;
 }
-.now {
-	font-size: 2.6rem;
-	font-weight: bold;
-	color: white;
-	margin-top: -3px;
-}
-
 .temperature {
-	font-size: 3.5rem;
-	font-weight: bold;
-	line-height: 1;
-	margin-top: -40px;
+	font-size: 128px;
 }
-
-.condition {
-	position: absolute;
-	top: 270px;
-	left: 50%;
-	transform: translateX(-50%);
-	font-size: 1.6rem;
+.text-wrapper-2 {
+	font-size: 64px;
+	margin-top: 10px;
+}
+.text-wrapper-3 {
+	text-align: center;
+	font-size: 36px;
+	margin-top: 20px;
+	color: #ffffffbf;
 }
 </style>

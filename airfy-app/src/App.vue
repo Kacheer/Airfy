@@ -4,9 +4,14 @@ import Header from './components/Header.vue'
 import CurrentForecastDetails from './components/CurrentForecastDetails.vue'
 import apiBrowser from './browser_api/apiBrowser'
 import apiForecast from './api/apiForecast'
-import DataService from './services/DataService'
+import ForecastContainer from './components/ForecastContainer.vue'
 export default {
-	components: {CurrentForecast, Header, CurrentForecastDetails },
+	components: {
+		CurrentForecast,
+		Header,
+		CurrentForecastDetails,
+		ForecastContainer,
+	},
 	data() {
 		return {
 			currentCity: 'London',
@@ -16,8 +21,12 @@ export default {
 			temperature: 23,
 			condition: 'Partly Cloudy',
 			now: 'Now',
-
 		}
+	},
+
+	created() {
+		apiBrowser.getPos()
+		apiForecast.fetchForecast()
 	},
  async mounted() {
         console.log("Начало получения позиции")
@@ -50,11 +59,11 @@ export default {
 		updateLanguage(newLang) {
 			this.selectedLanguage = newLang
 		},
+   // getResponse() {
+	// 	DataService.setStore({data: 'test data'})
+	// }
 	},
-	computed: {
-
-	}
-
+	computed: {},
 }
 </script>
 
@@ -65,8 +74,7 @@ export default {
 			:language="selectedLanguage"
 			:theme="'Темная'"
 			@update:language="updateLanguage"
-		/><CurrentForecast
-			:city="currentCity"
+		/><ForecastContainer
 			:temperature="temperature"
 			:condition="condition"
 			:now="now"
@@ -89,5 +97,4 @@ export default {
 .logo.vue:hover {
 	filter: drop-shadow(0 0 2em #42b883aa);
 }
-
 </style>

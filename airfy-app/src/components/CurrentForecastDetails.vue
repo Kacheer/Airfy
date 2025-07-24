@@ -1,69 +1,28 @@
 <template>
 	<div class="CurrentForecastDetails">
-		<h2>{{ translations.forecastDetails.title }}</h2>
 		<ul>
-			<li>
-				<SvgIcon name="v2 (Stroke) (1)" />{{
-					translations.forecastDetails.morning
-				}}
-			</li>
-			<li><SvgIcon name="Vector" />{{ translations.forecastDetails.day }}</li>
-			<li>
-				<SvgIcon name="v2 (Stroke)" />{{ translations.forecastDetails.evening }}
-			</li>
-			<li>
-				<SvgIcon name="Subtract (Stroke)" />{{
-					translations.forecastDetails.night
-				}}
-			</li>
-		</ul>
-
-		<hr />
-
-		<h2>{{ translations.forecastDetails.additionalInfo }}</h2>
-		<ul>
-			<li>
-				<SvgIcon name="Vector (1)" />{{
-					translations.forecastDetails.feelsLike
-				}}
-			</li>
 			<li>
 				<SvgIcon name="moisture" />{{ translations.forecastDetails.humidity }}
 			</li>
-			<li>
-				<SvgIcon name="Vector (Stroke)" />{{
-					translations.forecastDetails.windSpeed
-				}}
-			</li>
-			<li>
-				<SvgIcon name="Vector (2)" />{{
-					translations.forecastDetails.visibility
-				}}
-			</li>
-			<li>
-				<SvgIcon name="Union" />{{ translations.forecastDetails.pressure }}
-			</li>
+			<li><SvgIcon name="Vector" />Вероятность осадков</li>
 		</ul>
 
 		<hr />
 
-		<h2>{{ translations.forecastDetails.pressure }}</h2>
 		<ul>
-			<li>
-				<SvgIcon name="Union (1)" />{{
-					translations.forecastDetails.seaLevelPressure
-				}}
-			</li>
-			<li>
-				<SvgIcon name="Union (2)" />{{
-					translations.forecastDetails.groundLevelPressure
-				}}
-			</li>
+			<li>Минимальное давление</li>
+			<li>Максимальное давление</li>
 		</ul>
 
 		<hr />
 
-		<h2>{{ translations.forecastDetails.sunriseSunset }}</h2>
+		<ul>
+			<li>Скорость ветра</li>
+			<li>Видимость</li>
+		</ul>
+
+		<hr />
+
 		<ul>
 			<li>
 				<SvgIcon name="v2 (Stroke)" />{{
@@ -81,6 +40,7 @@
 <script>
 import SvgIcon from '../../public/SvgIcon.vue'
 import language from '../lang/language.js'
+
 export default {
 	name: 'CurrentForecastDetails',
 	components: {
@@ -101,12 +61,16 @@ export default {
 </script>
 <style scoped>
 .CurrentForecastDetails {
-	color: #fff;
-	font-family: Arial, sans-serif;
-	padding: 20px;
-	border-radius: 10px;
-	text-align: left;
-	padding-left: 15px;
+	margin: 144px 181px 1112px 1183px; /* Устанавливаем отступы */
+	padding: 30px;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	border-radius: 20px;
+	box-sizing: border-box; /* Учет padding и border */
 }
 
 ul {
