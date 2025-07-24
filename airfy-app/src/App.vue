@@ -13,8 +13,6 @@ export default {
 		ForecastContainer,
 	},
 
-	components: { CurrentForecast, Header, CurrentForecastDetails },
-
 	data() {
 		return {
 			currentCity: 'London',

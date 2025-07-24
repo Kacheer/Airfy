@@ -45,9 +45,10 @@ export default {
 	display: flex;
 	justify-content: flex-start;
 	align-items: stretch;
-	gap: 30px;
-	width: 100%;
-	margin: 0 auto;
+	gap: 38px;
+
+	margin: 0 auto; /* Центрируем контейнер */
 	padding: 20px;
+	overflow: auto;
 }
 </style>

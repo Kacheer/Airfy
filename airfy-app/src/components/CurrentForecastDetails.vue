@@ -4,7 +4,7 @@
 			<li>
 				<SvgIcon name="moisture" />{{ translations.forecastDetails.humidity }}
 			</li>
-			<li>Вероятность осадков</li>
+			<li><SvgIcon name="Vector" />Вероятность осадков</li>
 		</ul>
 
 		<hr />
@@ -61,17 +61,16 @@ export default {
 </script>
 <style scoped>
 .CurrentForecastDetails {
-	max-width: 400px;
-	padding: 20px;
+	margin: 144px 181px 1112px 1183px; /* Устанавливаем отступы */
+	padding: 30px;
 	background: rgba(255, 255, 255, 0.05);
 	border: 1px solid rgba(255, 255, 255, 0.15);
 	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	flex-grow: 1;
-	height: 522px;
 	border-radius: 20px;
+	box-sizing: border-box; /* Учет padding и border */
 }
 
 ul {
