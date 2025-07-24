@@ -4,8 +4,14 @@ import Header from './components/Header.vue'
 import CurrentForecastDetails from './components/CurrentForecastDetails.vue'
 import apiBrowser from './browser_api/apiBrowser'
 import apiForecast from './api/apiForecast'
+import ForecastContainer from './components/ForecastContainer.vue'
 export default {
-	components: { CurrentForecast, Header, CurrentForecastDetails },
+	components: {
+		CurrentForecast,
+		Header,
+		CurrentForecastDetails,
+		ForecastContainer,
+	},
 	data() {
 		return {
 			currentCity: 'London',
@@ -45,26 +51,17 @@ export default {
 
 <template>
 	<div>
-		<a href="https://vite.dev" target="_blank">
-			<img src="/vite.svg" class="logo" alt="Vite logo" />
-		</a>
-		<button type="button" @click="increment()">Привет</button>
-		<a href="https://vuejs.org/" target="_blank">
-			<img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-		</a>
 		<Header
 			:city="currentCity"
 			:language="selectedLanguage"
 			:theme="'Темная'"
 			@update:language="updateLanguage"
-		/><CurrentForecast
-			:city="currentCity"
+		/><ForecastContainer
 			:temperature="temperature"
 			:condition="condition"
 			:now="now"
 			:language="selectedLanguage"
 		/>
-		<CurrentForecastDetails :language="selectedLanguage" />
 	</div>
 </template>
 

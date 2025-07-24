@@ -69,7 +69,7 @@ export default {
 	display: flex;
 	justify-content: center;
 	gap: 1rem;
-	background-color: rgba(255, 255, 255, 0.05);
+	margin-top: -100px;
 	padding: 1rem;
 	border-radius: 10px;
 	font-weight: bold;
