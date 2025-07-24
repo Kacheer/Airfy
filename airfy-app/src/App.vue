@@ -4,8 +4,9 @@ import Header from './components/Header.vue'
 import CurrentForecastDetails from './components/CurrentForecastDetails.vue'
 import apiBrowser from './browser_api/apiBrowser'
 import apiForecast from './api/apiForecast'
+import DataService from './services/DataService'
 export default {
-	components: { CurrentForecast, Header, CurrentForecastDetails },
+	components: {CurrentForecast, Header, CurrentForecastDetails },
 	data() {
 		return {
 			currentCity: 'London',
@@ -18,10 +19,25 @@ export default {
 
 		}
 	},
-	created() {
-		apiBrowser.getPos()
-		apiForecast.fetchForecast()
-	},
+ async mounted() {
+        console.log("Начало получения позиции")
+        
+        try {
+            const userPos = await apiBrowser.getPos()
+            
+            DataService.addPosToStore(userPos.lat, userPos.long)
+            
+            console.log("Координаты получены и сохранены")
+            
+            await apiForecast.fetchForecast()
+            
+            console.log("Прогноз получен")
+        } catch (error) {
+            console.error("Ошибка при получении данных:", error)
+            this.currentCity = 'Moscow'
+            await apiForecast.fetchForecast()
+        }
+    },
 	methods: {
 		increment(index) {
 			this.currentCity = this.cities[index]
@@ -55,7 +71,7 @@ export default {
 			:condition="condition"
 			:now="now"
 			:language="selectedLanguage"
-		/><HelloWorld msg="Hello World !!!! Helooooooo" />
+		/>
 		<CurrentForecastDetails :language="selectedLanguage" />
 	</div>
 </template>

@@ -9,6 +9,10 @@ var userPos = {
 export default {
 
   async fetchForecast() {
+      await DataService.waitForCoordinates()
+        
+      const pos = DataService.getPosStore()
+      console.log("[API] userPos получен", pos.lat, pos.long)
 
     const api = axios.create({
       baseURL: BASE_URL,
@@ -34,7 +38,6 @@ export default {
     .then(response => {
       console.log("[API] Данные получены", response.data);
       DataService.addResponseToStore(response)
-      console.log("---- ПОЛУЧИЛОСЬ ? ---- \n", serverStore.getDailyForecast())
       
     })
     .catch(error => {

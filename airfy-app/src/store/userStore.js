@@ -7,7 +7,8 @@ export const useUserStore = defineStore ('userStore', {
       lat: null,
       long: null
     },
-    language: null
+    language: null,
+    requestTime: null
   }),
 
     actions: {
@@ -20,8 +21,17 @@ export const useUserStore = defineStore ('userStore', {
         getUserPos() {
           console.log("[STORE] Данные возвращаются ", this.userPos)
           return this.userPos
-        }
+        },
 
+        setRequestTime() {
+          const date = new Date()
+          const time = date.getTime()
+          this.requestTime = time
+        },
+        getRequestTime() {
+          return this.requestTime
+        }
+        
     },
 
   getters: {
