@@ -1,5 +1,11 @@
+
 <template>
-	<div v-if="icon" class="svg-icon" v-html="icon" />
+	<div
+		v-if="icon"
+		class="svg-icon"
+		v-html="icon"
+		:style="containerStyle"
+	/>
 </template>
 
 <script>
@@ -10,10 +16,26 @@ export default {
 			type: String,
 			required: true,
 		},
+		width: {
+			type: [String, Number],
+			default: 32,
+		},
+		height: {
+			type: [String, Number],
+			default: 32,
+		},
 	},
 	data() {
 		return {
 			icon: null,
+		}
+	},
+	computed: {
+		containerStyle() {
+			return {
+				width: typeof this.width === 'number' ? this.width + 'px' : this.width,
+				height: typeof this.height === 'number' ? this.height + 'px' : this.height,
+			}
 		}
 	},
 	async created() {
@@ -37,8 +59,11 @@ li svg {
 	filter: none;
 }
 .svg-icon {
+
 	width: 24px;
 	height: 24px;
+
+
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;

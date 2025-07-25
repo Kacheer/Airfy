@@ -55,13 +55,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .div {
 	display: flex;
 	align-items: center;
 	gap: 20px;
 }
 .CurrentForecast {
+
 	width: 50.68vw;
 	height: 53.45vh;
 	left: 8.44vw;
@@ -69,6 +70,12 @@ export default {
 	padding: 2.5vh;
 
 	border-radius: 8px;
+
+
+	margin: 134px 751px 1112px 162px; /* Устанавливаем отступы */
+	width: 973px; /* Ширина блока */
+	height: 432px; /* Высота блока */
+	padding: 30px;
 
 	display: flex;
 	flex-direction: column;
