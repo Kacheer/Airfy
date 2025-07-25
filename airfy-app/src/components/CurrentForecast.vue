@@ -1,5 +1,5 @@
 <template>
-	<div class="CurrentForecast">
+	<div class="CurrentForecast glass-card">
 		<div class="group">
 			<div class="text-wrapper">{{ translations.Today }}</div>
 			<div class="div">
@@ -66,16 +66,17 @@ export default {
 	height: 53.45vh;
 	left: 8.44vw;
 	top: 12.41vh;
-	padding: 2.5vh; /* можно также адаптировать от размера экрана */
-	background: rgba(255, 255, 255, 0.05);
-	border: 1px solid rgba(255, 255, 255, 0.15);
-	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+	padding: 2.5vh;
+
+	border-radius: 8px;
+
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	border-radius: 1.8vh; /* адаптивный скруглённый угол */
+	border-radius: 1.8vh;
 	box-sizing: border-box;
 	position: absolute;
+	justify-content: space-between;
 }
 .CurrentForecast .group {
 	display: flex;

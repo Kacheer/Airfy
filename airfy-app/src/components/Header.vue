@@ -66,11 +66,15 @@ export default {
 </script>
 <style scoped>
 .header-container {
+	position: absolute;
+	left: 7.86vw;
+	top: 3.7vh;
+	width: 82.5vw;
+	height: 6.91vh;
+	padding: 1rem;
 	display: flex;
 	justify-content: center;
 	gap: 1rem;
-	margin-top: -100px;
-	padding: 1rem;
 	border-radius: 10px;
 	font-weight: bold;
 }

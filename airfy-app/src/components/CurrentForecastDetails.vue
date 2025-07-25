@@ -1,5 +1,5 @@
 <template>
-	<div class="CurrentForecastDetails">
+	<div class="CurrentForecastDetails glass-card">
 		<ul>
 			<li>
 				<SvgIcon name="moisture" />{{ translations.forecastDetails.humidity }}
@@ -87,23 +87,30 @@ export default {
 	width: 28.7vw;
 	height: 53.45vh;
 	padding: 2vh;
+
+	backdrop-filter: none !important;
+	box-shadow: none !important;
+	filter: none !important;
+	text-shadow: none !important;
+	color: white;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	border-radius: 1.85vh;
+
+	border-radius: 20px;
 	box-sizing: border-box;
-	background: rgba(255, 255, 255, 0.05);
-	border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 ul {
 	list-style: none;
 	padding: 0;
+	margin: 0;
 
-	align-items: center;
-	width: 27.19vw;
-	height: 4.4vh;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 }
+
 .icon {
 	width: 36px;
 	height: 32px;
@@ -116,10 +123,15 @@ ul {
 li {
 	display: flex;
 	align-items: center;
-	gap: 0.5vw;
+	gap: 12px;
 	font-weight: 400;
 	font-size: 1.2vw;
+	color: white;
+	line-height: 1.4;
+	text-shadow: none;
+	filter: none;
 }
+
 hr {
 	border: none;
 	height: 2px;

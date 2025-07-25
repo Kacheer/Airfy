@@ -46,8 +46,7 @@ export default {
 	justify-content: flex-start;
 	align-items: stretch;
 	gap: 38px;
-
-	margin: 0 auto; /* Центрируем контейнер */
+	margin: 0 auto;
 	padding: 20px;
 	overflow: auto;
 }
