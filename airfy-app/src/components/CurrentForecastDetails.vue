@@ -1,24 +1,44 @@
 <template>
-	<div class="CurrentForecastDetails">
+	<div class="CurrentForecastDetails glass-card">
 		<ul>
 			<li>
 				<SvgIcon name="moisture" />{{ translations.forecastDetails.humidity }}
 			</li>
-			<li><SvgIcon name="Vector" />Вероятность осадков</li>
+			<li>
+				<SvgIcon name="Vector" />{{
+					translations.forecastDetails.chanceOfPrecipitation
+				}}
+			</li>
 		</ul>
 
 		<hr />
 
 		<ul>
-			<li>Минимальное давление</li>
-			<li>Максимальное давление</li>
+			<li>
+				<SvgIcon name="solar_arrow-down-broken" />{{
+					translations.forecastDetails.minimumPressure
+				}}
+			</li>
+			<li>
+				<SvgIcon name="solar_arrow-down-broken" />{{
+					translations.forecastDetails.maximumPressure
+				}}
+			</li>
 		</ul>
 
 		<hr />
 
 		<ul>
-			<li>Скорость ветра</li>
-			<li>Видимость</li>
+			<li>
+				<SvgIcon name="Vector (Stroke)" />{{
+					translations.forecastDetails.windSpeed
+				}}
+			</li>
+			<li>
+				<SvgIcon name="Vector (2)" />{{
+					translations.forecastDetails.visibility
+				}}
+			</li>
 		</ul>
 
 		<hr />
@@ -61,24 +81,36 @@ export default {
 </script>
 <style scoped>
 .CurrentForecastDetails {
-	margin: 144px 181px 1112px 1183px; /* Устанавливаем отступы */
-	padding: 30px;
-	background: rgba(255, 255, 255, 0.05);
-	border: 1px solid rgba(255, 255, 255, 0.15);
-	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+	position: absolute;
+	left: 61.09vw;
+	top: 12.41vh;
+	width: 28.7vw;
+	height: 53.45vh;
+	padding: 2vh;
+
+	backdrop-filter: none !important;
+	box-shadow: none !important;
+	filter: none !important;
+	text-shadow: none !important;
+	color: white;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+
 	border-radius: 20px;
-	box-sizing: border-box; /* Учет padding и border */
+	box-sizing: border-box;
 }
 
 ul {
 	list-style: none;
 	padding: 0;
-	font-weight: bold;
-	align-items: center;
+	margin: 0;
+
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 }
+
 .icon {
 	width: 36px;
 	height: 32px;
@@ -92,10 +124,14 @@ li {
 	display: flex;
 	align-items: center;
 	gap: 12px;
-	margin: 10px 0;
-	font-size: 16px;
-	line-height: 1;
+	font-weight: 400;
+	font-size: 1.2vw;
+	color: white;
+	line-height: 1.4;
+	text-shadow: none;
+	filter: none;
 }
+
 hr {
 	border: none;
 	height: 2px;

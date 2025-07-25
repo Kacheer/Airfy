@@ -53,16 +53,22 @@ export default {
 
 <style scoped>
 li svg {
-	width: 32px;
-	height: 32px;
-	display: block;
+	width: 24px;
+	height: 24px;
 	flex-shrink: 0;
+	filter: none;
 }
 .svg-icon {
+
+	width: 24px;
+	height: 24px;
+
+
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	flex-shrink: 0;
-	transform: translateY(-2.4px);
+	transform: none;
+	filter: none;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
 	<div class="CurrentForecast glass-card">
 		<div class="group">
-			<div class="text-wrapper">Сегодня</div>
+			<div class="text-wrapper">{{ translations.Today }}</div>
 			<div class="div">
 				<SvgIcon class="cloud-icon" name="cloud-v3 (Stroke)" />
 				<div class="group-2">
@@ -62,15 +62,28 @@ export default {
 	gap: 20px;
 }
 .CurrentForecast {
+
+	width: 50.68vw;
+	height: 53.45vh;
+	left: 8.44vw;
+	top: 12.41vh;
+	padding: 2.5vh;
+
+	border-radius: 8px;
+
+
 	margin: 134px 751px 1112px 162px; /* Устанавливаем отступы */
 	width: 973px; /* Ширина блока */
 	height: 432px; /* Высота блока */
 	padding: 30px;
+
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	border-radius: 20px;
+	border-radius: 1.8vh;
 	box-sizing: border-box;
+	position: absolute;
+	justify-content: space-between;
 }
 .CurrentForecast .group {
 	display: flex;
