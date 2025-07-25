@@ -1,5 +1,5 @@
 <template>
-	<div class="CurrentForecast">
+	<div class="CurrentForecast glass-card">
 		<div class="group">
 			<div class="text-wrapper">Сегодня</div>
 			<div class="div">
@@ -55,7 +55,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .div {
 	display: flex;
 	align-items: center;
@@ -66,9 +66,6 @@ export default {
 	width: 973px; /* Ширина блока */
 	height: 432px; /* Высота блока */
 	padding: 30px;
-	background: rgba(255, 255, 255, 0.05);
-	border: 1px solid rgba(255, 255, 255, 0.15);
-	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 	display: flex;
 	flex-direction: column;
 	justify-content: center;

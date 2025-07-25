@@ -5,12 +5,14 @@ import CurrentForecastDetails from './components/CurrentForecastDetails.vue'
 import apiBrowser from './browser_api/apiBrowser'
 import apiForecast from './api/apiForecast'
 import ForecastContainer from './components/ForecastContainer.vue'
+import DailyCard from './components/DailyCard.vue'
 export default {
 	components: {
 		CurrentForecast,
 		Header,
 		CurrentForecastDetails,
 		ForecastContainer,
+		DailyCard
 	},
 	data() {
 		return {
@@ -21,6 +23,14 @@ export default {
 			temperature: 23,
 			condition: 'Partly Cloudy',
 			now: 'Now',
+			dailyCards: [
+				{ title: 'Завтра', temperature: 23, feelsLike: 19, weatherCode: 1 },
+				{ title: 'Вторник', temperature: 25, feelsLike: 20, weatherCode: 2 },
+				{ title: 'Среда', temperature: 25, feelsLike: 20, weatherCode: 2 },
+				{ title: 'Четверг', temperature: 25, feelsLike: 20, weatherCode: 2 },
+				{ title: 'Пятница', temperature: 25, feelsLike: 20, weatherCode: 2 },
+				{ title: 'Суббота', temperature: 25, feelsLike: 20, weatherCode: 2 },
+			]
 		}
 	},
 
@@ -70,11 +80,22 @@ export default {
 <template>
 	<div>
 		<Header
-			:city="currentCity"
-			:language="selectedLanguage"
-			:theme="'Темная'"
-			@update:language="updateLanguage"
-		/><ForecastContainer
+		:city="currentCity"
+		:language="selectedLanguage"
+		:theme="'Темная'"
+		@update:language="updateLanguage"
+		/>
+		<div class="dailyContainer">
+		  <DailyCard
+			v-for="(card, idx) in dailyCards"
+			:key="idx"
+			:title="card.title"
+			:temperature="card.temperature"
+			:feels-like="card.feelsLike"
+			:weather-code="card.weatherCode"
+		  />
+		</div>
+		<ForecastContainer
 			:temperature="temperature"
 			:condition="condition"
 			:now="now"
@@ -96,5 +117,11 @@ export default {
 }
 .logo.vue:hover {
 	filter: drop-shadow(0 0 2em #42b883aa);
+}
+.dailyContainer {
+	margin-top: 50px ;
+	display: flex;
+	flex-direction: row;
+	gap: 39px;
 }
 </style>
