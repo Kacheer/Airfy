@@ -81,22 +81,19 @@ export default {
 </script>
 <style scoped>
 .CurrentForecastDetails {
-	position: absolute;
-	left: 61.09vw;
-	top: 12.41vh;
-	width: 28.7vw;
-	height: 53.45vh;
-	padding: 2vh;
-
-	backdrop-filter: none !important;
+	width: 400px;
+	height: auto;
+	padding: 0px 15px;
+	/*Обнови браузер, у меня всё норм, свечения нет */
+	/* backdrop-filter: none !important;
 	box-shadow: none !important;
 	filter: none !important;
-	text-shadow: none !important;
+	text-shadow: none !important; */
 	color: white;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
-
+	justify-content: center;
+	gap: 10px;
 	border-radius: 20px;
 	box-sizing: border-box;
 }
@@ -136,6 +133,6 @@ hr {
 	border: none;
 	height: 2px;
 	background: rgba(255, 255, 255, 0.2);
-	margin: 15px 0;
+	margin: 5px 0px;
 }
 </style>

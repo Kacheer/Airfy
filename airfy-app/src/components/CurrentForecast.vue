@@ -3,7 +3,7 @@
 		<div class="group">
 			<div class="text-wrapper">{{ translations.Today }}</div>
 			<div class="div">
-				<SvgIcon class="cloud-icon" name="cloud-v3 (Stroke)" />
+				<SvgIcon class="cloud-icon" name="cloud-v3 (Stroke)" width="200" height="125" />
 				<div class="group-2">
 					<div class="temperature">{{ temperature }}</div>
 					<div class="text-wrapper-2">°C</div>
@@ -62,27 +62,14 @@ export default {
 	gap: 20px;
 }
 .CurrentForecast {
-
-	width: 50.68vw;
-	height: 53.45vh;
-	left: 8.44vw;
-	top: 12.41vh;
-	padding: 2.5vh;
-
+	width: 800px;
+	height: auto;
 	border-radius: 8px;
-
-
-	margin: 134px 751px 1112px 162px; /* Устанавливаем отступы */
-	width: 973px; /* Ширина блока */
-	height: 432px; /* Высота блока */
 	padding: 30px;
-
 	display: flex;
+	border-radius: 20px;
 	flex-direction: column;
-	justify-content: center;
-	border-radius: 1.8vh;
 	box-sizing: border-box;
-	position: absolute;
 	justify-content: space-between;
 }
 .CurrentForecast .group {

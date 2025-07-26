@@ -48,6 +48,6 @@ export default {
 	gap: 38px;
 	margin: 0 auto;
 	padding: 20px;
-	overflow: auto;
+	overflow: none;
 }
 </style>

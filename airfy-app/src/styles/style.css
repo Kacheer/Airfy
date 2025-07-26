@@ -6,8 +6,10 @@
 
 	color-scheme: light dark;
 	color: rgba(255, 255, 255, 0.87);
-	background-color: #242424;
-
+	background-image: url("/airfy-app/src/assets/test-background.png");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
@@ -45,7 +47,7 @@ h1 {
 button {
 	border-radius: 8px;
 	border: 1px solid transparent;
-	padding: 0.6em 1.2em;
+	padding: 0.6em 1.2em; /* 0.6em = 9.6px / 0.6rem */
 	font-size: 1em;
 	font-weight: 500;
 	font-family: inherit;
@@ -58,7 +60,7 @@ button:hover {
 }
 button:focus,
 button:focus-visible {
-	outline: 4px auto -webkit-focus-ring-color;
+	outline: 4px auto -webkit-focus-ring-color;  /* 4px = 0.25rem / 0.25em / 1.06cm */
 }
 
 .card {

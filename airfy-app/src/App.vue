@@ -78,15 +78,24 @@ export default {
 </script>
 
 <template>
-	<div>
-		<Header
+  <div class="main-container">
+    <Header
 		:city="currentCity"
 		:language="selectedLanguage"
 		:theme="'Темная'"
 		@update:language="updateLanguage"
 		/>
-		<div class="dailyContainer">
-		  <DailyCard
+    <div class="forecast-row">
+	 		<CurrentForecast
+			:temperature="temperature"
+			:condition="condition"
+			:now="now"
+			:language="selectedLanguage"
+		/>
+      <CurrentForecastDetails :language="selectedLanguage" />
+    </div>
+    <div class="dailyContainer">
+      <DailyCard
 			v-for="(card, idx) in dailyCards"
 			:key="idx"
 			:title="card.title"
@@ -94,15 +103,8 @@ export default {
 			:feels-like="card.feelsLike"
 			:weather-code="card.weatherCode"
 		  />
-		</div>
-		<ForecastContainer
-			:temperature="temperature"
-			:condition="condition"
-			:now="now"
-			:language="selectedLanguage"
-		/>
-		<CurrentForecastDetails :language="selectedLanguage" />
-	</div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -118,10 +120,36 @@ export default {
 .logo.vue:hover {
 	filter: drop-shadow(0 0 2em #42b883aa);
 }
-.dailyContainer {
-	margin-top: 50px ;
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+.forecast-row {
 	display: flex;
 	flex-direction: row;
-	gap: 39px;
+	gap: 38px;
+	margin: 0 auto;
+	width: 100%;
+	justify-content: space-between;
+}
+
+.forecast-row > *:last-child {
+  width: 400px;
+  min-width: 200px;
+  flex: 0 1 400px;
+}
+.forecast-row > *:first-child {
+	flex: 1;
+}
+.dailyContainer {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+  gap: 39px;
+  justify-content: flex-start;
+  width: 100%;
 }
 </style>

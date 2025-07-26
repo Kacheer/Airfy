@@ -2,7 +2,7 @@
 	<div class="header-container">
 		<span>
 			{{ translations.location }}
-			<button class="header-button" lang>
+			<button class="header-button glass-card" lang>
 				{{ translations.cities[city] || city }}
 			</button></span
 		>
@@ -10,7 +10,7 @@
 			{{ translations.language }}
 
 			<select
-				class="dropdown"
+				class="dropdown glass-card"
 				v-model="selectedLanguage"
 				@change="updateLanguage"
 			>
@@ -21,7 +21,7 @@
 		>
 		<span
 			>{{ translations.theme }}
-			<button class="header-button">
+			<button class="header-button glass-card">
 				{{ translations.themes[theme] || theme }}
 			</button></span
 		>
@@ -64,24 +64,21 @@ export default {
 	},
 }
 </script>
-<style scoped>
+<style>
 .header-container {
-	position: absolute;
-	left: 7.86vw;
-	top: 3.7vh;
-	width: 82.5vw;
-	height: 6.91vh;
-	padding: 1rem;
+	width: 100%;
+	height: fit-content;
+	margin: 50px 0px;
 	display: flex;
 	justify-content: center;
-	gap: 1rem;
+	gap: 50px;
 	border-radius: 10px;
 	font-weight: bold;
 }
 .header-button {
 	background-color: #444;
 	border: none;
-	border-radius: 16px;
+	border-radius: 8px;
 	padding: 4px 12px;
 	color: white;
 	font-weight: 500;
@@ -91,7 +88,7 @@ export default {
 	background-color: #444;
 	color: white;
 	border: none;
-	border-radius: 16px;
+	border-radius: 8px;
 	padding: 4px 12px;
 	margin-left: 0.5rem;
 	font-weight: 500;
