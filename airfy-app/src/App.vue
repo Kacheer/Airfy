@@ -6,13 +6,14 @@ import apiBrowser from './browser_api/apiBrowser'
 import apiForecast from './api/apiForecast'
 import ForecastContainer from './components/ForecastContainer.vue'
 import DailyCard from './components/DailyCard.vue'
+import language from './lang/language'
 export default {
 	components: {
 		CurrentForecast,
 		Header,
 		CurrentForecastDetails,
 		ForecastContainer,
-		DailyCard
+		DailyCard,
 	},
 	data() {
 		return {
@@ -24,13 +25,43 @@ export default {
 			condition: 'Partly Cloudy',
 			now: 'Now',
 			dailyCards: [
-				{ title: 'Завтра', temperature: 23, feelsLike: 19, weatherCode: 1 },
-				{ title: 'Вторник', temperature: 25, feelsLike: 20, weatherCode: 2 },
-				{ title: 'Среда', temperature: 25, feelsLike: 20, weatherCode: 2 },
-				{ title: 'Четверг', temperature: 25, feelsLike: 20, weatherCode: 2 },
-				{ title: 'Пятница', temperature: 25, feelsLike: 20, weatherCode: 2 },
-				{ title: 'Суббота', temperature: 25, feelsLike: 20, weatherCode: 2 },
-			]
+				{
+					title: 'Tomorrow',
+					temperature: 23,
+					feelsLike: 19,
+					weatherCode: 1,
+				},
+				{
+					title: 'Tuesday',
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+				{
+					title: 'Wednesday',
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+				{
+					title: 'Thursday',
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+				{
+					title: 'Friday',
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+				{
+					title: 'Saturday',
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+			],
 		}
 	},
 
@@ -38,25 +69,25 @@ export default {
 		apiBrowser.getPos()
 		apiForecast.fetchForecast()
 	},
- async mounted() {
-        console.log("Начало получения позиции")
-        
-        try {
-            const userPos = await apiBrowser.getPos()
-            
-            DataService.addPosToStore(userPos.lat, userPos.long)
-            
-            console.log("Координаты получены и сохранены")
-            
-            await apiForecast.fetchForecast()
-            
-            console.log("Прогноз получен")
-        } catch (error) {
-            console.error("Ошибка при получении данных:", error)
-            this.currentCity = 'Moscow'
-            await apiForecast.fetchForecast()
-        }
-    },
+	async mounted() {
+		console.log('Начало получения позиции')
+
+		try {
+			const userPos = await apiBrowser.getPos()
+
+			DataService.addPosToStore(userPos.lat, userPos.long)
+
+			console.log('Координаты получены и сохранены')
+
+			await apiForecast.fetchForecast()
+
+			console.log('Прогноз получен')
+		} catch (error) {
+			console.error('Ошибка при получении данных:', error)
+			this.currentCity = 'Moscow'
+			await apiForecast.fetchForecast()
+		}
+	},
 	methods: {
 		increment(index) {
 			this.currentCity = this.cities[index]
@@ -69,42 +100,53 @@ export default {
 		updateLanguage(newLang) {
 			this.selectedLanguage = newLang
 		},
-   // getResponse() {
-	// 	DataService.setStore({data: 'test data'})
-	// }
+		// getResponse() {
+		// 	DataService.setStore({data: 'test data'})
+		// }
 	},
-	computed: {},
+	computed: {
+		currentTranslations() {
+			return language[this.selectedLanguage] || language['Русский']
+		},
+		translatedDailyCards() {
+			return this.dailyCards.map(card => ({
+				...card,
+				title: this.currentTranslations.DailyCard[card.title] || card.title,
+			}))
+		},
+	},
 }
 </script>
 
 <template>
-  <div class="main-container">
-    <Header
-		:city="currentCity"
-		:language="selectedLanguage"
-		:theme="'Темная'"
-		@update:language="updateLanguage"
-		/>
-    <div class="forecast-row">
-	 		<CurrentForecast
-			:temperature="temperature"
-			:condition="condition"
-			:now="now"
+	<div class="main-container">
+		<Header
+			:city="currentCity"
 			:language="selectedLanguage"
+			:theme="'Темная'"
+			@update:language="updateLanguage"
 		/>
-      <CurrentForecastDetails :language="selectedLanguage" />
-    </div>
-    <div class="dailyContainer">
-      <DailyCard
-			v-for="(card, idx) in dailyCards"
-			:key="idx"
-			:title="card.title"
-			:temperature="card.temperature"
-			:feels-like="card.feelsLike"
-			:weather-code="card.weatherCode"
-		  />
-    </div>
-  </div>
+		<div class="forecast-row">
+			<CurrentForecast
+				:temperature="temperature"
+				:condition="condition"
+				:now="now"
+				:language="selectedLanguage"
+			/>
+			<CurrentForecastDetails :language="selectedLanguage" />
+		</div>
+		<div class="dailyContainer">
+			<DailyCard
+				v-for="(card, idx) in translatedDailyCards"
+				:key="idx"
+				:title="card.title"
+				:temperature="card.temperature"
+				:feels-like="card.feelsLike"
+				:weather-code="card.weatherCode"
+				:translations="currentTranslations"
+			/>
+		</div>
+	</div>
 </template>
 
 <style scoped>
@@ -121,10 +163,10 @@ export default {
 	filter: drop-shadow(0 0 2em #42b883aa);
 }
 .main-container {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	width: 100%;
 }
 
 .forecast-row {
@@ -137,19 +179,19 @@ export default {
 }
 
 .forecast-row > *:last-child {
-  width: 400px;
-  min-width: 200px;
-  flex: 0 1 400px;
+	width: 400px;
+	min-width: 200px;
+	flex: 0 1 400px;
 }
 .forecast-row > *:first-child {
 	flex: 1;
 }
 .dailyContainer {
-  margin-top: 50px;
-  display: flex;
-  flex-direction: row;
-  gap: 39px;
-  justify-content: flex-start;
-  width: 100%;
+	margin-top: 50px;
+	display: flex;
+	flex-direction: row;
+	gap: 39px;
+	justify-content: flex-start;
+	width: 100%;
 }
 </style>
