@@ -83,6 +83,7 @@ export default {
 				weatherCode: null
 			},
 			daily: [],
+			isDataLoaded: false
 		}
 	},
 
@@ -90,30 +91,27 @@ export default {
 	},
 
  async mounted() {
-        console.log("Начало получения позиции")
-        
-        try {
-            const userPos = await apiBrowser.getPos()
-            
-            DataService.addPosToStore(userPos.lat, userPos.long)
-            
-            console.log("Координаты получены и сохранены")
-            
-            await apiForecast.fetchForecast()
-            this.currentCity = await apiLocation.getCityNameByStore()
-            console.log("Прогноз получен")
-			const data = DataService.getAllData()
-			this.daily = data.daily
-			this.units = data.units
-			this.current = data.current
-			console.log(`В РАЗМЕТКЕ ПОЛУЧЕНЫ: ${this.units} \n ${this.current}\n${this.daily[0].temperature}`)
-			// console.log("Текущая температура:", this.current.temperature)
-        } catch (error) {
-            console.error("Ошибка при получении данных:", error)
-            this.currentCity = 'Moscow'
-            await apiForecast.fetchForecast()
-        }
-    },
+  console.log("Начало получения позиции");
+  try {
+    const userPos = await apiBrowser.getPos();
+    DataService.addPosToStore(userPos.lat, userPos.long);
+    console.log("Координаты получены и сохранены");
+    await apiForecast.fetchForecast();
+    this.currentCity = await apiLocation.getCityNameByStore();
+    console.log("Прогноз получен");
+    const data = DataService.getAllData();
+    this.daily = data.daily;
+    this.units = data.units;
+    this.current = data.current;
+    this.isDataLoaded = true; // Данные готовы, можно рендерить!
+    console.log(`В РАЗМЕТКЕ ПОЛУЧЕНЫ: ${this.units} \n ${this.current}\n${this.daily[0].temperature}`);
+  } catch (error) {
+    console.error("Ошибка при получении данных:", error);
+    this.currentCity = 'Moscow';
+    await apiForecast.fetchForecast();
+    this.isDataLoaded = true; // Или оставь false, если хочешь
+  }
+},
 	methods: {
 		increment(index) {
 			this.currentCity = this.cities[index]
@@ -148,58 +146,57 @@ export default {
 </script>
 
 <template>
-	<div class="main-container">
-		<Header
-			:city="currentCity"
-			:language="selectedLanguage"
-			:theme="'Темная'"
-			@update:language="updateLanguage"
-		/>
-		<div class="forecast-row">
-			<CurrentForecast
-				:temperature="round(current.temperature)"
-				:condition="condition"
-				:now="now"
-				:language="selectedLanguage"
-			/>
-			<CurrentForecastDetails 
-			:humidity="daily[0].humidity"
-			:precipitation_probability="daily[0].precipitation_probability"
-			:pressure_min="daily[0].pressure_min"
-			:pressure_max="daily[0].pressure_max"
-			:wind_speed="daily[0].wind_speed"
-			:visibility="daily[0].visibility"
-			:sunrise="daily[0].sunrise"
-			:sunset="daily[0].sunset"
-			:language="selectedLanguage"
-			 />
-		</div>
-		<div class="hourly-scroll-container">
-			<HourlyCard
-				v-for="(hour, idx) in hourlyForecast"
-				:key="idx"
-				:hour="hour.time"
-				:temperature="hour.temp"
-				:feelsLike="hour.feelsLike"
-			/>
-		</div>
-
-		<h2 class="forecast-title">
-			{{ currentTranslations.DailyCard.forecastTitle }}
-		</h2>
-
-		<div class="dailyContainer">
-			<DailyCard
-				v-for="(card, idx) in translatedDailyCards"
-				:key="idx"
-				:title="card.title"
-				:temperature="card.temperature"
-				:feels-like="card.feelsLike"
-				:weather-code="card.weatherCode"
-				:translations="currentTranslations"
-			/>
-		</div>
-	</div>
+  <div class="main-container">
+    <Header
+      :city="currentCity"
+      :language="selectedLanguage"
+      :theme="'Темная'"
+      @update:language="updateLanguage"
+    />
+    <div v-if="isDataLoaded" class="forecast-row">
+      <CurrentForecast
+        :temperature="round(current.temperature)"
+        :condition="condition"
+        :now="now"
+        :language="selectedLanguage"
+      />
+      <CurrentForecastDetails 
+        :humidity="daily[0].humidity"
+        :precipitation_probability="daily[0].precipitation_probability"
+        :pressure_min="daily[0].pressure_min"
+        :pressure_max="daily[0].pressure_max"
+        :wind_speed="daily[0].wind_speed"
+        :visibility="daily[0].visibility"
+        :sunrise="daily[0].sunrise"
+        :sunset="daily[0].sunset"
+        :language="selectedLanguage"
+      />
+    </div>
+    <!-- Остальной код шаблона -->
+    <div class="hourly-scroll-container">
+      <HourlyCard
+        v-for="(hour, idx) in hourlyForecast"
+        :key="idx"
+        :hour="hour.time"
+        :temperature="hour.temp"
+        :feelsLike="hour.feelsLike"
+      />
+    </div>
+    <h2 class="forecast-title">
+      {{ currentTranslations.DailyCard.forecastTitle }}
+    </h2>
+    <div class="dailyContainer">
+      <DailyCard
+        v-for="(card, idx) in translatedDailyCards"
+        :key="idx"
+        :title="card.title"
+        :temperature="card.temperature"
+        :feels-like="card.feelsLike"
+        :weather-code="card.weatherCode"
+        :translations="currentTranslations"
+      />
+    </div>
+  </div>
 </template>
 
 <style scoped>
