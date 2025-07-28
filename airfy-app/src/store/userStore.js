@@ -7,6 +7,7 @@ export const useUserStore = defineStore ('userStore', {
       lat: null,
       long: null
     },
+    city: null,
     language: null,
     requestTime: null
   }),
@@ -28,7 +29,7 @@ export const useUserStore = defineStore ('userStore', {
           const date = new Date()
           const time = date.getTime()
           this.requestTime = time
-           console.log("Заебись")
+          console.log("Заебись")
         },
         getRequestTime() {
           return this.requestTime

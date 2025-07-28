@@ -22,7 +22,7 @@ export default {
     console.log("ВРЕМЯ ЗАСЕЙВИЛОСЬ БЛЯТЬ ? ",lastRequestTime)
     const oneHour = 3600 * 1000;
 
-    if (!lastRequestTime || (currentTime - lastRequestTime > oneHour)) {
+    // if (!lastRequestTime || (currentTime - lastRequestTime > oneHour)) {
       //Работает супер магическим образом ✨
       console.log("[API] Обновление данных, так как прошло более часа или это первый запрос");
 
@@ -55,9 +55,9 @@ export default {
           console.error('[API] Не предвиденная ошибка ', error.code);
         }
       }
-    } else {
-      console.log("[API] Используем существующие данные, так как прошло менее часа");
-    }
+    // } else {
+    //   console.log("[API] Используем существующие данные, так как прошло менее часа");
+    // }
   DataService.printForecastData()
   }
 };
