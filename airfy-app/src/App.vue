@@ -84,32 +84,41 @@ export default {
 	},
 
 	created() {
-	},
+		const savedTheme = localStorage.getItem('theme')
+		if (savedTheme) {
+			this.selectedTheme = savedTheme
+			this.applyTheme(savedTheme)
+		}
+		apiBrowser.getPos()
+		apiForecast.fetchForecast()
+	}, //ggggg
 
- async mounted() {
-        console.log("Начало получения позиции")
-        
-        try {
-            const userPos = await apiBrowser.getPos()
-            
-            DataService.addPosToStore(userPos.lat, userPos.long)
-            
-            console.log("Координаты получены и сохранены")
-            
-            await apiForecast.fetchForecast()
-            this.currentCity = await apiLocation.getCityNameByStore()
-            console.log("Прогноз получен")
+	async mounted() {
+		console.log('Начало получения позиции')
+
+		try {
+			const userPos = await apiBrowser.getPos()
+
+			DataService.addPosToStore(userPos.lat, userPos.long)
+
+			console.log('Координаты получены и сохранены')
+
+			await apiForecast.fetchForecast()
+			this.currentCity = await apiLocation.getCityNameByStore()
+			console.log('Прогноз получен')
 			const data = DataService.getAllData()
 			this.daily = data.daily
 			this.units = data.units
 			this.daily = data.daily
-			console.log(`В РАЗМЕТКЕ ПОЛУЧЕНЫ: ${this.units} \n ${this.current}\n${this.daily[0].temperature}`)
-        } catch (error) {
-            console.error("Ошибка при получении данных:", error)
-            this.currentCity = 'Moscow'
-            await apiForecast.fetchForecast()
-        }
-    },
+			console.log(
+				`В РАЗМЕТКЕ ПОЛУЧЕНЫ: ${this.units} \n ${this.current}\n${this.daily[0].temperature}`
+			)
+		} catch (error) {
+			console.error('Ошибка при получении данных:', error)
+			this.currentCity = 'Moscow'
+			await apiForecast.fetchForecast()
+		}
+	},
 	methods: {
 		increment(index) {
 			this.currentCity = this.cities[index]
@@ -125,6 +134,17 @@ export default {
 		// getResponse() {
 		// 	DataService.setStore({data: 'test data'})
 		// }
+		updateTheme(newTheme) {
+			this.selectedTheme = newTheme
+			localStorage.setItem('theme', newTheme)
+			this.applyTheme(newTheme)
+		},
+		applyTheme(theme) {
+			document.body.classList.remove('dark-mode')
+			if (theme === 'Темная') {
+				document.body.classList.add('dark-mode')
+			}
+		},
 	},
 	computed: {
 		currentTranslations() {
@@ -145,8 +165,9 @@ export default {
 		<Header
 			:city="currentCity"
 			:language="selectedLanguage"
-			:theme="'Темная'"
 			@update:language="updateLanguage"
+			@update:theme="updateTheme"
+			:theme="selectedTheme"
 		/>
 		<div class="forecast-row">
 			<CurrentForecast

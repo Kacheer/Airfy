@@ -3,7 +3,7 @@
 		<p id="title">{{ title }}</p>
 		<SvgIcon name="cloud-v3 (Stroke)" :width="80" :height="80"></SvgIcon>
 		<p id="temperature">{{ temperature }} °C</p>
-		<p id="feelsLike">{{ feelsLike }} °C</p>
+		<p class="feelsLike">{{ feelsLike }} °C</p>
 		<p id="weatherDesc">{{ weatherDescription }}</p>
 	</div>
 </template>
@@ -58,7 +58,7 @@ p {
 	text-align: center;
 	width: fit-content;
 }
-#feelsLike {
+.feelsLike {
 	font-size: 1.1875rem;
 	font-weight: 600;
 	text-align: center;
