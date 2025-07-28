@@ -7,6 +7,8 @@ import apiForecast from './api/apiForecast'
 import ForecastContainer from './components/ForecastContainer.vue'
 import DailyCard from './components/DailyCard.vue'
 import language from './lang/language'
+import HourlyCard from './components/HourlyCard.vue'
+
 export default {
 	components: {
 		CurrentForecast,
@@ -14,6 +16,7 @@ export default {
 		CurrentForecastDetails,
 		ForecastContainer,
 		DailyCard,
+		HourlyCard,
 	},
 	data() {
 		return {
@@ -61,6 +64,17 @@ export default {
 					feelsLike: 20,
 					weatherCode: 2,
 				},
+			],
+			hourlyForecast: [
+				{ time: '13:00', temp: 22, feelsLike: 19 },
+				{ time: '14:00', temp: 24, feelsLike: 23 },
+				{ time: '15:00', temp: 25, feelsLike: 25 },
+				{ time: '16:00', temp: 25, feelsLike: 26 },
+				{ time: '17:00', temp: 24, feelsLike: 26 },
+				{ time: '18:00', temp: 23, feelsLike: 25 },
+				{ time: '19:00', temp: 20, feelsLike: 23 },
+				{ time: '21:00', temp: 21, feelsLike: 20 },
+				{ time: '21:00', temp: 21, feelsLike: 20 },
 			],
 		}
 	},
@@ -135,6 +149,20 @@ export default {
 			/>
 			<CurrentForecastDetails :language="selectedLanguage" />
 		</div>
+		<div class="hourly-scroll-container">
+			<HourlyCard
+				v-for="(hour, idx) in hourlyForecast"
+				:key="idx"
+				:hour="hour.time"
+				:temperature="hour.temp"
+				:feelsLike="hour.feelsLike"
+			/>
+		</div>
+
+		<h2 class="forecast-title">
+			{{ currentTranslations.DailyCard.forecastTitle }}
+		</h2>
+
 		<div class="dailyContainer">
 			<DailyCard
 				v-for="(card, idx) in translatedDailyCards"

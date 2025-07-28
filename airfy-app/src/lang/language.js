@@ -11,6 +11,7 @@ export default {
 			minimumPressure: 'Минимальное давление',
 			maximumPressure: 'Максимальное давление',
 		},
+
 		DailyCard: {
 			Tomorrow: 'Завтра',
 			Tuesday: 'Вторник',
@@ -19,6 +20,7 @@ export default {
 			Friday: 'Пятница',
 			Saturday: 'Суббота',
 			weatherDescription: 'Описание погоды',
+			forecastTitle: 'Прогноз на ближайшие 4 дня',
 		},
 		location: 'Локация',
 		language: 'Язык',
@@ -54,6 +56,7 @@ export default {
 			Friday: 'Friday',
 			Saturday: 'Saturday',
 			weatherDescription: 'Weather Description',
+			forecastTitle: '4-Day Forecast',
 		},
 		location: 'Location',
 		language: 'Language',
