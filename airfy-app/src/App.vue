@@ -78,7 +78,10 @@ export default {
 				{ time: '21:00', temp: 21, feelsLike: 20 },
 			],
 			units: null,
-			current: null,
+			current: {
+				temperature: null,
+				weatherCode: null
+			},
 			daily: [],
 		}
 	},
@@ -102,8 +105,9 @@ export default {
 			const data = DataService.getAllData()
 			this.daily = data.daily
 			this.units = data.units
-			this.daily = data.daily
+			this.current = data.current
 			console.log(`В РАЗМЕТКЕ ПОЛУЧЕНЫ: ${this.units} \n ${this.current}\n${this.daily[0].temperature}`)
+			// console.log("Текущая температура:", this.current.temperature)
         } catch (error) {
             console.error("Ошибка при получении данных:", error)
             this.currentCity = 'Moscow'
@@ -122,6 +126,9 @@ export default {
 		updateLanguage(newLang) {
 			this.selectedLanguage = newLang
 		},
+		round(number) {
+			return Math.round(number)
+		}
 		// getResponse() {
 		// 	DataService.setStore({data: 'test data'})
 		// }
@@ -150,12 +157,22 @@ export default {
 		/>
 		<div class="forecast-row">
 			<CurrentForecast
-				:temperature="temperature"
+				:temperature="round(current.temperature)"
 				:condition="condition"
 				:now="now"
 				:language="selectedLanguage"
 			/>
-			<CurrentForecastDetails :language="selectedLanguage" />
+			<CurrentForecastDetails 
+			:humidity="daily[0].humidity"
+			:precipitation_probability="daily[0].precipitation_probability"
+			:pressure_min="daily[0].pressure_min"
+			:pressure_max="daily[0].pressure_max"
+			:wind_speed="daily[0].wind_speed"
+			:visibility="daily[0].visibility"
+			:sunrise="daily[0].sunrise"
+			:sunset="daily[0].sunset"
+			:language="selectedLanguage"
+			 />
 		</div>
 		<div class="hourly-scroll-container">
 			<HourlyCard
@@ -215,9 +232,8 @@ export default {
 }
 
 .forecast-row > *:last-child {
-	width: 400px;
 	min-width: 200px;
-	flex: 0 1 400px;
+	flex: 0 1 475px;
 }
 .forecast-row > *:first-child {
 	flex: 1;

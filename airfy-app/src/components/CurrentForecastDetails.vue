@@ -2,27 +2,11 @@
 	<div class="CurrentForecastDetails glass-card">
 		<ul>
 			<li>
-				<SvgIcon name="moisture" />{{ translations.forecastDetails.humidity }}
+				<SvgIcon name="moisture" />{{ translations.forecastDetails.humidity }} {{humidity}} %
 			</li>
 			<li>
-				<SvgIcon name="Vector" />{{
-					translations.forecastDetails.chanceOfPrecipitation
-				}}
-			</li>
-		</ul>
-
-		<hr />
-
-		<ul>
-			<li>
-				<SvgIcon name="solar_arrow-down-broken" />{{
-					translations.forecastDetails.minimumPressure
-				}}
-			</li>
-			<li>
-				<SvgIcon name="solar_arrow-down-broken" />{{
-					translations.forecastDetails.maximumPressure
-				}}
+				<SvgIcon name="Vector" />{{translations.forecastDetails.chanceOfPrecipitation}}
+				{{precipitation_probability}} %
 			</li>
 		</ul>
 
@@ -30,14 +14,11 @@
 
 		<ul>
 			<li>
-				<SvgIcon name="Vector (Stroke)" />{{
-					translations.forecastDetails.windSpeed
-				}}
+				<SvgIcon name="solar_arrow-down-broken" />{{translations.forecastDetails.minimumPressure}} {{pressure_min}} hPa
+
 			</li>
 			<li>
-				<SvgIcon name="Vector (2)" />{{
-					translations.forecastDetails.visibility
-				}}
+				<SvgIcon name="solar_arrow-down-broken" />{{translations.forecastDetails.maximumPressure}} {{pressure_max}} hPa
 			</li>
 		</ul>
 
@@ -45,14 +26,21 @@
 
 		<ul>
 			<li>
-				<SvgIcon name="v2 (Stroke)" />{{
-					translations.forecastDetails.sunsetTime
-				}}
+				<SvgIcon name="Vector (Stroke)" />{{ translations.forecastDetails.windSpeed }} {{ wind_speed }} км/ч
 			</li>
 			<li>
-				<SvgIcon name="v2 (Stroke) (1)" />{{
-					translations.forecastDetails.sunriseTime
-				}}
+				<SvgIcon name="Vector (2)" />{{ translations.forecastDetails.visibility }} {{ visibility }}
+			</li>
+		</ul>
+
+		<hr />
+
+		<ul>
+			<li>
+				<SvgIcon name="v2 (Stroke)" />{{ translations.forecastDetails.sunsetTime }} {{ sunset }}
+			</li>
+			<li>
+				<SvgIcon name="v2 (Stroke) (1)" />{{ translations.forecastDetails.sunriseTime }} {{ sunrise }}
 			</li>
 		</ul>
 	</div>
@@ -67,6 +55,38 @@ export default {
 		SvgIcon,
 	},
 	props: {
+    humidity: {
+      type: Number,
+      default: 0
+    },
+    precipitation_probability: {
+      type: Number,
+      default: 0
+    },
+    pressure_max: {
+      type: Number,
+      default: 0
+    },
+    pressure_min: {
+      type: Number,
+      default: 0
+    },
+    sunrise: {
+      type: Number,
+      default: 0
+    },
+    sunset: {
+      type: Number,
+      default: 0
+    },
+    wind_speed: {
+      type: Number,
+      default: 0
+    },
+    visibility: {
+      type: Number,
+      default: 0
+    },
 		language: {
 			type: String,
 			required: true,
@@ -81,9 +101,7 @@ export default {
 </script>
 <style scoped>
 .CurrentForecastDetails {
-	width: 400px;
-	height: auto;
-	padding: 0px 15px;
+	padding: 15px 15px;
 	/*Обнови браузер, у меня всё норм, свечения нет */
 	/* backdrop-filter: none !important;
 	box-shadow: none !important;
