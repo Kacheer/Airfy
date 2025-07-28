@@ -8,7 +8,8 @@ import ForecastContainer from './components/ForecastContainer.vue'
 import DailyCard from './components/DailyCard.vue'
 import language from './lang/language'
 import HourlyCard from './components/HourlyCard.vue'
-
+import DataService from './services/DataService'
+import apiLocation from './api/apiLocation'
 export default {
 	components: {
 		CurrentForecast,
@@ -76,6 +77,9 @@ export default {
 				{ time: '21:00', temp: 21, feelsLike: 20 },
 				{ time: '21:00', temp: 21, feelsLike: 20 },
 			],
+			units: null,
+			current: null,
+			daily: [],
 		}
 	},
 
@@ -88,6 +92,7 @@ export default {
 		apiBrowser.getPos()
 		apiForecast.fetchForecast()
 	},
+
 	async mounted() {
 		console.log('Начало получения позиции')
 
@@ -99,8 +104,15 @@ export default {
 			console.log('Координаты получены и сохранены')
 
 			await apiForecast.fetchForecast()
-
+			this.currentCity = await apiLocation.getCityNameByStore()
 			console.log('Прогноз получен')
+			const data = DataService.getAllData()
+			this.daily = data.daily
+			this.units = data.units
+			this.daily = data.daily
+			console.log(
+				`В РАЗМЕТКЕ ПОЛУЧЕНЫ: ${this.units} \n ${this.current}\n${this.daily[0].temperature}`
+			)
 		} catch (error) {
 			console.error('Ошибка при получении данных:', error)
 			this.currentCity = 'Moscow'

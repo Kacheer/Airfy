@@ -16,7 +16,8 @@ export default {
     addResponseToStore(response) {
         const data = response.data;
         console.log("[DS] Данные приняты !", data);
-
+        serverStore.setCurrent(data.current.temperature_2m, data.current.weather_code)
+        serverStore.setUnits(data.daily_units.temperature_2m_mean, data.daily_units.surface_pressure_max, data.daily_units.wind_gusts_10m_mean)
         const dailyData = [];
         try {
             for (let i = 0; i <= 6; i++) {
@@ -72,6 +73,15 @@ export default {
     getPosStore() {
         return store.getUserPos()
     },
+    getAllData() {
+        const data = serverStore.getAll()
+        console.log("[DS] Все данные получены!", data)
+        return {
+            units: data.units,
+            current: data.current,
+            daily: data.daily
+        }
+},
     ResponseTime() {
         const requestTime = store.getRequestTime()
         if (requestTime == null) {

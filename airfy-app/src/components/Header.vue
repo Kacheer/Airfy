@@ -3,9 +3,9 @@
 		<span>
 			{{ translations.location }}
 			<button class="header-button glass-card" lang>
-				{{ translations.cities[city] || city }}
-			</button></span
-		>
+				{{ city }}
+			</button>
+		</span>
 		<span>
 			{{ translations.language }}
 
@@ -63,6 +63,7 @@ export default {
 			selectedTheme: this.theme,
 		}
 	},
+
 	computed: {
 		translations() {
 			return language[this.selectedLanguage] || language['Русский']
