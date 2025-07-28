@@ -6,6 +6,8 @@ import apiBrowser from './browser_api/apiBrowser'
 import apiForecast from './api/apiForecast'
 import ForecastContainer from './components/ForecastContainer.vue'
 import DailyCard from './components/DailyCard.vue'
+import DataService from './services/DataService'
+import apiLocation from './api/apiLocation'
 export default {
 	components: {
 		CurrentForecast,
@@ -35,8 +37,6 @@ export default {
 	},
 
 	created() {
-		apiBrowser.getPos()
-		apiForecast.fetchForecast()
 	},
  async mounted() {
         console.log("Начало получения позиции")
@@ -49,7 +49,7 @@ export default {
             console.log("Координаты получены и сохранены")
             
             await apiForecast.fetchForecast()
-            
+            this.currentCity = await apiLocation.getCityNameByStore()
             console.log("Прогноз получен")
         } catch (error) {
             console.error("Ошибка при получении данных:", error)

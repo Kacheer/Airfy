@@ -1,30 +1,26 @@
 <template>
 	<div class="header-container">
-		<span>
-			{{ translations.location }}
-			<button class="header-button glass-card" lang>
-				{{ translations.cities[city] || city }}
-			</button></span
-		>
+<span>
+	{{translations.location}}
+  <button class="header-button glass-card" lang>
+    {{ city }}
+  </button>
+</span>
 		<span>
 			{{ translations.language }}
 
-			<select
-				class="dropdown glass-card"
-				v-model="selectedLanguage"
-				@change="updateLanguage"
-			>
+			<select 
+				class="dropdown glass-card" 
+				:value="language" 
+				@change="updateLanguage($event.target.value)">
 				<option v-for="lang in languages" :key="lang" :value="lang">
 					{{ translations.languageNames[lang] || lang }}
 				</option>
-			</select></span
-		>
-		<span
-			>{{ translations.theme }}
+			</select></span>
+		<span>{{ translations.theme }}
 			<button class="header-button glass-card">
 				{{ translations.themes[theme] || theme }}
-			</button></span
-		>
+			</button></span>
 	</div>
 </template>
 <script>
@@ -52,16 +48,16 @@ export default {
 			languages: ['Русский', 'English'],
 		}
 	},
-	computed: {
-		translations() {
-			return language[this.selectedLanguage] || language['Русский']
-		},
-	},
-	methods: {
-		updateLanguage() {
-			this.$emit('update:language', this.selectedLanguage)
-		},
-	},
+computed: {
+    translations() {
+        return language[this.language] || language['Русский']
+    },
+},
+methods: {
+    updateLanguage(newLang) {
+        this.$emit('update:language', newLang)
+    },
+},
 }
 </script>
 <style>
