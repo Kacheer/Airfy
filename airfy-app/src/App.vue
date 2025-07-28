@@ -91,7 +91,7 @@ export default {
 		}
 		apiBrowser.getPos()
 		apiForecast.fetchForecast()
-	},
+	}, //ggggg
 
 	async mounted() {
 		console.log('Начало получения позиции')
