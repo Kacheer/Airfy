@@ -64,6 +64,16 @@ export const useServerStore = defineStore('ServerStore', {
     getDailyForecast() {
       return this.daily;
     },
+    getAll() {
+      console.log("[STORE] Начало выгрузки всех данных")
+      console.log(`[STORE] Проверка целостности данных \n ${this.units}, \n${this.current}, \n${this.daily}`)
+      return {
+        units: this.units,
+        current: this.current,
+        daily: this.daily,
+      }
+
+    },
     addHourlyForecast(daily_id, hourly) {
       this.daily[daily_id].hourly.push({
         temperature: hourly.temperature,

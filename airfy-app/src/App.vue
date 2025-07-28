@@ -32,7 +32,10 @@ export default {
 				{ title: 'Четверг', temperature: 25, feelsLike: 20, weatherCode: 2 },
 				{ title: 'Пятница', temperature: 25, feelsLike: 20, weatherCode: 2 },
 				{ title: 'Суббота', temperature: 25, feelsLike: 20, weatherCode: 2 },
-			]
+			],
+			units: null,
+			current: null,
+			daily: [],
 		}
 	},
 
@@ -51,12 +54,18 @@ export default {
             await apiForecast.fetchForecast()
             this.currentCity = await apiLocation.getCityNameByStore()
             console.log("Прогноз получен")
+			const data = DataService.getAllData()
+			this.daily = data.daily
+			this.units = data.units
+			this.daily = data.daily
+			console.log(`В РАЗМЕТКЕ ПОЛУЧЕНЫ: ${this.units} \n ${this.current}\n${this.daily[0].temperature}`)
         } catch (error) {
             console.error("Ошибка при получении данных:", error)
             this.currentCity = 'Moscow'
             await apiForecast.fetchForecast()
         }
     },
+
 	methods: {
 		increment(index) {
 			this.currentCity = this.cities[index]
