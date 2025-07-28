@@ -80,6 +80,11 @@ export default {
 	},
 
 	created() {
+		const savedTheme = localStorage.getItem('theme')
+		if (savedTheme) {
+			this.selectedTheme = savedTheme
+			this.applyTheme(savedTheme)
+		}
 		apiBrowser.getPos()
 		apiForecast.fetchForecast()
 	},
@@ -117,6 +122,17 @@ export default {
 		// getResponse() {
 		// 	DataService.setStore({data: 'test data'})
 		// }
+		updateTheme(newTheme) {
+			this.selectedTheme = newTheme
+			localStorage.setItem('theme', newTheme)
+			this.applyTheme(newTheme)
+		},
+		applyTheme(theme) {
+			document.body.classList.remove('dark-mode')
+			if (theme === 'Темная') {
+				document.body.classList.add('dark-mode')
+			}
+		},
 	},
 	computed: {
 		currentTranslations() {
@@ -137,8 +153,9 @@ export default {
 		<Header
 			:city="currentCity"
 			:language="selectedLanguage"
-			:theme="'Темная'"
 			@update:language="updateLanguage"
+			@update:theme="updateTheme"
+			:theme="selectedTheme"
 		/>
 		<div class="forecast-row">
 			<CurrentForecast

@@ -27,6 +27,7 @@ export default {
 		theme: 'Тема',
 		themes: {
 			Темная: 'Темная',
+			Светлая: 'Светлая',
 		},
 		cities: { London: 'Лондон', Moscow: 'Москва' },
 		languageNames: {
@@ -63,6 +64,7 @@ export default {
 		theme: 'Theme',
 		themes: {
 			Темная: 'Dark',
+			Светлая: 'Light',
 		},
 		cities: { London: 'London' },
 		languageNames: {

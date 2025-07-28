@@ -10,7 +10,7 @@
 			{{ translations.language }}
 
 			<select
-				class="dropdown glass-card"
+				class="dropdown glass-card header-button"
 				v-model="selectedLanguage"
 				@change="updateLanguage"
 			>
@@ -19,12 +19,22 @@
 				</option>
 			</select></span
 		>
-		<span
-			>{{ translations.theme }}
-			<button class="header-button glass-card">
-				{{ translations.themes[theme] || theme }}
-			</button></span
-		>
+		<span>
+			{{ translations.theme }}
+			<select
+				class="dropdown glass-card header-button"
+				v-model="selectedTheme"
+				@change="updateTheme"
+			>
+				<option
+					v-for="(translatedName, key) in translations.themes"
+					:key="key"
+					:value="key"
+				>
+					{{ translatedName }}
+				</option>
+			</select>
+		</span>
 	</div>
 </template>
 <script>
@@ -43,13 +53,14 @@ export default {
 		},
 		theme: {
 			type: String,
-			required: true,
+			default: 'Темная',
 		},
 	},
 	data() {
 		return {
-			selectedLanguage: 'Русский',
+			selectedLanguage: this.language,
 			languages: ['Русский', 'English'],
+			selectedTheme: this.theme,
 		}
 	},
 	computed: {
@@ -61,10 +72,13 @@ export default {
 		updateLanguage() {
 			this.$emit('update:language', this.selectedLanguage)
 		},
+		updateTheme() {
+			this.$emit('update:theme', this.selectedTheme)
+		},
 	},
 }
 </script>
-<style>
+<style scoped>
 .header-container {
 	width: 100%;
 	height: fit-content;
