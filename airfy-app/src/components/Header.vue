@@ -1,26 +1,40 @@
 <template>
 	<div class="header-container">
-<span>
-	{{translations.location}}
-  <button class="header-button glass-card" lang>
-    {{ city }}
-  </button>
-</span>
+		<span>
+			{{ translations.location }}
+			<button class="header-button glass-card" lang>
+				{{ city }}
+			</button>
+		</span>
 		<span>
 			{{ translations.language }}
 
-			<select 
-				class="dropdown glass-card" 
-				:value="language" 
-				@change="updateLanguage($event.target.value)">
+			<select
+				class="dropdown glass-card header-button"
+				v-model="selectedLanguage"
+				@change="updateLanguage"
+			>
 				<option v-for="lang in languages" :key="lang" :value="lang">
 					{{ translations.languageNames[lang] || lang }}
 				</option>
-			</select></span>
-		<span>{{ translations.theme }}
-			<button class="header-button glass-card">
-				{{ translations.themes[theme] || theme }}
-			</button></span>
+			</select></span
+		>
+		<span>
+			{{ translations.theme }}
+			<select
+				class="dropdown glass-card header-button"
+				v-model="selectedTheme"
+				@change="updateTheme"
+			>
+				<option
+					v-for="(translatedName, key) in translations.themes"
+					:key="key"
+					:value="key"
+				>
+					{{ translatedName }}
+				</option>
+			</select>
+		</span>
 	</div>
 </template>
 <script>
@@ -39,28 +53,33 @@ export default {
 		},
 		theme: {
 			type: String,
-			required: true,
+			default: 'Темная',
 		},
 	},
 	data() {
 		return {
-			selectedLanguage: 'Русский',
+			selectedLanguage: this.language,
 			languages: ['Русский', 'English'],
+			selectedTheme: this.theme,
 		}
 	},
-computed: {
-    translations() {
-        return language[this.language] || language['Русский']
-    },
-},
-methods: {
-    updateLanguage(newLang) {
-        this.$emit('update:language', newLang)
-    },
-},
+
+	computed: {
+		translations() {
+			return language[this.selectedLanguage] || language['Русский']
+		},
+	},
+	methods: {
+		updateLanguage() {
+			this.$emit('update:language', this.selectedLanguage)
+		},
+		updateTheme() {
+			this.$emit('update:theme', this.selectedTheme)
+		},
+	},
 }
 </script>
-<style>
+<style scoped>
 .header-container {
 	width: 100%;
 	height: fit-content;

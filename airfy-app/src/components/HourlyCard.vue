@@ -4,7 +4,7 @@
 		<SvgIcon name="cloud-v3 (Stroke)" :width="80" :height="80"></SvgIcon>
 
 		<p id="temperature">{{ temperature }} °C</p>
-		<p id="feelsLike">{{ feelsLike }} °C</p>
+		<p class="feelsLike">{{ feelsLike }} °C</p>
 	</div>
 </template>
 <script>
@@ -39,9 +39,9 @@ export default {
 	text-align: center;
 	width: fit-content;
 }
-#feelsLike {
+.feelsLike {
 	font-size: 1.1875rem;
-	font-weight: 100;
+	font-weight: 600;
 	text-align: center;
 	color: rgba(255, 255, 255, 0.85);
 	width: fit-content;
