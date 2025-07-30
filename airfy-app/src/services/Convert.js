@@ -46,17 +46,19 @@ export default {
     },
     toWeatherIcon(weather_code) {
         const w = weather_code;
-        if (w == 0) { return 'Sun.png' }
-        else if (w == 1 || w == 2) { return 'CloudSun.svg' }
-        else if (w == 3) { return 'Clouds.svg' }
-        else if (w == 45 || w == 48) { return 'CloudFog2.svg' }
-        else if (w == 51 || w == 53 || w == 55 || w == 56 || w == 57) { return 'CloudDrizzle.svg' }
-        else if (w == 61 || w == 63 || w == 65 || w == 80 || w == 81 || w == 82) { return 'CloudRainHeavy.svg' }
-        else if (w == 66 || w == 67) { return 'CloudSleet.svg' }
-        else if (w == 71 || w == 73 || w == 75 || w == 85 || w == 86) { return 'CloudSnow.svg' }
-        else if (w == 77 || w == 96 || w == 99) { return 'CloudHail.svg' }
-        else if (w == 95) { return 'CloudLightningRain.svg' }
-        return 'default-icon.svg';
+        let icon;
+        if (w == 0) { icon = 'Sun.png' }
+        else if (w == 1 || w == 2) { icon = 'CloudSun.svg' }
+        else if (w == 3) { icon = 'Clouds.svg' }
+        else if (w == 45 || w == 48) { icon = 'CloudFog2.svg' }
+        else if (w == 51 || w == 53 || w == 55 || w == 56 || w == 57 || w == 61) { icon = 'CloudDrizzle.svg' }
+        else if (w == 63 || w == 65 || w == 80 || w == 81 || w == 82) { icon = 'CloudRainHeavy.svg' }
+        else if (w == 66 || w == 67) { icon = 'CloudSleet.svg' }
+        else if (w == 71 || w == 73 || w == 75 || w == 85 || w == 86) { icon = 'CloudSnow.svg' }
+        else if (w == 77 || w == 96 || w == 99) { icon = 'CloudHail.svg' }
+        else if (w == 95) { icon = 'CloudLightningRain.svg' }
+        console.log(`[CONVERT] Weather code ${w} mapped to ${icon}`);
+        return icon;
     },
     toWeatherDesc(weather_code, lang) {
         console.log("toWeatherDesc: imported language =", language);

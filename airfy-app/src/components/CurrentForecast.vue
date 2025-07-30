@@ -3,7 +3,7 @@
 		<div class="group">
 			<div class="text-wrapper">{{ translations.Today }}</div>
 			<div class="div">
-				<SvgIcon class="cloud-icon" :name="icon" width="200" height="125" :is-weather-icons="true"/>
+				<SvgIcon class="cloud-icon" :name="icon" width="400" height="125" :is-weather-icons="true"/>
 				<div class="group-2">
 					<div class="temperature">{{ temperature }}</div>
 					<div class="text-wrapper-2">°C</div>
@@ -71,7 +71,7 @@ translations() {
 .div {
 	display: flex;
 	align-items: center;
-	gap: 20px;
+	gap: 0px;
 }
 .CurrentForecast {
 	width: 800px;
@@ -110,6 +110,7 @@ translations() {
 	height: 126.07px;
 	position: relative;
 	width: 200.95px;
+	transform: scale(1.5);
 }
 .group-2 {
 	display: flex;
