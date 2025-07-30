@@ -28,22 +28,26 @@ export default {
 
       const api = axios.create({
         baseURL: BASE_URL,
-        timeout: 5000
+        timeout: 10000
       });
 
-      try {
-        const response = await api.get('v1/forecast', {
-          params: {
-            latitude: pos.lat,
-            longitude: pos.long,
-            daily: 'sunrise,sunset,weather_code,temperature_2m_mean,precipitation_probability_mean,relative_humidity_2m_mean,visibility_mean,winddirection_10m_dominant,wind_gusts_10m_mean,cloud_cover_mean,surface_pressure_max,surface_pressure_min',
-            hourly: 'temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,precipitation_probability,wind_speed_10m,pressure_msl,surface_pressure,visibility,uv_index',
-            current: 'temperature_2m,weather_code',
-            timeformat: 'unixtime',
-          }
-        });
+    try {
+      const response = await api.get('v1/forecast', {
+        params: {
+          latitude: pos.lat,
+          longitude: pos.long,
+          daily: 'sunrise,sunset,weather_code,temperature_2m_mean,precipitation_probability_mean,relative_humidity_2m_mean,visibility_mean,winddirection_10m_dominant,wind_gusts_10m_mean,cloud_cover_mean,surface_pressure_max,surface_pressure_min',
+          hourly: 'temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,precipitation_probability,wind_speed_10m,pressure_msl,surface_pressure,visibility,uv_index,weather_code',
+          current: 'temperature_2m,weather_code',
+          timezone: 'auto',
+          timeformat: 'unixtime',
+          wind_speed_unit: 'ms'
+        }
+      });
         
         console.log("[API] Данные получены", response.data);
+        console.log("[API] Hourly time:", response.data.hourly.time);
+        console.log("[API] Hourly weather_code:", response.data.hourly.weather_code);
         DataService.addResponseToStore(response);
         userStore.setRequestTime();
       } catch (error) {

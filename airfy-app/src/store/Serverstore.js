@@ -9,7 +9,7 @@ export const useServerStore = defineStore('ServerStore', {
     },
     current: {
       temperature: null,
-      weather_desc: null
+      weather_code: null
     },
     daily: []
   }),
@@ -17,7 +17,7 @@ export const useServerStore = defineStore('ServerStore', {
   actions: {
     setCurrent(temperature, weather_desc) {
       this.current.temperature = temperature;
-      this.current.weather_desc = weather_desc;
+      this.current.weather_code = weather_desc;
     },
     setUnits(temperature, pressure, wind_speed) {
       this.units.temperature = temperature;
@@ -74,15 +74,18 @@ export const useServerStore = defineStore('ServerStore', {
       }
 
     },
-    addHourlyForecast(daily_id, hourly) {
-      this.daily[daily_id].hourly.push({
+addHourlyForecast(daily_id, hourly) {
+    this.daily[daily_id].hourly.push({
+        time: hourly.time,
+        weather_code: hourly.weather_code,
         temperature: hourly.temperature,
         apparent_temperature: hourly.apparent_temperature,
         precipitation_probability: hourly.precipitation_probability,
         precipitation: hourly.precipitation,
-        visibility: hourly.visibility
-      });
-    },
+        visibility: hourly.visibility,
+    });
+    console.log("[STORE] Почасовые данные в хранилище:", this.daily[0].hourly);
+},
     setHourlyForecast(daily_id, hourly) {
       const data = this.daily[daily_id].hourly;
       console.log("[STORE] setHourlyForecast Data", data);

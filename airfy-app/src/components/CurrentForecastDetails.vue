@@ -2,23 +2,10 @@
 	<div class="CurrentForecastDetails glass-card">
 		<ul>
 			<li>
-				<SvgIcon name="moisture" />{{ translations.forecastDetails.humidity }} {{humidity}} %
+				<SvgIcon name="moisture" />{{ translations.forecastDetails.humidity }}: {{humidity}} %
 			</li>
 			<li>
-				<SvgIcon name="Vector" />{{translations.forecastDetails.chanceOfPrecipitation}}
-				{{precipitation_probability}} %
-			</li>
-		</ul>
-
-		<hr />
-
-		<ul>
-			<li>
-				<SvgIcon name="solar_arrow-down-broken" />{{translations.forecastDetails.minimumPressure}} {{pressure_min}} hPa
-
-			</li>
-			<li>
-				<SvgIcon name="solar_arrow-down-broken" />{{translations.forecastDetails.maximumPressure}} {{pressure_max}} hPa
+				<SvgIcon name="Vector" />{{translations.forecastDetails.chanceOfPrecipitation}}: {{precipitation_probability}} %
 			</li>
 		</ul>
 
@@ -26,10 +13,11 @@
 
 		<ul>
 			<li>
-				<SvgIcon name="Vector (Stroke)" />{{ translations.forecastDetails.windSpeed }} {{ wind_speed }} км/ч
+				<SvgIcon name="solar_arrow-down-broken" />{{translations.forecastDetails.minimumPressure}}: {{pressure_min}} мм рт. с.
+
 			</li>
 			<li>
-				<SvgIcon name="Vector (2)" />{{ translations.forecastDetails.visibility }} {{ visibility }}
+				<SvgIcon name="solar_arrow-down-broken" />{{translations.forecastDetails.maximumPressure}}: {{pressure_max}} мм рт. с.
 			</li>
 		</ul>
 
@@ -37,10 +25,21 @@
 
 		<ul>
 			<li>
-				<SvgIcon name="v2 (Stroke)" />{{ translations.forecastDetails.sunsetTime }} {{ sunset }}
+				<SvgIcon name="Vector (Stroke)" />{{ translations.forecastDetails.windSpeed }}: {{wind_speed }} м/с
 			</li>
 			<li>
-				<SvgIcon name="v2 (Stroke) (1)" />{{ translations.forecastDetails.sunriseTime }} {{ sunrise }}
+				<SvgIcon name="Vector (2)" />{{ translations.forecastDetails.visibility }}: {{ visibility }}
+			</li>
+		</ul>
+
+		<hr />
+
+		<ul>
+			<li>
+				<SvgIcon name="v2 (Stroke) (1)" />{{ translations.forecastDetails.sunriseTime }}: {{ sunrise }}
+			</li>
+			<li>
+				<SvgIcon name="v2 (Stroke)" />{{ translations.forecastDetails.sunsetTime }}: {{ sunset }}
 			</li>
 		</ul>
 	</div>
@@ -48,54 +47,58 @@
 <script>
 import SvgIcon from '../../public/SvgIcon.vue'
 import language from '../lang/language.js'
-
 export default {
 	name: 'CurrentForecastDetails',
 	components: {
 		SvgIcon,
 	},
 	props: {
-    humidity: {
-      type: Number,
-      default: 0
-    },
-    precipitation_probability: {
-      type: Number,
-      default: 0
-    },
-    pressure_max: {
-      type: Number,
-      default: 0
-    },
-    pressure_min: {
-      type: Number,
-      default: 0
-    },
-    sunrise: {
-      type: Number,
-      default: 0
-    },
-    sunset: {
-      type: Number,
-      default: 0
-    },
-    wind_speed: {
-      type: Number,
-      default: 0
-    },
-    visibility: {
-      type: Number,
-      default: 0
-    },
+		humidity: {
+			type: Number,
+			default: 0
+		},
+		precipitation_probability: {
+			type: Number,
+			default: 0
+		},
+		pressure_max: {
+			type: Number,
+			default: 0
+		},
+		pressure_min: {
+			type: Number,
+			default: 0
+		},
+		sunrise: {
+			type: String,
+			default: "--:--"
+		},
+		sunset: {
+			type: String,
+			default: "--:--"
+		},
+		wind_speed: {
+			type: Number,
+			default: 0
+		},
+		visibility: {
+			type: String,
+			default: "None"
+		},
 		language: {
 			type: String,
 			required: true,
-		},
+		}
+	},
+	data() {
+		return {
+			weatherDesc: 'No description',
+		}
 	},
 	computed: {
 		translations() {
 			return language[this.language] || language['Русский']
-		},
+		}
 	},
 }
 </script>
