@@ -62,9 +62,19 @@ export default {
 			82: 'Сильные ливневые дожди',
 			85: 'Легкие снежные ливни',
 			86: 'Сильные снежные ливни',
-			95: 'Гроза: легкая или умеренная',
+			95: 'Гроза',
 			96: 'Гроза с легким градом',
 			99: 'Гроза с сильным градом',
+		},
+		visibilityDescriptions: {
+			very_poor: 'Очень плохая', // 0-500 м
+			poor: 'Плохая', // 500-1000 м
+			moderate: 'Умеренная', // 1000-2000 м
+			average: 'Средняя', // 2000-10000 м
+			good: 'Хорошая', // 10000-20000 м
+			very_good: 'Очень хорошая', // 20000-50000 м
+			exceptional: 'Исключительная', // >=50000 м
+			unknown: 'Неизвестно', // Для некорректных значений
 		},
 	},
 	English: {
@@ -131,6 +141,16 @@ export default {
 			95: 'Thunderstorm: slight or moderate',
 			96: 'Thunderstorm with slight hail',
 			99: 'Thunderstorm with heavy hail',
+		},
+		visibilityDescriptions: {
+			very_poor: 'Very poor',
+			poor: 'Poor',
+			moderate: 'Moderate',
+			average: 'Average',
+			good: 'Good',
+			very_good: 'Very good',
+			exceptional: 'Exceptional',
+			unknown: 'Unknown',
 		},
 	},
 }

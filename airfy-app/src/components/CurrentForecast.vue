@@ -10,7 +10,7 @@
 				</div>
 			</div>
 			<div class="text-wrapper-3">
-				{{ translations.condition }}
+				{{ weatherDesc }}
 			</div>
 		</div>
 	</div>
@@ -21,21 +21,16 @@ import SvgIcon from '../../public/SvgIcon.vue'
 import Header from './Header.vue'
 import language from '../lang/language.js'
 import Convert from '../services/Convert.js'
+
 export default {
 	name: 'CurrentForecast',
-
 	components: {
 		SvgIcon,
-
 		Header,
 	},
 	props: {
 		temperature: {
 			type: Number,
-			required: true,
-		},
-		condition: {
-			type: String,
 			required: true,
 		},
 		now: {
@@ -52,16 +47,21 @@ export default {
 		},
 	},
 	mounted() {
-    console.log("CurrentForecast weatherCode:", this.weatherCode);
-},
+		console.log("CurrentForecast weatherCode:", this.weatherCode);
+		console.log("Weather description:", this.weatherDesc);
+	},
 	computed: {
-		translations() {
-			return language[this.language] || language['Русский']
-		},
+translations() {
+        console.log("language in CurrentForecast:", language);
+        return language[this.language] || language['Русский']
+    },
 		icon() {
 			const res = Convert.toWeatherIcon(this.weatherCode)
-			console.log("ВЫВЕЛО КАРТИНКУ ",res)
-			return Convert.toWeatherIcon(this.weatherCode)
+			console.log("ВЫВЕЛО КАРТИНКУ ", res)
+			return res
+		},
+		weatherDesc() {
+			return Convert.toWeatherDesc(this.weatherCode, this.language)
 		}
 	},
 }
@@ -103,11 +103,9 @@ export default {
 	margin-bottom: 20px;
 	letter-spacing: 0;
 	line-height: normal;
-
 	white-space: nowrap;
 	width: 626px;
 }
-
 .CurrentForecast .cloud-icon {
 	height: 126.07px;
 	position: relative;

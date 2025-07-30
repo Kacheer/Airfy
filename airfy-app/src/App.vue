@@ -10,6 +10,7 @@ import HourlyCard from './components/HourlyCard.vue'
 import DataService from './services/DataService'
 import apiLocation from './api/apiLocation'
 import Convert from './services/Convert.js'
+
 export default {
 	components: {
 		CurrentForecast,
@@ -22,10 +23,9 @@ export default {
 		return {
 			currentCity: 'London',
 			cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
-
 			selectedLanguage: 'Русский',
 			temperature: 23,
-			condition: 'Partly Cloudy',
+			// condition: 'Partly Cloudy',
 			now: 'Now',
 			dailyCards: [
 				{
@@ -83,10 +83,8 @@ export default {
 			},
 			daily: [],
 			isDataLoaded: false,
-
 		}
 	},
-
 	created() {
 		const savedTheme = localStorage.getItem('theme')
 		if (savedTheme) {
@@ -95,29 +93,31 @@ export default {
 		}
 		apiBrowser.getPos()
 		apiForecast.fetchForecast()
-	}, //ggggg
- async mounted() {
-  console.log("Начало получения позиции");
-  try {
-    const userPos = await apiBrowser.getPos();
-    DataService.addPosToStore(userPos.lat, userPos.long);
-    console.log("Координаты получены и сохранены");
-    await apiForecast.fetchForecast();
-    this.currentCity = await apiLocation.getCityNameByStore();
-    console.log("Прогноз получен");
-    const data = DataService.getAllData();
-    this.daily = data.daily;
-    this.units = data.units;
-    this.current = data.current;
-    this.isDataLoaded = true; // Данные готовы, можно рендерить!
-    console.log(`В РАЗМЕТКЕ ПОЛУЧЕНЫ: ${this.units} \n ${this.current}\n${this.daily[0].temperature}`);
-	console.log("Weather code:", this.current.weather_code);
-  } catch (error) {
-    console.error("Ошибка при получении данных:", error);
-    this.currentCity = 'Moscow';
-    await apiForecast.fetchForecast();
-    this.isDataLoaded = true; // Или оставь false, если хочешь
-  }
+	},
+	async mounted() {
+    console.log("Начало получения позиции");
+    try {
+        const userPos = await apiBrowser.getPos();
+        DataService.addPosToStore(userPos.lat, userPos.long);
+        console.log("Координаты получены и сохранены");
+        await apiForecast.fetchForecast();
+        this.currentCity = await apiLocation.getCityNameByStore();
+        console.log("Прогноз получен");
+        const data = DataService.getAllData();
+        this.daily = data.daily;
+        this.units = data.units;
+        this.current = data.current;
+        this.isDataLoaded = true;
+		//блок отладочной хуйни
+        console.log(`В РАЗМЕТКЕ ПОЛУЧЕНЫ: ${this.units} \n ${this.current}\n${this.daily[0].temperature}`);
+        console.log("Weather code:", this.current.weather_code);
+        console.log("Current data:", this.current);
+    } catch (error) {
+        console.error("Ошибка при получении данных:", error);
+        this.currentCity = 'Moscow';
+        await apiForecast.fetchForecast();
+        this.isDataLoaded = true;
+    }
 },
 	methods: {
 		increment(index) {
@@ -134,9 +134,6 @@ export default {
 		round(number) {
 			return Math.round(number)
 		},
-		// getResponse() {
-		// 	DataService.setStore({data: 'test data'})
-		// }
 		updateTheme(newTheme) {
 			this.selectedTheme = newTheme
 			localStorage.setItem('theme', newTheme)
@@ -159,14 +156,14 @@ export default {
 				title: this.currentTranslations.DailyCard[card.title] || card.title,
 			}))
 		},
-		convertSunriseTime(){
+		convertSunriseTime() {
 			return Convert.toTime(this.daily[0].sunrise)
 		},
-		convertSunsetTime(){
+		convertSunsetTime() {
 			return Convert.toTime(this.daily[0].sunset)
 		},
 		convertVisibility() {
-			return Convert.toVisibilityDesc(this.daily[0].visibility)
+			return Convert.toVisibilityDesc(this.daily[0].visibility, this.selectedLanguage)
 		},
 		convertMinPressure() {
 			return Convert.toMillimetersOfMercury(this.daily[0].pressure_min)
@@ -189,10 +186,9 @@ export default {
     <div v-if="isDataLoaded" class="forecast-row">
       <CurrentForecast
         :temperature="round(current.temperature)"
-        :condition="condition"
         :now="now"
         :language="selectedLanguage"
-		:weather-code="current.weather_code"
+        :weather-code="current.weather_code"
       />
       <CurrentForecastDetails 
         :humidity="daily[0].humidity"
@@ -206,7 +202,6 @@ export default {
         :language="selectedLanguage"
       />
     </div>
-    <!-- Остальной код шаблона -->
     <div class="hourly-scroll-container">
       <HourlyCard
         v-for="(hour, idx) in hourlyForecast"
@@ -252,7 +247,6 @@ export default {
 	align-items: stretch;
 	width: 100%;
 }
-
 .forecast-row {
 	display: flex;
 	flex-direction: row;
@@ -261,7 +255,6 @@ export default {
 	width: 100%;
 	justify-content: space-between;
 }
-
 .forecast-row > *:last-child {
 	min-width: 200px;
 	flex: 0 1 475px;
