@@ -4,18 +4,17 @@ import Header from './components/Header.vue'
 import CurrentForecastDetails from './components/CurrentForecastDetails.vue'
 import apiBrowser from './browser_api/apiBrowser'
 import apiForecast from './api/apiForecast'
-import ForecastContainer from './components/ForecastContainer.vue'
 import DailyCard from './components/DailyCard.vue'
 import language from './lang/language'
 import HourlyCard from './components/HourlyCard.vue'
 import DataService from './services/DataService'
 import apiLocation from './api/apiLocation'
+import Convert from './services/Convert.js'
 export default {
 	components: {
 		CurrentForecast,
 		Header,
 		CurrentForecastDetails,
-		ForecastContainer,
 		DailyCard,
 		HourlyCard,
 	},
@@ -80,10 +79,11 @@ export default {
 			units: null,
 			current: {
 				temperature: null,
-				weatherCode: null
+				weather_code: null
 			},
 			daily: [],
-			isDataLoaded: false
+			isDataLoaded: false,
+
 		}
 	},
 
@@ -111,6 +111,7 @@ export default {
     this.current = data.current;
     this.isDataLoaded = true; // Данные готовы, можно рендерить!
     console.log(`В РАЗМЕТКЕ ПОЛУЧЕНЫ: ${this.units} \n ${this.current}\n${this.daily[0].temperature}`);
+	console.log("Weather code:", this.current.weather_code);
   } catch (error) {
     console.error("Ошибка при получении данных:", error);
     this.currentCity = 'Moscow';
@@ -158,6 +159,21 @@ export default {
 				title: this.currentTranslations.DailyCard[card.title] || card.title,
 			}))
 		},
+		convertSunriseTime(){
+			return Convert.toTime(this.daily[0].sunrise)
+		},
+		convertSunsetTime(){
+			return Convert.toTime(this.daily[0].sunset)
+		},
+		convertVisibility() {
+			return Convert.toVisibilityDesc(this.daily[0].visibility)
+		},
+		convertMinPressure() {
+			return Convert.toMillimetersOfMercury(this.daily[0].pressure_min)
+		},
+		convertMaxPressure() {
+			return Convert.toMillimetersOfMercury(this.daily[0].pressure_max)
+		}
 	},
 }
 </script>
@@ -176,16 +192,17 @@ export default {
         :condition="condition"
         :now="now"
         :language="selectedLanguage"
+		:weather-code="current.weather_code"
       />
       <CurrentForecastDetails 
         :humidity="daily[0].humidity"
         :precipitation_probability="daily[0].precipitation_probability"
-        :pressure_min="daily[0].pressure_min"
-        :pressure_max="daily[0].pressure_max"
+        :pressure_min="convertMinPressure"
+        :pressure_max="convertMaxPressure"
         :wind_speed="daily[0].wind_speed"
-        :visibility="daily[0].visibility"
-        :sunrise="daily[0].sunrise"
-        :sunset="daily[0].sunset"
+        :visibility="convertVisibility"
+        :sunrise="convertSunriseTime"
+        :sunset="convertSunsetTime"
         :language="selectedLanguage"
       />
     </div>

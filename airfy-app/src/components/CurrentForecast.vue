@@ -3,7 +3,7 @@
 		<div class="group">
 			<div class="text-wrapper">{{ translations.Today }}</div>
 			<div class="div">
-				<SvgIcon class="cloud-icon" name="cloud-v3 (Stroke)" width="200" height="125" />
+				<SvgIcon class="cloud-icon" :name="icon" width="200" height="125" :is-weather-icons="true"/>
 				<div class="group-2">
 					<div class="temperature">{{ temperature }}</div>
 					<div class="text-wrapper-2">°C</div>
@@ -20,7 +20,7 @@
 import SvgIcon from '../../public/SvgIcon.vue'
 import Header from './Header.vue'
 import language from '../lang/language.js'
-
+import Convert from '../services/Convert.js'
 export default {
 	name: 'CurrentForecast',
 
@@ -46,11 +46,23 @@ export default {
 			type: String,
 			required: true,
 		},
+		weatherCode: {
+			type: Number,
+			default: 0
+		},
 	},
+	mounted() {
+    console.log("CurrentForecast weatherCode:", this.weatherCode);
+},
 	computed: {
 		translations() {
 			return language[this.language] || language['Русский']
 		},
+		icon() {
+			const res = Convert.toWeatherIcon(this.weatherCode)
+			console.log("ВЫВЕЛО КАРТИНКУ ",res)
+			return Convert.toWeatherIcon(this.weatherCode)
+		}
 	},
 }
 </script>

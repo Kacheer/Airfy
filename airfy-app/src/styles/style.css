@@ -103,8 +103,9 @@ button:focus-visible {
 	overflow-y: hidden;
 	display: flex;
 	flex-direction: row;
-	gap: 12px;
-	padding: 12px;
+	gap: 12px; /* 12px = 0.75rem / 0.75em / 3.17cm */
+    margin: 20px 0px; /* 0px = 0.00rem / 0.00em / 0.00cm */
+    padding: 15px 0px;
 	scroll-behavior: smooth;
 
 	white-space: nowrap;

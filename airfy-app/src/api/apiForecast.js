@@ -28,7 +28,7 @@ export default {
 
       const api = axios.create({
         baseURL: BASE_URL,
-        timeout: 5000
+        timeout: 10000
       });
 
       try {
@@ -40,6 +40,7 @@ export default {
             hourly: 'temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,precipitation_probability,wind_speed_10m,pressure_msl,surface_pressure,visibility,uv_index',
             current: 'temperature_2m,weather_code',
             timeformat: 'unixtime',
+            wind_speed_unit: 'ms'
           }
         });
         

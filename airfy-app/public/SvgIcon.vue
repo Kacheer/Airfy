@@ -24,6 +24,10 @@ export default {
 			type: [String, Number],
 			default: 32,
 		},
+		isWeatherIcons: {
+			type: Boolean,
+			default: false
+		}
 	},
 	data() {
 		return {
@@ -40,7 +44,14 @@ export default {
 	},
 	async created() {
 		try {
-			const response = await fetch(`/src/assets/${this.name}.svg`)
+			let response;
+			if (!this.isWeatherIcons) {
+				response = await fetch(`/src/assets/${this.name}.svg`)
+			}
+			else {
+				response = await fetch(`/src/assets/weather-icons/${this.name}`)
+			}
+			console.log("РЕЗУЛЬТАТ КАРТИНКА, ",  response)
 			if (!response.ok) throw new Error('Failed to fetch SVG')
 			const svgText = await response.text()
 			this.icon = svgText

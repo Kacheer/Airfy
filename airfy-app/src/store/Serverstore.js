@@ -9,7 +9,7 @@ export const useServerStore = defineStore('ServerStore', {
     },
     current: {
       temperature: null,
-      weather_desc: null
+      weather_code: null
     },
     daily: []
   }),
@@ -17,7 +17,7 @@ export const useServerStore = defineStore('ServerStore', {
   actions: {
     setCurrent(temperature, weather_desc) {
       this.current.temperature = temperature;
-      this.current.weather_desc = weather_desc;
+      this.current.weather_code = weather_desc;
     },
     setUnits(temperature, pressure, wind_speed) {
       this.units.temperature = temperature;
