@@ -21,6 +21,11 @@ export default {
 	},
 	data() {
 		return {
+			isDragging: false,
+			startX: 0,
+			scrollLeft: 0,
+			dragSpeed: 3,
+
 			currentCity: 'London',
 			cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
 			selectedLanguage: 'Русский',
@@ -97,6 +102,7 @@ export default {
 			this.units = data.units
 			this.current = data.current
 			this.isDataLoaded = true
+
 			console.log(
 				`В РАЗМЕТКЕ ПОЛУЧЕНЫ: ${this.units} \n ${this.current}\n${this.daily[0].temperature}`
 			)
@@ -137,7 +143,27 @@ export default {
 				document.body.classList.add('dark-mode')
 			}
 		},
+		startDrag(e) {
+			this.isDragging = true
+			this.$refs.scrollContainer.classList.add('dragging')
+			this.startX = e.pageX - this.$refs.scrollContainer.offsetLeft
+			this.scrollLeft = this.$refs.scrollContainer.scrollLeft
+		},
+
+		onDrag(e) {
+			if (!this.isDragging) return
+			e.preventDefault()
+			const x = e.pageX - this.$refs.scrollContainer.offsetLeft
+			const walk = (x - this.startX) * 1
+			this.$refs.scrollContainer.scrollLeft = this.scrollLeft - walk
+		},
+
+		stopDrag() {
+			this.isDragging = false
+			this.$refs.scrollContainer.classList.remove('dragging')
+		},
 	},
+
 	computed: {
 		currentTranslations() {
 			return language[this.selectedLanguage] || language['Русский']
@@ -212,7 +238,14 @@ export default {
 				:language="selectedLanguage"
 			/>
 		</div>
-		<div class="hourly-scroll-container">
+		<div
+			class="hourly-scroll-container"
+			ref="scrollContainer"
+			@mousedown="startDrag"
+			@mousemove="onDrag"
+			@mouseup="stopDrag"
+			@mouseleave="stopDrag"
+		>
 			<HourlyCard
 				v-for="(hour, idx) in hourlyForecast"
 				:key="idx"
@@ -247,6 +280,7 @@ export default {
 	will-change: filter;
 	transition: filter 300ms;
 }
+
 .logo:hover {
 	filter: drop-shadow(0 0 2em #646cffaa);
 }

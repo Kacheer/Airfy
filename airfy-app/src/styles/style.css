@@ -1,5 +1,5 @@
 :root {
-	font-family: system-ui, "Inter-Bold";
+	font-family: system-ui, 'Inter-Bold';
 	line-height: 1.5;
 	font-weight: 400;
 
@@ -104,8 +104,8 @@ button:focus-visible {
 	display: flex;
 	flex-direction: row;
 	gap: 12px; /* 12px = 0.75rem / 0.75em / 3.17cm */
-    margin: 20px 0px; /* 0px = 0.00rem / 0.00em / 0.00cm */
-    padding: 15px 0px;
+	margin: 20px 0px; /* 0px = 0.00rem / 0.00em / 0.00cm */
+	padding: 15px 0px;
 	scroll-behavior: smooth;
 
 	white-space: nowrap;
@@ -256,7 +256,7 @@ body:not(.dark-mode) option {
 	border: 1px solid #555;
 }
 body:not(.dark-mode) #weatherDesc {
-    color: #7c7c7c;
+	color: #7c7c7c;
 }
 body.dark-mode .header-button:hover {
 	background-color: #535bf2;
@@ -295,4 +295,17 @@ body.dark-mode option {
 
 .svg-icon svg {
 	transition: all 0.3s ease;
+}
+.hourly-scroll-container {
+	display: flex;
+	overflow-x: auto;
+	scroll-behavior: smooth;
+	cursor: grab;
+	user-select: none;
+	-webkit-overflow-scrolling: touch;
+}
+
+.hourly-scroll-container.dragging {
+	cursor: grabbing;
+	scroll-behavior: auto;
 }
