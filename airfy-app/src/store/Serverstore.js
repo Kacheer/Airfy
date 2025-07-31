@@ -40,27 +40,29 @@ export const useServerStore = defineStore('ServerStore', {
       });
     },
     setDailyForecast(dailyData) {
-      try {
+    try {
         this.daily = dailyData.map(daily => ({
-          temperature: daily.temperature,
-          weather_code: daily.weather_code,
-          precipitation_probability: daily.precipitation_probability,
-          pressure_max: daily.pressure_max,
-          pressure_min: daily.pressure_min,
-          humidity: daily.humidity,
-          visibility: daily.visibility,
-          wind_speed: daily.wind_speed,
-          sunrise: daily.sunrise,
-          sunset: daily.sunset,
-          hourly: daily.hourly || []
+            time: daily.time, // Добавляем время
+            temperature: daily.temperature,
+            feelsLike: daily.feelsLike, // Добавляем ощущаемую температуру
+            weather_code: daily.weather_code,
+            precipitation_probability: daily.precipitation_probability,
+            pressure_max: daily.pressure_max,
+            pressure_min: daily.pressure_min,
+            humidity: daily.humidity,
+            visibility: daily.visibility,
+            wind_speed: daily.wind_speed,
+            sunrise: daily.sunrise,
+            sunset: daily.sunset,
+            hourly: daily.hourly || []
         }));
         console.log("[STORE] Данные daily обновлены:", this.daily);
         return true;
-      } catch (error) {
+    } catch (error) {
         console.error("[STORE] Ошибка в setDailyForecast:", error);
         return false;
-      }
-    },
+    }
+},
     getDailyForecast() {
       return this.daily;
     },

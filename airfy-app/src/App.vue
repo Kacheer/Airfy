@@ -139,12 +139,16 @@ export default {
 		currentTranslations() {
 			return language[this.selectedLanguage] || language['Русский']
 		},
-		translatedDailyCards() {
-			return this.dailyCards.map(card => ({
-				...card,
-				title: this.currentTranslations.DailyCard[card.title] || card.title,
-			}))
-		},
+translatedDailyCards() {
+    if (!this.daily || this.daily.length < 7) return [];
+    return this.daily.slice(1, 7).map(day => ({
+        time: day.time, // Unix-время для дня
+        temperature: this.round(day.temperature),
+        feelsLike: this.round(day.feelsLike), // Ощущаемая температура
+        weatherCode: day.weather_code,
+        language: this.selectedLanguage
+    }));
+},
 		convertSunriseTime() {
 			return Convert.toTime(this.daily[0].sunrise)
 		},
@@ -216,15 +220,15 @@ export default {
       {{ currentTranslations.DailyCard.forecastTitle }}
     </h2>
     <div class="dailyContainer">
-      <DailyCard
-        v-for="(card, idx) in translatedDailyCards"
-        :key="idx"
-        :title="card.title"
-        :temperature="card.temperature"
-        :feels-like="card.feelsLike"
-        :weather-code="card.weatherCode"
-        :translations="currentTranslations"
-      />
+<DailyCard
+    v-for="(card, idx) in translatedDailyCards"
+    :key="idx"
+    :time="card.time"
+    :temperature="card.temperature"
+    :feels-like="card.feelsLike"
+    :weather-code="card.weatherCode"
+    :language="card.language"
+/>
     </div>
   </div>
 </template>

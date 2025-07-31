@@ -21,8 +21,13 @@ export default {
     const dailyData = [];
     try {
         for (let i = 0; i <= 6; i++) {
+            // Вычисляем среднюю ощущаемую температуру за день
+            const hourlySlice = data.hourly.apparent_temperature.slice(i * 24, (i + 1) * 24);
+            const dailyFeelsLike = hourlySlice.reduce((sum, val) => sum + val, 0) / 24;
             const dailyModel = {
+                time: data.daily.sunrise[i], // Добавляем время (sunrise)
                 temperature: data.daily.temperature_2m_mean[i],
+                feelsLike: dailyFeelsLike, // Добавляем ощущаемую температуру
                 weather_code: data.daily.weather_code[i],
                 precipitation_probability: data.daily.precipitation_probability_mean[i],
                 pressure_max: data.daily.surface_pressure_max[i],
@@ -43,6 +48,7 @@ export default {
         console.error("[DS] Ошибка при сборке ежедневных данных:", error);
         return;
     }
+    // Почасовые данные оставляем как есть
     try {
         for (let day = 0; day < 7; day++) {
             for (let hour = 0; hour < 24; hour++) {

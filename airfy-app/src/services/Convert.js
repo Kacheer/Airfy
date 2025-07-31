@@ -8,6 +8,16 @@ export default {
         const minutes = `${date.getMinutes()}`
         return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`
     },
+    toDayOfWeek(unix, lang) {
+        const date = new Date(unix * 1000);
+        const daysOfWeek = {
+            'Русский': ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+            'English': ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        };
+        const selectedLang = lang || 'Русский';
+        const dayIndex = date.getDay();
+        return daysOfWeek[selectedLang][dayIndex];
+    },
     toVisibilityDesc(visible, lang) {
         console.log("toVisibilityDesc: lang =", lang, "visible =", visible);
         const languageData = language || {};
