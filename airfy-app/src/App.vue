@@ -1,15 +1,16 @@
 <script>
-import CurrentForecast from './components/CurrentForecast.vue'
-import Header from './components/Header.vue'
-import CurrentForecastDetails from './components/CurrentForecastDetails.vue'
-import apiBrowser from './browser_api/apiBrowser'
-import apiForecast from './api/apiForecast'
-import DailyCard from './components/DailyCard.vue'
-import language from './lang/language'
-import HourlyCard from './components/HourlyCard.vue'
-import DataService from './services/DataService'
-import apiLocation from './api/apiLocation'
-import Convert from './services/Convert.js'
+import CurrentForecast from './components/CurrentForecast.vue';
+import Header from './components/Header.vue';
+import CurrentForecastDetails from './components/CurrentForecastDetails.vue';
+import apiBrowser from './browser_api/apiBrowser';
+import apiForecast from './api/apiForecast';
+import DailyCard from './components/DailyCard.vue';
+import language from './lang/language';
+import HourlyCard from './components/HourlyCard.vue';
+import DataService from './services/DataService';
+import apiLocation from './api/apiLocation';
+import Convert from './services/Convert.js';
+import { useServerStore } from './store/Serverstore';
 
 export default {
 	components: {
@@ -80,42 +81,65 @@ export default {
 		}
 	},
 	created() {
-		const savedTheme = localStorage.getItem('theme')
-		if (savedTheme) {
-			this.selectedTheme = savedTheme
-			this.applyTheme(savedTheme)
-		}
-		apiBrowser.getPos()
-		apiForecast.fetchForecast()
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      this.selectedTheme = savedTheme;
+      this.applyTheme(savedTheme);
+    }
 	},
-	async mounted() {
-		console.log('Начало получения позиции')
-		try {
-			const userPos = await apiBrowser.getPos()
-			DataService.addPosToStore(userPos.lat, userPos.long)
-			console.log('Координаты получены и сохранены')
-			await apiForecast.fetchForecast()
-			this.currentCity = await apiLocation.getCityNameByStore()
-			console.log('Прогноз получен')
-			const data = DataService.getAllData()
-			this.daily = data.daily
-			this.units = data.units
-			this.current = data.current
-			this.isDataLoaded = true
+  async mounted() {
+    const serverStore = useServerStore();
+    console.log("[APP] Начало получения позиции");
 
-			console.log(
-				`В РАЗМЕТКЕ ПОЛУЧЕНЫ: ${this.units} \n ${this.current}\n${this.daily[0].temperature}`
-			)
-			console.log('Weather code:', this.current.weather_code)
-			console.log('Current data:', this.current)
-			console.log('Hourly data:', this.daily[0].hourly) // Добавлено для отладки
-		} catch (error) {
-			console.error('Ошибка при получении данных:', error)
-			this.currentCity = 'Moscow'
-			await apiForecast.fetchForecast()
-			this.isDataLoaded = true
-		}
-	},
+    // лоудим кеш из хранилища
+    if (serverStore.loadState()) {
+      const data = DataService.getAllData();
+      this.units = data.units;
+      this.current = data.current;
+      this.daily = data.daily;
+      this.isDataLoaded = true;
+      console.log("[APP] Данные загружены из localStorage:", data);
+    }
+
+    try {
+      const userPos = await apiBrowser.getPos();
+      DataService.addPosToStore(userPos.lat, userPos.long);
+      console.log("[APP] Координаты получены и сохранены");
+      this.currentCity = await apiLocation.getCityNameByStore();
+      console.log("[APP] Город определен:", this.currentCity);
+      await apiForecast.fetchForecast();
+      const data = DataService.getAllData();
+      this.units = data.units;
+      this.current = data.current;
+      this.daily = data.daily;
+      this.isDataLoaded = true;
+      console.log("[APP] Данные отрисованы:", { units: this.units, current: this.current, daily: this.daily });
+    } catch (error) {
+      console.error("[APP] Ошибка при получении данных:", error);
+      this.currentCity = 'Moscow';
+      await apiForecast.fetchForecast(true);
+      const data = DataService.getAllData();
+      this.units = data.units;
+      this.current = data.current;
+      this.daily = data.daily;
+      this.isDataLoaded = true;
+    }
+
+    // Автоматическое обновление каждые 10 минут
+    setInterval(async () => {
+      console.log("[APP] Запуск автоматического обновления данных");
+      try {
+        await apiForecast.fetchForecast(true);
+        const data = DataService.getAllData();
+        this.units = data.units;
+        this.current = data.current;
+        this.daily = data.daily;
+        console.log("[APP] Данные обновлены автоматически");
+      } catch (error) {
+        console.error("[APP] Ошибка при автоматическом обновлении:", error);
+      }
+    }, 10 * 60 * 1000); // 10 минуток тут ) 
+  },
 	methods: {
 		increment(index) {
 			this.currentCity = this.cities[index]
@@ -208,6 +232,7 @@ export default {
 		},
 	},
 }
+
 </script>
 
 <template>
