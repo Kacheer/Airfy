@@ -13,74 +13,80 @@ import Convert from './services/Convert.js';
 import { useServerStore } from './store/Serverstore';
 
 export default {
-  components: {
-    CurrentForecast,
-    Header,
-    CurrentForecastDetails,
-    DailyCard,
-    HourlyCard,
-  },
-  data() {
-    return {
-      currentCity: 'London',
-      cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
-      selectedLanguage: 'Русский',
-      temperature: 23,
-      now: 'Now',
-      dailyCards: [
-        {
-          title: 'Tomorrow',
-          temperature: 23,
-          feelsLike: 19,
-          weatherCode: 1,
-        },
-        {
-          title: 'Tuesday',
-          temperature: 25,
-          feelsLike: 20,
-          weatherCode: 2,
-        },
-        {
-          title: 'Wednesday',
-          temperature: 25,
-          feelsLike: 20,
-          weatherCode: 2,
-        },
-        {
-          title: 'Thursday',
-          temperature: 25,
-          feelsLike: 20,
-          weatherCode: 2,
-        },
-        {
-          title: 'Friday',
-          temperature: 25,
-          feelsLike: 20,
-          weatherCode: 2,
-        },
-        {
-          title: 'Saturday',
-          temperature: 25,
-          feelsLike: 20,
-          weatherCode: 2,
-        },
-      ],
-      units: null,
-      current: {
-        temperature: null,
-        weather_code: null,
-      },
-      daily: [],
-      isDataLoaded: false,
-    };
-  },
-  created() {
+	components: {
+		CurrentForecast,
+		Header,
+		CurrentForecastDetails,
+		DailyCard,
+		HourlyCard,
+	},
+	data() {
+		return {
+			isDragging: false,
+			startX: 0,
+			scrollLeft: 0,
+			dragSpeed: 3,
+
+			currentCity: 'London',
+			cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
+			selectedLanguage: 'Русский',
+			temperature: 23,
+			now: 'Now',
+			dailyCards: [
+				{
+					title: 'Tomorrow',
+					temperature: 23,
+					feelsLike: 19,
+					weatherCode: 1,
+				},
+				{
+					title: 'Tuesday',
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+				{
+					title: 'Wednesday',
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+				{
+					title: 'Thursday',
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+				{
+					title: 'Friday',
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+				{
+					title: 'Saturday',
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+			],
+			units: null,
+			current: {
+				temperature: null,
+
+				weather_code: null,
+			},
+			daily: [],
+			isDataLoaded: false,
+		}
+	},
+	created() {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
       this.selectedTheme = savedTheme;
       this.applyTheme(savedTheme);
     }
-  },
+	},
   async mounted() {
     const serverStore = useServerStore();
     console.log("[APP] Начало получения позиции");
@@ -134,134 +140,162 @@ export default {
       }
     }, 10 * 60 * 1000); // 10 минуток тут ) 
   },
-  methods: {
-    increment(index) {
-      this.currentCity = this.cities[index];
-      this.setStore();
-    },
-    setStore() {
-		// это я спиздил, каюсь
-      const userStore = require('./store/userStore').useUserStore(require('./store/index'));
-      userStore.setUserPos(null, null);
-      apiForecast.fetchForecast(true);
-    },
-    updateLanguage(newLang) {
-      console.log("[APP] Updated language:", newLang);
-      this.selectedLanguage = newLang;
-    },
-    round(number) {
-      return Math.round(number);
-    },
-    updateTheme(newTheme) {
-      this.selectedTheme = newTheme;
-      localStorage.setItem('theme', newTheme);
-      this.applyTheme(newTheme);
-    },
-    applyTheme(theme) {
-      document.body.classList.remove('dark-mode');
-      if (theme === 'Темная') {
-        document.body.classList.add('dark-mode');
-      }
-    },
-  },
-  computed: {
-    currentTranslations() {
-      return language[this.selectedLanguage] || language['Русский'];
-    },
-    translatedDailyCards() {
-      if (!this.daily || this.daily.length < 7) return [];
-      return this.daily.slice(1, 7).map(day => ({
-        time: day.time,
-        temperature: this.round(day.temperature),
-        feelsLike: this.round(day.feelsLike),
-        weatherCode: day.weather_code,
-        language: this.selectedLanguage,
-      }));
-    },
-    convertSunriseTime() {
-      return Convert.toTime(this.daily[0]?.sunrise) || '--:--';
-    },
-    convertSunsetTime() {
-      return Convert.toTime(this.daily[0]?.sunset) || '--:--';
-    },
-    convertVisibility() {
-      return Convert.toVisibilityDesc(this.daily[0]?.visibility, this.selectedLanguage) || 'None';
-    },
-    convertMinPressure() {
-      return Convert.toMillimetersOfMercury(this.daily[0]?.pressure_min) || 0;
-    },
-    convertMaxPressure() {
-      return Convert.toMillimetersOfMercury(this.daily[0]?.pressure_max) || 0;
-    },
-    hourlyForecast() {
-      if (!this.daily[0]?.hourly) return [];
-      return this.daily[0].hourly.map(hour => ({
-        time: hour.time,
-        temperature: this.round(hour.temperature),
-        feelsLike: this.round(hour.apparent_temperature),
-        weatherCode: hour.weather_code || 0,
-        language: this.selectedLanguage,
-      }));
-    },
-  },
-};
+	methods: {
+		increment(index) {
+			this.currentCity = this.cities[index]
+			this.setStore()
+		},
+		setStore() {
+			this.store.setCurrentCity(this.currentCity)
+			console.log('Store city:', this.store.currentCity)
+		},
+		updateLanguage(newLang) {
+			console.log('Updated language:', newLang) // Добавлено для отладки
+			this.selectedLanguage = newLang
+		},
+		round(number) {
+			return Math.round(number)
+		},
+		updateTheme(newTheme) {
+			this.selectedTheme = newTheme
+			localStorage.setItem('theme', newTheme)
+			this.applyTheme(newTheme)
+		},
+		applyTheme(theme) {
+			document.body.classList.remove('dark-mode')
+			if (theme === 'Темная') {
+				document.body.classList.add('dark-mode')
+			}
+		},
+		startDrag(e) {
+			this.isDragging = true
+			this.$refs.scrollContainer.classList.add('dragging')
+			this.startX = e.pageX - this.$refs.scrollContainer.offsetLeft
+			this.scrollLeft = this.$refs.scrollContainer.scrollLeft
+		},
+
+		onDrag(e) {
+			if (!this.isDragging) return
+			e.preventDefault()
+			const x = e.pageX - this.$refs.scrollContainer.offsetLeft
+			const walk = (x - this.startX) * 1
+			this.$refs.scrollContainer.scrollLeft = this.scrollLeft - walk
+		},
+
+		stopDrag() {
+			this.isDragging = false
+			this.$refs.scrollContainer.classList.remove('dragging')
+		},
+	},
+
+	computed: {
+		currentTranslations() {
+			return language[this.selectedLanguage] || language['Русский']
+		},
+		translatedDailyCards() {
+			if (!this.daily || this.daily.length < 7) return []
+			return this.daily.slice(1, 7).map(day => ({
+				time: day.time, // Unix-время для дня
+				temperature: this.round(day.temperature),
+				feelsLike: this.round(day.feelsLike), // Ощущаемая температура
+				weatherCode: day.weather_code,
+				language: this.selectedLanguage,
+			}))
+		},
+		convertSunriseTime() {
+			return Convert.toTime(this.daily[0].sunrise)
+		},
+		convertSunsetTime() {
+			return Convert.toTime(this.daily[0].sunset)
+		},
+		convertVisibility() {
+			return Convert.toVisibilityDesc(
+				this.daily[0].visibility,
+				this.selectedLanguage
+			)
+		},
+		convertMinPressure() {
+			return Convert.toMillimetersOfMercury(this.daily[0].pressure_min)
+		},
+		convertMaxPressure() {
+			return Convert.toMillimetersOfMercury(this.daily[0].pressure_max)
+		},
+		hourlyForecast() {
+			if (!this.daily[0]?.hourly) return []
+			return this.daily[0].hourly.map(hour => ({
+				time: hour.time,
+				temperature: this.round(hour.temperature),
+				feelsLike: this.round(hour.apparent_temperature),
+				weatherCode: hour.weather_code || 0,
+			}))
+			console.log('[APP] Hourly forecast:', this.hourlyForecast)
+		},
+	},
+}
+
 </script>
 
 <template>
-
-  <div class="main-container">
-    <Header
-      :city="currentCity"
-      :language="selectedLanguage"
-      :theme="'Темная'"
-      @update:language="updateLanguage"
-    />
-    <div v-if="isDataLoaded" class="forecast-row">
-      <CurrentForecast
-        :temperature="round(current.temperature)"
-        :now="now"
-        :language="selectedLanguage"
-        :weather-code="current.weather_code"
-      />
-      <CurrentForecastDetails 
-        :humidity="daily[0].humidity"
-        :precipitation_probability="daily[0].precipitation_probability"
-        :pressure_min="convertMinPressure"
-        :pressure_max="convertMaxPressure"
-        :wind_speed="daily[0].wind_speed"
-        :visibility="convertVisibility"
-        :sunrise="convertSunriseTime"
-        :sunset="convertSunsetTime"
-        :language="selectedLanguage"
-      />
-    </div>
-    <div class="hourly-scroll-container">
-      <HourlyCard
-        v-for="(hour, idx) in hourlyForecast"
-        :key="idx"
-        :time="hour.time"
-        :temperature="hour.temperature"
-        :feelsLike="hour.feelsLike"
-        :weatherCode="hour.weatherCode"
-        :language="selectedLanguage"
-      />
-    </div>
-    <h2 class="forecast-title">
-      {{ currentTranslations.DailyCard.forecastTitle }}
-    </h2>
-    <div class="dailyContainer">
-<DailyCard
-    v-for="(card, idx) in translatedDailyCards"
-    :key="idx"
-    :time="card.time"
-    :temperature="card.temperature"
-    :feels-like="card.feelsLike"
-    :weather-code="card.weatherCode"
-    :language="card.language"
-/>
-    </div>
-  </div>
-
+	<div class="main-container">
+		<Header
+			:city="currentCity"
+			:language="selectedLanguage"
+			:theme="'Темная'"
+			@update:language="updateLanguage"
+			@update:theme="updateTheme"
+		/>
+		<div v-if="isDataLoaded" class="forecast-row">
+			<CurrentForecast
+				:temperature="round(current.temperature)"
+				:now="now"
+				:language="selectedLanguage"
+				:weather-code="current.weather_code"
+			/>
+			<CurrentForecastDetails
+				:humidity="daily[0].humidity"
+				:precipitation_probability="daily[0].precipitation_probability"
+				:pressure_min="convertMinPressure"
+				:pressure_max="convertMaxPressure"
+				:wind_speed="daily[0].wind_speed"
+				:visibility="convertVisibility"
+				:sunrise="convertSunriseTime"
+				:sunset="convertSunsetTime"
+				:language="selectedLanguage"
+			/>
+		</div>
+		<div
+			class="hourly-scroll-container"
+			ref="scrollContainer"
+			@mousedown="startDrag"
+			@mousemove="onDrag"
+			@mouseup="stopDrag"
+			@mouseleave="stopDrag"
+		>
+			<HourlyCard
+				v-for="(hour, idx) in hourlyForecast"
+				:key="idx"
+				:time="hour.time"
+				:temperature="hour.temperature"
+				:feelsLike="hour.feelsLike"
+				:weatherCode="hour.weatherCode"
+				:language="selectedLanguage"
+			/>
+		</div>
+		<h2 class="forecast-title">
+			{{ currentTranslations.DailyCard.forecastTitle }}
+		</h2>
+		<div class="dailyContainer">
+			<DailyCard
+				v-for="(card, idx) in translatedDailyCards"
+				:key="idx"
+				:title="card.title"
+				:temperature="card.temperature"
+				:feels-like="card.feelsLike"
+				:weather-code="card.weatherCode"
+				:translations="currentTranslations"
+			/>
+		</div>
+	</div>
 </template>
 
 <style scoped>
@@ -271,6 +305,7 @@ export default {
 	will-change: filter;
 	transition: filter 300ms;
 }
+
 .logo:hover {
 	filter: drop-shadow(0 0 2em #646cffaa);
 }
