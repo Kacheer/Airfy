@@ -67,7 +67,9 @@ export default {
 			units: null,
 			current: {
 				temperature: null,
+
 				weather_code: null
+
 			},
 			daily: [],
 			isDataLoaded: false,
@@ -81,6 +83,7 @@ export default {
 		}
 		apiBrowser.getPos()
 		apiForecast.fetchForecast()
+
 	},
 	async mounted() {
 		console.log("Начало получения позиции");
@@ -105,6 +108,7 @@ export default {
 			this.currentCity = 'Moscow';
 			await apiForecast.fetchForecast();
 			this.isDataLoaded = true;
+
 		}
 	},
 	methods: {
@@ -179,6 +183,7 @@ translatedDailyCards() {
 </script>
 
 <template>
+
   <div class="main-container">
     <Header
       :city="currentCity"
@@ -231,6 +236,7 @@ translatedDailyCards() {
 />
     </div>
   </div>
+
 </template>
 
 <style scoped>
