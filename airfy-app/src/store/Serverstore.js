@@ -11,7 +11,8 @@ export const useServerStore = defineStore('ServerStore', {
       temperature: null,
       weather_code: null
     },
-    daily: []
+    daily: [],
+    lastFetched: null,
   }),
 
   actions: {
@@ -40,44 +41,43 @@ export const useServerStore = defineStore('ServerStore', {
       });
     },
     setDailyForecast(dailyData) {
-    try {
+      try {
         this.daily = dailyData.map(daily => ({
-            time: daily.time, // Добавляем время
-            temperature: daily.temperature,
-            feelsLike: daily.feelsLike, // Добавляем ощущаемую температуру
-            weather_code: daily.weather_code,
-            precipitation_probability: daily.precipitation_probability,
-            pressure_max: daily.pressure_max,
-            pressure_min: daily.pressure_min,
-            humidity: daily.humidity,
-            visibility: daily.visibility,
-            wind_speed: daily.wind_speed,
-            sunrise: daily.sunrise,
-            sunset: daily.sunset,
-            hourly: daily.hourly || []
+          time: daily.time,
+          temperature: daily.temperature,
+          feelsLike: daily.feelsLike,
+          weather_code: daily.weather_code,
+          precipitation_probability: daily.precipitation_probability,
+          pressure_max: daily.pressure_max,
+          pressure_min: daily.pressure_min,
+          humidity: daily.humidity,
+          visibility: daily.visibility,
+          wind_speed: daily.wind_speed,
+          sunrise: daily.sunrise,
+          sunset: daily.sunset,
+          hourly: daily.hourly || []
         }));
         console.log("[STORE] Данные daily обновлены:", this.daily);
         return true;
-    } catch (error) {
+      } catch (error) {
         console.error("[STORE] Ошибка в setDailyForecast:", error);
         return false;
-    }
-},
+      }
+    },
     getDailyForecast() {
       return this.daily;
     },
     getAll() {
-      console.log("[STORE] Начало выгрузки всех данных")
-      console.log(`[STORE] Проверка целостности данных \n ${this.units}, \n${this.current}, \n${this.daily}`)
+      console.log("[STORE] Начало выгрузки всех данных");
+      console.log(`[STORE] Проверка целостности данных \n ${this.units}, \n${this.current}, \n${this.daily}`);
       return {
         units: this.units,
         current: this.current,
         daily: this.daily,
-      }
-
+      };
     },
-addHourlyForecast(daily_id, hourly) {
-    this.daily[daily_id].hourly.push({
+    addHourlyForecast(daily_id, hourly) {
+      this.daily[daily_id].hourly.push({
         time: hourly.time,
         weather_code: hourly.weather_code,
         temperature: hourly.temperature,
@@ -85,9 +85,9 @@ addHourlyForecast(daily_id, hourly) {
         precipitation_probability: hourly.precipitation_probability,
         precipitation: hourly.precipitation,
         visibility: hourly.visibility,
-    });
-    console.log("[STORE] Почасовые данные в хранилище:", this.daily[0].hourly);
-},
+      });
+      console.log("[STORE] Почасовые данные в хранилище:", this.daily[0].hourly);
+    },
     setHourlyForecast(daily_id, hourly) {
       const data = this.daily[daily_id].hourly;
       console.log("[STORE] setHourlyForecast Data", data);
@@ -102,9 +102,42 @@ addHourlyForecast(daily_id, hourly) {
     checkDailyData() {
       console.log("Данные есть!");
       console.log(this.daily);
-    }
+    },
+    saveState() {
+      try {
+        const state = {
+          units: this.units,
+          current: this.current,
+          daily: this.daily,
+          lastFetched: this.lastFetched,
+        };
+        localStorage.setItem('serverStore', JSON.stringify(state));
+        console.log("[STORE] Состояние сохранено в localStorage:", state);
+      } catch (error) {
+        console.error("[STORE] Ошибка при сохранении состояния:", error);
+      }
+    },
+    loadState() {
+      try {
+        const savedState = localStorage.getItem('serverStore');
+        if (savedState) {
+          const parsedState = JSON.parse(savedState);
+          this.units = parsedState.units;
+          this.current = parsedState.current;
+          this.daily = parsedState.daily;
+          this.lastFetched = parsedState.lastFetched;
+          console.log("[STORE] Состояние загружено из localStorage:", parsedState);
+          return true;
+        } else {
+          console.log("[STORE] Нет сохраненного состояния в localStorage");
+          return false;
+        }
+      } catch (error) {
+        console.error("[STORE] Ошибка при загрузке состояния:", error);
+        return false;
+      }
+    },
   },
 
   getters: {},
-  persist: true
 });

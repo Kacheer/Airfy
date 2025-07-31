@@ -1,35 +1,35 @@
 import axios from 'axios';
 import DataService from '../services/DataService';
-import { useUserStore } from "../store/userStore";
+import { useServerStore } from "../store/Serverstore"; // Import ServerStore instead of userStore
 import pinia from '../store/index';
 
 const BASE_URL = "https://api.open-meteo.com/";
 
-
-const userStore = useUserStore(pinia);
+const serverStore = useServerStore(pinia);
 
 export default {
-  async fetchForecast() {
+  async fetchForecast(force = false) {
     await DataService.waitForCoordinates();
     const pos = DataService.getPosStore();
-    console.log("[API] userPos получен", pos.lat, pos.long);
-    if (userStore.requestTime == null) {
-      userStore.setRequestTime()
-      console.log("Я НАЕБАЛ САМ СЕБЯ ? ")
+    console.log("[API] Позиция пользователя получена:", pos.lat, pos.long);
+
+    const now = Date.now();
+    const tenMinutes = 10 * 60 * 1000; 
+
+    if (!force && serverStore.lastFetched && (now - serverStore.lastFetched < tenMinutes)) {
+      console.log("[API] Данные свежие (< 10 минут), загружаем из localStorage");
+      if (serverStore.loadState()) {
+        console.log("[API] Данные успешно загружены из localStorage");
+        return;
+      }
     }
-    const currentTime = new Date().getTime();
-    const lastRequestTime = userStore.getRequestTime();
-    console.log("ВРЕМЯ ЗАСЕЙВИЛОСЬ БЛЯТЬ ? ",lastRequestTime)
-    const oneHour = 3600 * 1000;
 
-    // if (!lastRequestTime || (currentTime - lastRequestTime > oneHour)) {
-      //Работает супер магическим образом ✨
-      console.log("[API] Обновление данных, так как прошло более часа или это первый запрос");
+    console.log("[API] Обновляем данные с сервера");
 
-      const api = axios.create({
-        baseURL: BASE_URL,
-        timeout: 10000
-      });
+    const api = axios.create({
+      baseURL: BASE_URL,
+      timeout: 10000
+    });
 
     try {
       const response = await api.get('v1/forecast', {
@@ -44,24 +44,20 @@ export default {
           wind_speed_unit: 'ms'
         }
       });
-        
-        console.log("[API] Данные получены", response.data);
-        console.log("[API] Hourly time:", response.data.hourly.time);
-        console.log("[API] Hourly weather_code:", response.data.hourly.weather_code);
-        DataService.addResponseToStore(response);
-        userStore.setRequestTime();
-      } catch (error) {
-        if (error.code === 'ECONNABORTED') {
-          console.error('Запрос превысил время ожидания ответа');
-        } else if (error.code === '401') {
-          console.error('[API] 401 Unauthorized');
-        } else {
-          console.error('[API] Не предвиденная ошибка ', error.code);
-        }
+
+      console.log("[API] Данные успешно получены:", response.data);
+      DataService.addResponseToStore(response);
+      serverStore.lastFetched = now;
+      serverStore.saveState();
+    } catch (error) {
+      if (error.code === 'ECONNABORTED') {
+        console.error('[API] Превышено время ожидания ответа');
+      } else if (error.code === '401') {
+        console.error('[API] 401 Unauthorized');
+      } else {
+        console.error('[API] Неизвестная ошибка:', error.message);
       }
-    // } else {
-    //   console.log("[API] Используем существующие данные, так как прошло менее часа");
-    // }
-  DataService.printForecastData()
+      throw error;
+    }
   }
 };
