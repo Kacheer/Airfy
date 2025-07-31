@@ -26,7 +26,6 @@ export default {
 			startX: 0,
 			scrollLeft: 0,
 			dragSpeed: 3,
-
 			currentCity: 'London',
 			cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
 			selectedLanguage: 'Русский',
@@ -73,166 +72,160 @@ export default {
 			units: null,
 			current: {
 				temperature: null,
-
 				weather_code: null,
 			},
 			daily: [],
 			isDataLoaded: false,
-		}
+		};
 	},
 	created() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      this.selectedTheme = savedTheme;
-      this.applyTheme(savedTheme);
-    }
+		const savedTheme = localStorage.getItem('theme');
+		if (savedTheme) {
+			this.selectedTheme = savedTheme;
+			this.applyTheme(savedTheme);
+		}
 	},
-  async mounted() {
-    const serverStore = useServerStore();
-    console.log("[APP] Начало получения позиции");
+	async mounted() {
+		const serverStore = useServerStore();
+		console.log("[APP] Начало получения позиции");
 
-    // лоудим кеш из хранилища
-    if (serverStore.loadState()) {
-      const data = DataService.getAllData();
-      this.units = data.units;
-      this.current = data.current;
-      this.daily = data.daily;
-      this.isDataLoaded = true;
-      console.log("[APP] Данные загружены из localStorage:", data);
-    }
+		// Load cached data from localStorage
+		if (serverStore.loadState()) {
+			const data = DataService.getAllData();
+			this.units = data.units;
+			this.current = data.current;
+			this.daily = data.daily;
+			this.isDataLoaded = true;
+			console.log("[APP] Данные загружены из localStorage:", data);
+		}
 
-    try {
-      const userPos = await apiBrowser.getPos();
-      DataService.addPosToStore(userPos.lat, userPos.long);
-      console.log("[APP] Координаты получены и сохранены");
-      this.currentCity = await apiLocation.getCityNameByStore();
-      console.log("[APP] Город определен:", this.currentCity);
-      await apiForecast.fetchForecast();
-      const data = DataService.getAllData();
-      this.units = data.units;
-      this.current = data.current;
-      this.daily = data.daily;
-      this.isDataLoaded = true;
-      console.log("[APP] Данные отрисованы:", { units: this.units, current: this.current, daily: this.daily });
-    } catch (error) {
-      console.error("[APP] Ошибка при получении данных:", error);
-      this.currentCity = 'Moscow';
-      await apiForecast.fetchForecast(true);
-      const data = DataService.getAllData();
-      this.units = data.units;
-      this.current = data.current;
-      this.daily = data.daily;
-      this.isDataLoaded = true;
-    }
+		try {
+			const userPos = await apiBrowser.getPos();
+			DataService.addPosToStore(userPos.lat, userPos.long);
+			console.log("[APP] Координаты получены и сохранены");
+			this.currentCity = await apiLocation.getCityNameByStore();
+			console.log("[APP] Город определен:", this.currentCity);
+			await apiForecast.fetchForecast();
+			const data = DataService.getAllData();
+			this.units = data.units;
+			this.current = data.current;
+			this.daily = data.daily;
+			this.isDataLoaded = true;
+			console.log("[APP] Данные отрисованы:", { units: this.units, current: this.current, daily: this.daily });
+		} catch (error) {
+			console.error("[APP] Ошибка при получении данных:", error);
+			this.currentCity = 'Moscow';
+			await apiForecast.fetchForecast(true);
+			const data = DataService.getAllData();
+			this.units = data.units;
+			this.current = data.current;
+			this.daily = data.daily;
+			this.isDataLoaded = true;
+		}
 
-    // Автоматическое обновление каждые 10 минут
-    setInterval(async () => {
-      console.log("[APP] Запуск автоматического обновления данных");
-      try {
-        await apiForecast.fetchForecast(true);
-        const data = DataService.getAllData();
-        this.units = data.units;
-        this.current = data.current;
-        this.daily = data.daily;
-        console.log("[APP] Данные обновлены автоматически");
-      } catch (error) {
-        console.error("[APP] Ошибка при автоматическом обновлении:", error);
-      }
-    }, 10 * 60 * 1000); // 10 минуток тут ) 
-  },
+		// Automatic refresh every 10 minutes
+		setInterval(async () => {
+			console.log("[APP] Запуск автоматического обновления данных");
+			try {
+				await apiForecast.fetchForecast(true);
+				const data = DataService.getAllData();
+				this.units = data.units;
+				this.current = data.current;
+				this.daily = data.daily;
+				console.log("[APP] Данные обновлены автоматически");
+			} catch (error) {
+				console.error("[APP] Ошибка при автоматическом обновлении:", error);
+			}
+		}, 10 * 60 * 1000); // 10 minutes
+	},
 	methods: {
 		increment(index) {
-			this.currentCity = this.cities[index]
-			this.setStore()
+			this.currentCity = this.cities[index];
+			this.setStore();
 		},
 		setStore() {
-			this.store.setCurrentCity(this.currentCity)
-			console.log('Store city:', this.store.currentCity)
+			// Note: This references a non-existent 'store'. Assuming it should use userStore.
+			const userStore = require('./store/userStore').useUserStore(require('./store/index'));
+			userStore.setUserPos(null, null); // Clear coordinates to force new fetch
+			apiForecast.fetchForecast(true); // Force fetch for new city
 		},
 		updateLanguage(newLang) {
-			console.log('Updated language:', newLang) // Добавлено для отладки
-			this.selectedLanguage = newLang
+			console.log("[APP] Updated language:", newLang);
+			this.selectedLanguage = newLang;
 		},
 		round(number) {
-			return Math.round(number)
+			return Math.round(number);
 		},
 		updateTheme(newTheme) {
-			this.selectedTheme = newTheme
-			localStorage.setItem('theme', newTheme)
-			this.applyTheme(newTheme)
+			this.selectedTheme = newTheme;
+			localStorage.setItem('theme', newTheme);
+			this.applyTheme(newTheme);
 		},
 		applyTheme(theme) {
-			document.body.classList.remove('dark-mode')
+			document.body.classList.remove('dark-mode');
 			if (theme === 'Темная') {
-				document.body.classList.add('dark-mode')
+				document.body.classList.add('dark-mode');
 			}
 		},
 		startDrag(e) {
-			this.isDragging = true
-			this.$refs.scrollContainer.classList.add('dragging')
-			this.startX = e.pageX - this.$refs.scrollContainer.offsetLeft
-			this.scrollLeft = this.$refs.scrollContainer.scrollLeft
+			this.isDragging = true;
+			this.$refs.scrollContainer.classList.add('dragging');
+			this.startX = e.pageX - this.$refs.scrollContainer.offsetLeft;
+			this.scrollLeft = this.$refs.scrollContainer.scrollLeft;
 		},
-
 		onDrag(e) {
-			if (!this.isDragging) return
-			e.preventDefault()
-			const x = e.pageX - this.$refs.scrollContainer.offsetLeft
-			const walk = (x - this.startX) * 1
-			this.$refs.scrollContainer.scrollLeft = this.scrollLeft - walk
+			if (!this.isDragging) return;
+			e.preventDefault();
+			const x = e.pageX - this.$refs.scrollContainer.offsetLeft;
+			const walk = (x - this.startX) * this.dragSpeed;
+			this.$refs.scrollContainer.scrollLeft = this.scrollLeft - walk;
 		},
-
 		stopDrag() {
-			this.isDragging = false
-			this.$refs.scrollContainer.classList.remove('dragging')
+			this.isDragging = false;
+			this.$refs.scrollContainer.classList.remove('dragging');
 		},
 	},
-
 	computed: {
 		currentTranslations() {
-			return language[this.selectedLanguage] || language['Русский']
+			return language[this.selectedLanguage] || language['Русский'];
 		},
 		translatedDailyCards() {
-			if (!this.daily || this.daily.length < 7) return []
+			if (!this.daily || this.daily.length < 7) return [];
 			return this.daily.slice(1, 7).map(day => ({
-				time: day.time, // Unix-время для дня
+				time: day.time,
 				temperature: this.round(day.temperature),
-				feelsLike: this.round(day.feelsLike), // Ощущаемая температура
+				feelsLike: this.round(day.feelsLike),
 				weatherCode: day.weather_code,
 				language: this.selectedLanguage,
-			}))
+			}));
 		},
 		convertSunriseTime() {
-			return Convert.toTime(this.daily[0].sunrise)
+			return Convert.toTime(this.daily[0]?.sunrise) || '--:--';
 		},
 		convertSunsetTime() {
-			return Convert.toTime(this.daily[0].sunset)
+			return Convert.toTime(this.daily[0]?.sunset) || '--:--';
 		},
 		convertVisibility() {
-			return Convert.toVisibilityDesc(
-				this.daily[0].visibility,
-				this.selectedLanguage
-			)
+			return Convert.toVisibilityDesc(this.daily[0]?.visibility, this.selectedLanguage) || 'None';
 		},
 		convertMinPressure() {
-			return Convert.toMillimetersOfMercury(this.daily[0].pressure_min)
+			return Convert.toMillimetersOfMercury(this.daily[0]?.pressure_min) || 0;
 		},
 		convertMaxPressure() {
-			return Convert.toMillimetersOfMercury(this.daily[0].pressure_max)
+			return Convert.toMillimetersOfMercury(this.daily[0]?.pressure_max) || 0;
 		},
 		hourlyForecast() {
-			if (!this.daily[0]?.hourly) return []
+			if (!this.daily[0]?.hourly) return [];
 			return this.daily[0].hourly.map(hour => ({
 				time: hour.time,
 				temperature: this.round(hour.temperature),
 				feelsLike: this.round(hour.apparent_temperature),
 				weatherCode: hour.weather_code || 0,
-			}))
-			console.log('[APP] Hourly forecast:', this.hourlyForecast)
+				language: this.selectedLanguage,
+			}));
 		},
 	},
-}
-
+};
 </script>
 
 <template>
@@ -252,11 +245,11 @@ export default {
 				:weather-code="current.weather_code"
 			/>
 			<CurrentForecastDetails
-				:humidity="daily[0].humidity"
-				:precipitation_probability="daily[0].precipitation_probability"
+				:humidity="daily[0]?.humidity"
+				:precipitation_probability="daily[0]?.precipitation_probability"
 				:pressure_min="convertMinPressure"
 				:pressure_max="convertMaxPressure"
-				:wind_speed="daily[0].wind_speed"
+				:wind_speed="daily[0]?.wind_speed"
 				:visibility="convertVisibility"
 				:sunrise="convertSunriseTime"
 				:sunset="convertSunsetTime"
@@ -288,11 +281,11 @@ export default {
 			<DailyCard
 				v-for="(card, idx) in translatedDailyCards"
 				:key="idx"
-				:title="card.title"
+				:time="card.time"
 				:temperature="card.temperature"
-				:feels-like="card.feelsLike"
-				:weather-code="card.weatherCode"
-				:translations="currentTranslations"
+				:feelsLike="card.feelsLike"
+				:weatherCode="card.weatherCode"
+				:language="card.language"
 			/>
 		</div>
 	</div>
@@ -305,7 +298,6 @@ export default {
 	will-change: filter;
 	transition: filter 300ms;
 }
-
 .logo:hover {
 	filter: drop-shadow(0 0 2em #646cffaa);
 }
@@ -340,5 +332,16 @@ export default {
 	gap: 39px;
 	justify-content: flex-start;
 	width: 100%;
+}
+.hourly-scroll-container {
+	display: flex;
+	overflow-x: auto;
+	gap: 20px;
+	padding: 10px;
+	scroll-behavior: smooth;
+}
+.hourly-scroll-container.dragging {
+	cursor: grabbing;
+	user-select: none;
 }
 </style>
