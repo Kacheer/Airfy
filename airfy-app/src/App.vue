@@ -1,16 +1,16 @@
 <script>
-import CurrentForecast from './components/CurrentForecast.vue';
-import Header from './components/Header.vue';
-import CurrentForecastDetails from './components/CurrentForecastDetails.vue';
-import apiBrowser from './browser_api/apiBrowser';
-import apiForecast from './api/apiForecast';
-import DailyCard from './components/DailyCard.vue';
-import language from './lang/language';
-import HourlyCard from './components/HourlyCard.vue';
-import DataService from './services/DataService';
-import apiLocation from './api/apiLocation';
-import Convert from './services/Convert.js';
-import { useServerStore } from './store/Serverstore';
+import CurrentForecast from './components/CurrentForecast.vue'
+import Header from './components/Header.vue'
+import CurrentForecastDetails from './components/CurrentForecastDetails.vue'
+import apiBrowser from './browser_api/apiBrowser'
+import apiForecast from './api/apiForecast'
+import DailyCard from './components/DailyCard.vue'
+import language from './lang/language'
+import HourlyCard from './components/HourlyCard.vue'
+import DataService from './services/DataService'
+import apiLocation from './api/apiLocation'
+import Convert from './services/Convert.js'
+import { useServerStore } from './store/Serverstore'
 
 export default {
 	components: {
@@ -28,7 +28,7 @@ export default {
 			dragSpeed: 3,
 			currentCity: 'London',
 			cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
-			selectedLanguage: 'Русский',
+			selectedLanguage: 'English',
 			temperature: 23,
 			now: 'Now',
 			dailyCards: [
@@ -76,156 +76,167 @@ export default {
 			},
 			daily: [],
 			isDataLoaded: false,
-		};
+		}
 	},
 	created() {
-		const savedTheme = localStorage.getItem('theme');
+		const savedTheme = localStorage.getItem('theme')
 		if (savedTheme) {
-			this.selectedTheme = savedTheme;
-			this.applyTheme(savedTheme);
+			this.selectedTheme = savedTheme
+			this.applyTheme(savedTheme)
 		}
 	},
 	async mounted() {
-		const serverStore = useServerStore();
-		console.log("[APP] Начало получения позиции");
+		const serverStore = useServerStore()
+		console.log('[APP] Начало получения позиции')
 
 		// Load cached data from localStorage
 		if (serverStore.loadState()) {
-			const data = DataService.getAllData();
-			this.units = data.units;
-			this.current = data.current;
-			this.daily = data.daily;
-			this.isDataLoaded = true;
-			console.log("[APP] Данные загружены из localStorage:", data);
+			const data = DataService.getAllData()
+			this.units = data.units
+			this.current = data.current
+			this.daily = data.daily
+			this.isDataLoaded = true
+			console.log('[APP] Данные загружены из localStorage:', data)
 		}
 
 		try {
-			const userPos = await apiBrowser.getPos();
-			DataService.addPosToStore(userPos.lat, userPos.long);
-			console.log("[APP] Координаты получены и сохранены");
-			this.currentCity = await apiLocation.getCityNameByStore();
-			console.log("[APP] Город определен:", this.currentCity);
-			await apiForecast.fetchForecast();
-			const data = DataService.getAllData();
-			this.units = data.units;
-			this.current = data.current;
-			this.daily = data.daily;
-			this.isDataLoaded = true;
-			console.log("[APP] Данные отрисованы:", { units: this.units, current: this.current, daily: this.daily });
+			const userPos = await apiBrowser.getPos()
+			DataService.addPosToStore(userPos.lat, userPos.long)
+			console.log('[APP] Координаты получены и сохранены')
+			this.currentCity = await apiLocation.getCityNameByStore()
+			console.log('[APP] Город определен:', this.currentCity)
+			await apiForecast.fetchForecast()
+			const data = DataService.getAllData()
+			this.units = data.units
+			this.current = data.current
+			this.daily = data.daily
+			this.isDataLoaded = true
+			console.log('[APP] Данные отрисованы:', {
+				units: this.units,
+				current: this.current,
+				daily: this.daily,
+			})
 		} catch (error) {
-			console.error("[APP] Ошибка при получении данных:", error);
-			this.currentCity = 'Moscow';
-			await apiForecast.fetchForecast(true);
-			const data = DataService.getAllData();
-			this.units = data.units;
-			this.current = data.current;
-			this.daily = data.daily;
-			this.isDataLoaded = true;
+			console.error('[APP] Ошибка при получении данных:', error)
+			this.currentCity = 'Moscow'
+			await apiForecast.fetchForecast(true)
+			const data = DataService.getAllData()
+			this.units = data.units
+			this.current = data.current
+			this.daily = data.daily
+			this.isDataLoaded = true
 		}
 
 		// Automatic refresh every 10 minutes
 		setInterval(async () => {
-			console.log("[APP] Запуск автоматического обновления данных");
+			console.log('[APP] Запуск автоматического обновления данных')
 			try {
-				await apiForecast.fetchForecast(true);
-				const data = DataService.getAllData();
-				this.units = data.units;
-				this.current = data.current;
-				this.daily = data.daily;
-				console.log("[APP] Данные обновлены автоматически");
+				await apiForecast.fetchForecast(true)
+				const data = DataService.getAllData()
+				this.units = data.units
+				this.current = data.current
+				this.daily = data.daily
+				console.log('[APP] Данные обновлены автоматически')
 			} catch (error) {
-				console.error("[APP] Ошибка при автоматическом обновлении:", error);
+				console.error('[APP] Ошибка при автоматическом обновлении:', error)
 			}
-		}, 10 * 60 * 1000); // 10 minutes
+		}, 10 * 60 * 1000) // 10 minutes
 	},
 	methods: {
 		increment(index) {
-			this.currentCity = this.cities[index];
-			this.setStore();
+			this.currentCity = this.cities[index]
+			this.setStore()
 		},
 		setStore() {
 			// Note: This references a non-existent 'store'. Assuming it should use userStore.
-			const userStore = require('./store/userStore').useUserStore(require('./store/index'));
-			userStore.setUserPos(null, null); // Clear coordinates to force new fetch
-			apiForecast.fetchForecast(true); // Force fetch for new city
+			const userStore = require('./store/userStore').useUserStore(
+				require('./store/index')
+			)
+			userStore.setUserPos(null, null) // Clear coordinates to force new fetch
+			apiForecast.fetchForecast(true) // Force fetch for new city
 		},
 		updateLanguage(newLang) {
-			console.log("[APP] Updated language:", newLang);
-			this.selectedLanguage = newLang;
+			console.log('[APP] Updated language:', newLang)
+			this.selectedLanguage = newLang
 		},
 		round(number) {
-			return Math.round(number);
+			return Math.round(number)
 		},
 		updateTheme(newTheme) {
-			this.selectedTheme = newTheme;
-			localStorage.setItem('theme', newTheme);
-			this.applyTheme(newTheme);
+			this.selectedTheme = newTheme
+			localStorage.setItem('theme', newTheme)
+			this.applyTheme(newTheme)
 		},
 		applyTheme(theme) {
-			document.body.classList.remove('dark-mode');
+			document.body.classList.remove('dark-mode')
 			if (theme === 'Темная') {
-				document.body.classList.add('dark-mode');
+				document.body.classList.add('dark-mode')
 			}
 		},
 		startDrag(e) {
-			this.isDragging = true;
-			this.$refs.scrollContainer.classList.add('dragging');
-			this.startX = e.pageX - this.$refs.scrollContainer.offsetLeft;
-			this.scrollLeft = this.$refs.scrollContainer.scrollLeft;
+			this.isDragging = true
+			this.$refs.scrollContainer.classList.add('dragging')
+			this.startX = e.pageX - this.$refs.scrollContainer.offsetLeft
+			this.scrollLeft = this.$refs.scrollContainer.scrollLeft
 		},
 		onDrag(e) {
-			if (!this.isDragging) return;
-			e.preventDefault();
-			const x = e.pageX - this.$refs.scrollContainer.offsetLeft;
-			const walk = (x - this.startX) * this.dragSpeed;
-			this.$refs.scrollContainer.scrollLeft = this.scrollLeft - walk;
+			if (!this.isDragging) return
+			e.preventDefault()
+			const x = e.pageX - this.$refs.scrollContainer.offsetLeft
+			const walk = (x - this.startX) * this.dragSpeed
+			this.$refs.scrollContainer.scrollLeft = this.scrollLeft - walk
 		},
 		stopDrag() {
-			this.isDragging = false;
-			this.$refs.scrollContainer.classList.remove('dragging');
+			this.isDragging = false
+			this.$refs.scrollContainer.classList.remove('dragging')
 		},
 	},
 	computed: {
 		currentTranslations() {
-			return language[this.selectedLanguage] || language['Русский'];
+			return language[this.selectedLanguage] || language['Русский']
 		},
 		translatedDailyCards() {
-			if (!this.daily || this.daily.length < 7) return [];
+			if (!this.daily || this.daily.length < 7) return []
 			return this.daily.slice(1, 7).map(day => ({
 				time: day.time,
 				temperature: this.round(day.temperature),
 				feelsLike: this.round(day.feelsLike),
 				weatherCode: day.weather_code,
 				language: this.selectedLanguage,
-			}));
+			}))
 		},
 		convertSunriseTime() {
-			return Convert.toTime(this.daily[0]?.sunrise) || '--:--';
+			return Convert.toTime(this.daily[0]?.sunrise) || '--:--'
 		},
 		convertSunsetTime() {
-			return Convert.toTime(this.daily[0]?.sunset) || '--:--';
+			return Convert.toTime(this.daily[0]?.sunset) || '--:--'
 		},
 		convertVisibility() {
-			return Convert.toVisibilityDesc(this.daily[0]?.visibility, this.selectedLanguage) || 'None';
+			return (
+				Convert.toVisibilityDesc(
+					this.daily[0]?.visibility,
+					this.selectedLanguage
+				) || 'None'
+			)
 		},
 		convertMinPressure() {
-			return Convert.toMillimetersOfMercury(this.daily[0]?.pressure_min) || 0;
+			return Convert.toMillimetersOfMercury(this.daily[0]?.pressure_min) || 0
 		},
 		convertMaxPressure() {
-			return Convert.toMillimetersOfMercury(this.daily[0]?.pressure_max) || 0;
+			return Convert.toMillimetersOfMercury(this.daily[0]?.pressure_max) || 0
 		},
 		hourlyForecast() {
-			if (!this.daily[0]?.hourly) return [];
+			if (!this.daily[0]?.hourly) return []
 			return this.daily[0].hourly.map(hour => ({
 				time: hour.time,
 				temperature: this.round(hour.temperature),
 				feelsLike: this.round(hour.apparent_temperature),
 				weatherCode: hour.weather_code || 0,
 				language: this.selectedLanguage,
-			}));
+			}))
 		},
 	},
-};
+}
 </script>
 
 <template>
@@ -233,7 +244,7 @@ export default {
 		<Header
 			:city="currentCity"
 			:language="selectedLanguage"
-			:theme="'Темная'"
+			:theme="selectedTheme"
 			@update:language="updateLanguage"
 			@update:theme="updateTheme"
 		/>
