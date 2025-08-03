@@ -220,6 +220,9 @@ body:not(.dark-mode) .text-wrapper {
 body:not(.dark-mode) .text-wrapper-3 {
 	color: #ffffff;
 }
+body:not(.dark-mode) .weather-description {
+	color: #ffffff;
+}
 body:not(.dark-mode) .CurrentForecastDetails li {
 	color: #ffffff;
 }
