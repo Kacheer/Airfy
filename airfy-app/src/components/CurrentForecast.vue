@@ -57,8 +57,7 @@ translations() {
     },
 		icon() {
 			const res = Convert.toWeatherIcon(this.weatherCode)
-			console.log("ВЫВЕЛО КАРТИНКУ ", res)
-			return res
+			return res.endsWith('.svg') ? res : res + '.svg'
 		},
 		weatherDesc() {
 			return Convert.toWeatherDesc(this.weatherCode, this.language)

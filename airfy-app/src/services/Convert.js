@@ -57,7 +57,7 @@ export default {
     toWeatherIcon(weather_code) {
         const w = weather_code;
         let icon;
-        if (w == 0) { icon = 'Sun.png' }
+        if (w == 0) { icon = 'Sun.svg' }
         else if (w == 1 || w == 2) { icon = 'CloudSun.svg' }
         else if (w == 3) { icon = 'Clouds.svg' }
         else if (w == 45 || w == 48) { icon = 'CloudFog2.svg' }
