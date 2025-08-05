@@ -32,7 +32,6 @@ export default {
       currentCity: 'London',
       cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
       selectedLanguage: 'Русский',
-      selectedTheme: 'Светлая',
       temperature: 23,
       now: 'Now',
       dailyCards: [
@@ -80,7 +79,7 @@ export default {
       },
       daily: [],
       showLoader: true,
-      loaderStage: 'fetching',
+      loaderStage: 'fetching', // этап загрузки
       isDragging: false,
       isSnapping: false,
       scrollTimeout: null,
@@ -95,8 +94,7 @@ export default {
   },
   mounted() {
     const serverStore = useServerStore();
-    // Автоматически применяем тему при загрузке
-    this.applyTheme(this.selectedTheme);
+    console.log("[APP] Начало получения позиции");
 
     // Load cached data from localStorage
     if (serverStore.loadState()) {
@@ -108,21 +106,21 @@ export default {
       this.$nextTick(() => {
         this.waitUntilAllLoaded();
       });
+      console.log("[APP] Данные загружены из localStorage:", data);
     }
 
     this.fetchData();
 
     setInterval(() => {
+      console.log("[APP] Запуск автоматического обновления данных");
       this.fetchData();
     }, 10 * 60 * 1000);
 
-    this.$nextTick(() => {
-      // инициализируем scroll snap
-      this.initScrollableSnap();
-    });
+    this.initScrollableSnap();
   },
   methods: {
     async fetchData() {
+      const serverStore = useServerStore();
       this.showLoader = true;
       this.loaderStage = 'fetching';
       try {
@@ -164,6 +162,7 @@ export default {
       apiForecast.fetchForecast(true);
     },
     updateLanguage(newLang) {
+      console.log("[APP] Updated language:", newLang);
       this.selectedLanguage = newLang;
     },
     round(number) {
@@ -182,9 +181,10 @@ export default {
     },
     initScrollableSnap() {
       const container = this.$refs.scrollContainer;
-      if (!container) return;
+      if (!container) return;  
 
       container.scrollLeft = 0;
+      console.log("[APP] Container width:", container.offsetWidth, "First card offsetLeft:", container.querySelector('.hourly-card')?.offsetLeft);
 
       let startX = 0;
       let scrollLeft = 0;
@@ -253,7 +253,7 @@ export default {
         if (closestCard) {
           let targetScrollLeft;
           if (closestCardIndex === 0 && container.scrollLeft < 50) {
-            targetScrollLeft = 0;
+            targetScrollLeft = 0; // Принудительно выравниваем к началу, если близко к старту
           } else {
             targetScrollLeft = closestCard.offsetLeft;
           }
@@ -264,6 +264,7 @@ export default {
             ease: 'power2.out',
             onComplete: () => {
               this.isSnapping = false;
+              console.log("[APP] Snapped to card", closestCardIndex, "at scrollLeft:", targetScrollLeft);
             },
           });
         } else {
@@ -379,11 +380,11 @@ export default {
     <Header
       :city="currentCity"
       :language="selectedLanguage"
-      :theme="selectedTheme"
+      :theme="'Темная'"
       @update:language="updateLanguage"
       @update:theme="updateTheme"
     />
-    <div v-if="!showLoader" class="forecast-row">
+    <div class="forecast-row">
       <CurrentForecast
         :temperature="round(current.temperature)"
         :now="now"
@@ -402,7 +403,7 @@ export default {
         :language="selectedLanguage"
       />
     </div>
-    <div v-if="!showLoader" class="hourly-scroll-container" ref="scrollContainer">
+    <div class="hourly-scroll-container" ref="scrollContainer">
       <HourlyCard
         v-for="(hour, idx) in hourlyForecast"
         :key="idx"
@@ -414,10 +415,10 @@ export default {
         class="hourly-card"
       />
     </div>
-    <h2 v-if="!showLoader" class="forecast-title">
+    <h2 class="forecast-title">
       {{ currentTranslations.DailyCard.forecastTitle }}
     </h2>
-    <div v-if="!showLoader" class="dailyContainer">
+    <div class="dailyContainer">
       <DailyCard
         v-for="(card, idx) in translatedDailyCards"
         :key="idx"
@@ -477,13 +478,14 @@ export default {
   width: 100%;
 }
 .hourly-scroll-container {
-    display: flex;
-    overflow-x: auto;
-    gap: 20px;
-    padding: 10px 0px 10px 0px;
-    scroll-behavior: auto;
-    box-sizing: content-box;
-    width: -webkit-fill-available;
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  padding: 10px 0;
+  scroll-behavior: auto;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 .hourly-scroll-container.dragging {
   cursor: grabbing;
