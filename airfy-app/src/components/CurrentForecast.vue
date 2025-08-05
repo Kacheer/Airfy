@@ -3,7 +3,13 @@
 		<div class="group">
 			<div class="text-wrapper">{{ translations.Today }}</div>
 			<div class="div">
-				<SvgIcon class="cloud-icon" :name="icon" width="400" height="125" :is-weather-icons="true"/>
+				<SvgIcon
+					class="cloud-icon"
+					:name="icon"
+					width="400"
+					height="125"
+					:is-weather-icons="true"
+				/>
 				<div class="group-2">
 					<div class="temperature">{{ temperature }}</div>
 					<div class="text-wrapper-2">°C</div>
@@ -43,26 +49,26 @@ export default {
 		},
 		weatherCode: {
 			type: Number,
-			default: 0
+			default: 0,
 		},
 	},
 	mounted() {
-		console.log("CurrentForecast weatherCode:", this.weatherCode);
-		console.log("Weather description:", this.weatherDesc);
+		console.log('CurrentForecast weatherCode:', this.weatherCode)
+		console.log('Weather description:', this.weatherDesc)
 	},
 	computed: {
-translations() {
-        console.log("language in CurrentForecast:", language);
-        return language[this.language] || language['Русский']
-    },
+		translations() {
+			console.log('language in CurrentForecast:', language)
+			return language[this.language] || language['Русский']
+		},
 		icon() {
 			const res = Convert.toWeatherIcon(this.weatherCode)
-			console.log("ВЫВЕЛО КАРТИНКУ ", res)
+			console.log('ВЫВЕЛО КАРТИНКУ ', res)
 			return res
 		},
 		weatherDesc() {
 			return Convert.toWeatherDesc(this.weatherCode, this.language)
-		}
+		},
 	},
 }
 </script>
@@ -84,6 +90,7 @@ translations() {
 	box-sizing: border-box;
 	justify-content: space-between;
 }
+
 .CurrentForecast .group {
 	display: flex;
 	flex-direction: column;

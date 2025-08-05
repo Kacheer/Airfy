@@ -240,64 +240,66 @@ export default {
 </script>
 
 <template>
-	<div class="main-container">
-		<Header
-			:city="currentCity"
-			:language="selectedLanguage"
-			:theme="selectedTheme"
-			@update:language="updateLanguage"
-			@update:theme="updateTheme"
-		/>
-		<div v-if="isDataLoaded" class="forecast-row">
-			<CurrentForecast
-				:temperature="round(current.temperature)"
-				:now="now"
+	<div class="main-scroll-container">
+		<div class="main-scroll-content">
+			<Header
+				:city="currentCity"
 				:language="selectedLanguage"
-				:weather-code="current.weather_code"
+				:theme="selectedTheme"
+				@update:language="updateLanguage"
+				@update:theme="updateTheme"
 			/>
-			<CurrentForecastDetails
-				:humidity="daily[0]?.humidity"
-				:precipitation_probability="daily[0]?.precipitation_probability"
-				:pressure_min="convertMinPressure"
-				:pressure_max="convertMaxPressure"
-				:wind_speed="daily[0]?.wind_speed"
-				:visibility="convertVisibility"
-				:sunrise="convertSunriseTime"
-				:sunset="convertSunsetTime"
-				:language="selectedLanguage"
-			/>
-		</div>
-		<div
-			class="hourly-scroll-container"
-			ref="scrollContainer"
-			@mousedown="startDrag"
-			@mousemove="onDrag"
-			@mouseup="stopDrag"
-			@mouseleave="stopDrag"
-		>
-			<HourlyCard
-				v-for="(hour, idx) in hourlyForecast"
-				:key="idx"
-				:time="hour.time"
-				:temperature="hour.temperature"
-				:feelsLike="hour.feelsLike"
-				:weatherCode="hour.weatherCode"
-				:language="selectedLanguage"
-			/>
-		</div>
-		<h2 class="forecast-title">
-			{{ currentTranslations.DailyCard.forecastTitle }}
-		</h2>
-		<div class="dailyContainer">
-			<DailyCard
-				v-for="(card, idx) in translatedDailyCards"
-				:key="idx"
-				:time="card.time"
-				:temperature="card.temperature"
-				:feelsLike="card.feelsLike"
-				:weatherCode="card.weatherCode"
-				:language="card.language"
-			/>
+			<div v-if="isDataLoaded" class="forecast-row">
+				<CurrentForecast
+					:temperature="round(current.temperature)"
+					:now="now"
+					:language="selectedLanguage"
+					:weather-code="current.weather_code"
+				/>
+				<CurrentForecastDetails
+					:humidity="daily[0]?.humidity"
+					:precipitation_probability="daily[0]?.precipitation_probability"
+					:pressure_min="convertMinPressure"
+					:pressure_max="convertMaxPressure"
+					:wind_speed="daily[0]?.wind_speed"
+					:visibility="convertVisibility"
+					:sunrise="convertSunriseTime"
+					:sunset="convertSunsetTime"
+					:language="selectedLanguage"
+				/>
+			</div>
+			<div
+				class="hourly-scroll-container"
+				ref="scrollContainer"
+				@mousedown="startDrag"
+				@mousemove="onDrag"
+				@mouseup="stopDrag"
+				@mouseleave="stopDrag"
+			>
+				<HourlyCard
+					v-for="(hour, idx) in hourlyForecast"
+					:key="idx"
+					:time="hour.time"
+					:temperature="hour.temperature"
+					:feelsLike="hour.feelsLike"
+					:weatherCode="hour.weatherCode"
+					:language="selectedLanguage"
+				/>
+			</div>
+			<h2 class="forecast-title">
+				{{ currentTranslations.DailyCard.forecastTitle }}
+			</h2>
+			<div class="dailyContainer">
+				<DailyCard
+					v-for="(card, idx) in translatedDailyCards"
+					:key="idx"
+					:time="card.time"
+					:temperature="card.temperature"
+					:feelsLike="card.feelsLike"
+					:weatherCode="card.weatherCode"
+					:language="card.language"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
@@ -315,12 +317,7 @@ export default {
 .logo.vue:hover {
 	filter: drop-shadow(0 0 2em #42b883aa);
 }
-.main-container {
-	display: flex;
-	flex-direction: column;
-	align-items: stretch;
-	width: 100%;
-}
+
 .forecast-row {
 	display: flex;
 	flex-direction: row;
