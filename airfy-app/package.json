@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "animejs": "^4.1.2",
     "axios": "^1.10.0",
     "gsap": "^3.13.0",
     "pinia": "^3.0.3",

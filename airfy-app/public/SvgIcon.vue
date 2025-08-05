@@ -1,4 +1,3 @@
-
 <template>
 	<div
 		v-if="icon"
@@ -49,14 +48,16 @@ export default {
 				response = await fetch(`/src/assets/${this.name}.svg`)
 			}
 			else {
-				response = await fetch(`/src/assets/weather-icons/${this.name}`)
+				// Всегда добавляем .svg для weather-icons
+				const iconName = this.name.endsWith('.svg') ? this.name : this.name + '.svg';
+				response = await fetch(`/src/assets/weather-icons/${iconName}`)
 			}
 			console.log("РЕЗУЛЬТАТ КАРТИНКА, ",  response)
 			if (!response.ok) throw new Error('Failed to fetch SVG')
 			const svgText = await response.text()
 			this.icon = svgText
 		} catch (error) {
-			console.error(`SVG Icon "${this.name}" not found.`, error)
+			console.error(`SVG Icon \"${this.name}\" not found.`, error)
 		}
 	},
 }
