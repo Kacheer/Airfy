@@ -76,6 +76,11 @@ export default {
 			exceptional: 'Исключительная', // >=50000 м
 			unknown: 'Неизвестно', // Для некорректных значений
 		},
+		loadingStages: {
+			fetching: 'Достаём данные',
+			requesting: 'Запрашиваем данные с сервера',
+			showing: 'Показываем вам данные',
+		},
 	},
 	English: {
 		forecastDetails: {
@@ -151,6 +156,11 @@ export default {
 			very_good: 'Very good',
 			exceptional: 'Exceptional',
 			unknown: 'Unknown',
+		},
+		loadingStages: {
+			fetching: 'Fetching data',
+			requesting: 'Requesting data from server',
+			showing: 'Displaying data for you',
 		},
 	},
 }
