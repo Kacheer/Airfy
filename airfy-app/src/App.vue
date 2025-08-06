@@ -111,47 +111,47 @@ export default {
 
     this.fetchData();
 
-    setInterval(() => {
-      console.log("[APP] Запуск автоматического обновления данных");
-      this.fetchData();
-    }, 10 * 60 * 1000);
+setInterval(() => {
+  console.log("[APP] Запуск автоматического обновления данных");
+  this.fetchData();
+}, 10 * 60 * 1000);
 
     this.initScrollableSnap();
   },
   methods: {
     async fetchData() {
-      const serverStore = useServerStore();
-      this.showLoader = true;
-      this.loaderStage = 'fetching';
-      try {
-        this.loaderStage = 'requesting';
-        const userPos = await apiBrowser.getPos();
-        DataService.addPosToStore(userPos.lat, userPos.long);
-        this.currentCity = await apiLocation.getCityNameByStore();
-        await apiForecast.fetchForecast();
-        this.loaderStage = 'showing';
-        const data = DataService.getAllData();
-        this.units = data.units;
-        this.current = data.current;
-        this.daily = data.daily;
-        this.applyTheme(this.selectedTheme);
-        this.$nextTick(() => {
-          this.waitUntilAllLoaded();
-        });
-      } catch (error) {
-        this.loaderStage = 'showing';
-        this.currentCity = 'Moscow';
-        await apiForecast.fetchForecast(true);
-        const data = DataService.getAllData();
-        this.units = data.units;
-        this.current = data.current;
-        this.daily = data.daily;
-        this.applyTheme(this.selectedTheme);
-        this.$nextTick(() => {
-          this.waitUntilAllLoaded();
-        });
-      }
-    },
+  const serverStore = useServerStore();
+  this.showLoader = true;
+  this.loaderStage = 'fetching';
+  try {
+    this.loaderStage = 'requesting';
+    const userPos = await apiBrowser.getPos();
+    DataService.addPosToStore(userPos.lat, userPos.long);
+    this.currentCity = await apiLocation.getCityNameByStore();
+    await apiForecast.fetchForecast();
+    this.loaderStage = 'showing';
+    const data = DataService.getAllData();
+    this.units = data.units;
+    this.current = data.current;
+    this.daily = data.daily;
+    this.applyTheme(this.selectedTheme);
+    this.$nextTick(() => {
+      this.waitUntilAllLoaded();
+    });
+  } catch (error) {
+    this.loaderStage = 'showing';
+    this.currentCity = 'Moscow';
+    await apiForecast.fetchForecast(true);
+    const data = DataService.getAllData();
+    this.units = data.units;
+    this.current = data.current;
+    this.daily = data.daily;
+    this.applyTheme(this.selectedTheme);
+    this.$nextTick(() => {
+      this.waitUntilAllLoaded();
+    });
+  }
+},
     increment(index) {
       this.currentCity = this.cities[index];
       this.setStore();
@@ -296,35 +296,35 @@ export default {
       });
     },
     waitUntilAllLoaded() {
-      const images = Array.from(document.images);
-      const svgs = Array.from(document.querySelectorAll('svg'));
-      let total = images.length + svgs.length;
-      if (total === 0) {
+  const images = Array.from(document.images);
+  const svgs = Array.from(document.querySelectorAll('svg'));
+  let total = images.length + svgs.length;
+  if (total === 0) {
+    this.showLoader = false;
+    return;
+  }
+  let loaded = 0;
+  const check = () => {
+    loaded++;
+    if (loaded >= total) {
+      setTimeout(() => {
         this.showLoader = false;
-        return;
-      }
-      let loaded = 0;
-      const check = () => {
-        loaded++;
-        if (loaded >= total) {
-          setTimeout(() => {
-            this.showLoader = false;
-            this.loaderStage = 'fetching';
-          }, 200);
-        }
-      };
-      images.forEach(img => {
-        if (img.complete) {
-          check();
-        } else {
-          img.addEventListener('load', check);
-          img.addEventListener('error', check);
-        }
-      });
-      svgs.forEach(svg => {
-        setTimeout(check, 100);
-      });
-    },
+        this.loaderStage = 'fetching';
+      }, 200);
+    }
+  };
+  images.forEach(img => {
+    if (img.complete) {
+      check();
+    } else {
+      img.addEventListener('load', check);
+      img.addEventListener('error', check);
+    }
+  });
+  svgs.forEach(svg => {
+    setTimeout(check, 100);
+  });
+},
   },
   computed: {
     currentTranslations() {
@@ -485,7 +485,8 @@ export default {
   scroll-behavior: auto;
   width: 100%;
   max-width: 1280px;
-  margin: 0 auto;
+  margin: 0px auto;
+  margin-top: 20px
 }
 .hourly-scroll-container.dragging {
   cursor: grabbing;
