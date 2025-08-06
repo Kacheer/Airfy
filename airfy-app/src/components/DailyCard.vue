@@ -67,7 +67,9 @@ p {
 }
 .weather-description {
 	color: #ffffffbf;
-	font-weight: 480;
+	font-weight: 500;
+	text-align: center;
+	width: fit-content;
 }
 #card {
 	display: flex;
@@ -76,7 +78,7 @@ p {
 	justify-content: start;
 	gap: 5px;
 	width: 228px;
-	height: 260px;
+	height: 280px;
 
 	padding: 0.625rem;
 }

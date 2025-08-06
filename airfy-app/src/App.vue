@@ -79,7 +79,7 @@ export default {
       },
       daily: [],
       showLoader: true,
-      loaderStage: 'fetching', // этап загрузки
+      loaderStage: 'fetching',
       isDragging: false,
       isSnapping: false,
       scrollTimeout: null,
@@ -111,47 +111,66 @@ export default {
 
     this.fetchData();
 
-setInterval(() => {
-  console.log("[APP] Запуск автоматического обновления данных");
-  this.fetchData();
-}, 10 * 60 * 1000);
+    setInterval(() => {
+      console.log("[APP] Запуск автоматического обновления данных");
+      this.fetchData();
+    }, 10 * 60 * 1000);
 
     this.initScrollableSnap();
+    gsap.from(
+      '.header-container, .CurrentForecast, .CurrentForecastDetails, .hourly-scroll-container, .dailyContainer',
+      {
+        opacity: 0,
+        y: 30,
+        duration: 2,
+        ease: 'power3.out',
+        stagger: 0.3,
+        delay: 0.3,
+      }
+    );
   },
   methods: {
     async fetchData() {
-  const serverStore = useServerStore();
-  this.showLoader = true;
-  this.loaderStage = 'fetching';
-  try {
-    this.loaderStage = 'requesting';
-    const userPos = await apiBrowser.getPos();
-    DataService.addPosToStore(userPos.lat, userPos.long);
-    this.currentCity = await apiLocation.getCityNameByStore();
-    await apiForecast.fetchForecast();
-    this.loaderStage = 'showing';
-    const data = DataService.getAllData();
-    this.units = data.units;
-    this.current = data.current;
-    this.daily = data.daily;
-    this.applyTheme(this.selectedTheme);
-    this.$nextTick(() => {
-      this.waitUntilAllLoaded();
-    });
-  } catch (error) {
-    this.loaderStage = 'showing';
-    this.currentCity = 'Moscow';
-    await apiForecast.fetchForecast(true);
-    const data = DataService.getAllData();
-    this.units = data.units;
-    this.current = data.current;
-    this.daily = data.daily;
-    this.applyTheme(this.selectedTheme);
-    this.$nextTick(() => {
-      this.waitUntilAllLoaded();
-    });
-  }
-},
+      const serverStore = useServerStore();
+      this.showLoader = true;
+      this.loaderStage = 'fetching';
+      try {
+        this.loaderStage = 'requesting';
+        const userPos = await apiBrowser.getPos();
+        DataService.addPosToStore(userPos.lat, userPos.long);
+        this.currentCity = await apiLocation.getCityNameByStore();
+        await apiForecast.fetchForecast();
+        this.loaderStage = 'showing';
+        const data = DataService.getAllData();
+        this.units = data.units;
+        this.current = data.current;
+        this.daily = data.daily;
+        this.applyTheme(this.selectedTheme);
+        this.$nextTick(() => {
+          this.waitUntilAllLoaded();
+          const elementsToFadeIn = document.querySelectorAll(
+            '.header-container, .CurrentForecast, .CurrentForecastDetails, .hourly-card, .dailyContainer > *'
+          );
+          elementsToFadeIn.forEach((el, i) => {
+            setTimeout(() => {
+              el.classList.add('loaded');
+            }, i * 100);
+          });
+        });
+      } catch (error) {
+        this.loaderStage = 'showing';
+        this.currentCity = 'Moscow';
+        await apiForecast.fetchForecast(true);
+        const data = DataService.getAllData();
+        this.units = data.units;
+        this.current = data.current;
+        this.daily = data.daily;
+        this.applyTheme(this.selectedTheme);
+        this.$nextTick(() => {
+          this.waitUntilAllLoaded();
+        });
+      }
+    },
     increment(index) {
       this.currentCity = this.cities[index];
       this.setStore();
@@ -181,10 +200,15 @@ setInterval(() => {
     },
     initScrollableSnap() {
       const container = this.$refs.scrollContainer;
-      if (!container) return;  
+      if (!container) return;
 
       container.scrollLeft = 0;
-      console.log("[APP] Container width:", container.offsetWidth, "First card offsetLeft:", container.querySelector('.hourly-card')?.offsetLeft);
+      console.log(
+        "[APP] Container width:",
+        container.offsetWidth,
+        "First card offsetLeft:",
+        container.querySelector('.hourly-card')?.offsetLeft
+      );
 
       let startX = 0;
       let scrollLeft = 0;
@@ -253,7 +277,7 @@ setInterval(() => {
         if (closestCard) {
           let targetScrollLeft;
           if (closestCardIndex === 0 && container.scrollLeft < 50) {
-            targetScrollLeft = 0; // Принудительно выравниваем к началу, если близко к старту
+            targetScrollLeft = 0;
           } else {
             targetScrollLeft = closestCard.offsetLeft;
           }
@@ -264,7 +288,12 @@ setInterval(() => {
             ease: 'power2.out',
             onComplete: () => {
               this.isSnapping = false;
-              console.log("[APP] Snapped to card", closestCardIndex, "at scrollLeft:", targetScrollLeft);
+              console.log(
+                "[APP] Snapped to card",
+                closestCardIndex,
+                "at scrollLeft:",
+                targetScrollLeft
+              );
             },
           });
         } else {
@@ -296,35 +325,55 @@ setInterval(() => {
       });
     },
     waitUntilAllLoaded() {
-  const images = Array.from(document.images);
-  const svgs = Array.from(document.querySelectorAll('svg'));
-  let total = images.length + svgs.length;
-  if (total === 0) {
-    this.showLoader = false;
-    return;
-  }
-  let loaded = 0;
-  const check = () => {
-    loaded++;
-    if (loaded >= total) {
-      setTimeout(() => {
+      const images = Array.from(document.images);
+      const svgs = Array.from(document.querySelectorAll('svg'));
+      let total = images.length + svgs.length;
+      if (total === 0) {
         this.showLoader = false;
-        this.loaderStage = 'fetching';
-      }, 200);
-    }
-  };
-  images.forEach(img => {
-    if (img.complete) {
-      check();
-    } else {
-      img.addEventListener('load', check);
-      img.addEventListener('error', check);
-    }
-  });
-  svgs.forEach(svg => {
-    setTimeout(check, 100);
-  });
-},
+        return;
+      }
+      let loaded = 0;
+      const check = () => {
+        loaded++;
+        if (loaded >= total) {
+          setTimeout(() => {
+            this.showLoader = false;
+            this.loaderStage = 'fetching';
+          }, 200);
+        }
+      };
+      images.forEach(img => {
+        if (img.complete) {
+          check();
+        } else {
+          img.addEventListener('load', check);
+          img.addEventListener('error', check);
+        }
+      });
+      svgs.forEach(svg => {
+        setTimeout(check, 100);
+      });
+    },
+    scrollToForecast() {
+      const forecast = document.querySelector('.forecast-row');
+      if (forecast) {
+        gsap.to(window, {
+          scrollTo: forecast,
+          duration: 1,
+          ease: 'power2.out',
+        });
+      }
+    },
+    scrollToDaily() {
+      const targetElement = document.querySelector('.dailyContainer');
+      if (targetElement) {
+        gsap.to(window, {
+          scrollTo: { y: targetElement, offsetY: 80 },
+          duration: 1.2,
+          ease: 'power2.out',
+        });
+      }
+    },
   },
   computed: {
     currentTranslations() {
@@ -485,8 +534,8 @@ setInterval(() => {
   scroll-behavior: auto;
   width: 100%;
   max-width: 1280px;
-  margin: 0px auto;
-  margin-top: 20px
+  margin: 0 auto;
+  margin-top: 20px;
 }
 .hourly-scroll-container.dragging {
   cursor: grabbing;
