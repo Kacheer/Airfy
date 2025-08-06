@@ -91,12 +91,32 @@ export default {
       this.selectedTheme = savedTheme;
       this.applyTheme(savedTheme);
     }
+
+    // Определение языка пользователя
+    const browserLanguage = navigator.language.split('-')[0]; 
+    console.log("[APP] Язык браузера:", browserLanguage);
+
+
+    const languageMap = {
+      ru: 'Русский',
+      en: 'English',
+      // Можно добавить другие языки типо
+    };
+
+    // Проверяем, поддерживается ли язык браузера
+    const mappedLanguage = languageMap[browserLanguage];
+    if (mappedLanguage && language[mappedLanguage]) {
+      this.selectedLanguage = mappedLanguage;
+      console.log("[APP] Установлен язык из браузера:", mappedLanguage);
+    } else {
+      this.selectedLanguage = 'English';
+      console.log("[APP] Язык браузера не поддерживается, установлен English по умолчанию");
+    }
   },
   mounted() {
     const serverStore = useServerStore();
     console.log("[APP] Начало получения позиции");
 
-    // Load cached data from localStorage
     if (serverStore.loadState()) {
       const data = DataService.getAllData();
       this.units = data.units;
