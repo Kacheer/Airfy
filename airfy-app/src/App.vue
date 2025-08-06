@@ -117,6 +117,23 @@ export default {
 		}, 10 * 60 * 1000)
 
 		this.initScrollableSnap()
+		this.enableSmoothScroll()
+		gsap.from(
+			' .hourly-scroll-container, .dailyContainer, .CurrentForecast, CurrentForecastDetails',
+			{
+				opacity: 0,
+				y: 30,
+				duration: 2,
+				ease: 'power3.out',
+				stagger: 0.3,
+				delay: 0.3,
+				smooth: 1,
+			}
+		)
+
+		this.enableSmoothScroll()
+		this.initScrollableSnap()
+		this.fetchData()
 	},
 	methods: {
 		async fetchData() {
@@ -137,6 +154,16 @@ export default {
 				this.applyTheme(this.selectedTheme)
 				this.$nextTick(() => {
 					this.waitUntilAllLoaded()
+				})
+				this.$nextTick(() => {
+					const elementsToFadeIn = document.querySelectorAll(
+						'.header-container, .CurrentForecast, .CurrentForecastDetails, .hourly-card, .dailyContainer > *'
+					)
+					elementsToFadeIn.forEach((el, i) => {
+						setTimeout(() => {
+							el.classList.add('loaded')
+						}, i * 100)
+					})
 				})
 			} catch (error) {
 				this.loaderStage = 'showing'
@@ -338,6 +365,26 @@ export default {
 			svgs.forEach(svg => {
 				setTimeout(check, 100)
 			})
+		},
+		scrollToForecast() {
+			const forecast = document.querySelector('.forecast-row')
+			if (forecast) {
+				gsap.to(window, {
+					scrollTo: forecast,
+					duration: 1,
+					ease: 'power2.out',
+				})
+			}
+		},
+		scrollToDaily() {
+			const targetElement = document.querySelector('.dailyContainer')
+			if (targetElement) {
+				gsap.to(window, {
+					scrollTo: { y: targetElement, offsetY: 80 },
+					duration: 1.2,
+					ease: 'power2.out',
+				})
+			}
 		},
 	},
 	computed: {
