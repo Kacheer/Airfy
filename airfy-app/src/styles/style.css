@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;1,700&display=swap');
+
 :root {
 	font-family: system-ui, 'Inter-Bold';
 	line-height: 1.5;
@@ -324,21 +326,4 @@ body.dark-mode option {
 	margin: 0 auto;
 	box-sizing: border-box;
 	overflow: hidden;
-}
-.header-container,
-.CurrentForecast,
-.CurrentForecastDetails,
-.hourly-card,
-.dailyContainer > * {
-	opacity: 0;
-	transform: translateY(20px);
-	transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-.header-container.loaded,
-.CurrentForecast.loaded,
-.CurrentForecastDetails.loaded,
-.hourly-card.loaded,
-.dailyContainer > *.loaded {
-	opacity: 1;
-	transform: translateY(0);
 }

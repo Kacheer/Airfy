@@ -1,5 +1,14 @@
 export default {
 	Русский: {
+		footer: {
+			Support: 'Поддержка',
+			Contact: 'Контакты',
+			PrivacyPolicy: 'Конфиденциальность',
+			Help: 'Помощь',
+			Information: 'Информация',
+			Security: 'Безопасность',
+			OpenMeteoAPI: 'Open Meteo API',
+		},
 		forecastDetails: {
 			humidity: 'Влажность',
 			windSpeed: 'Скорость ветра',
@@ -83,6 +92,15 @@ export default {
 		},
 	},
 	English: {
+		footer: {
+			Support: 'Support',
+			Contact: 'Contact',
+			PrivacyPolicy: 'Privacy Policy',
+			Help: 'Help',
+			Information: 'Information',
+			Security: 'Security',
+			OpenMeteoAPI: 'Open Meteo API',
+		},
 		forecastDetails: {
 			humidity: 'Humidity',
 			windSpeed: 'Wind Speed',
