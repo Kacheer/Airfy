@@ -15,6 +15,7 @@ import apiLocation from './api/apiLocation'
 import Convert from './services/Convert.js'
 import { useServerStore } from './store/Serverstore'
 import LoadingScreen from './components/LoadingScreen.vue'
+
 import Footer from './components/Footer.vue'
 
 gsap.registerPlugin(ScrollToPlugin)
@@ -27,14 +28,19 @@ export default {
 		DailyCard,
 		HourlyCard,
 		LoadingScreen,
+
 		Footer,
 	},
 	data() {
 		return {
 			currentCity: 'London',
 			cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
+
 			selectedLanguage: '',
 			selectedTheme: '', // или 'Светлая'
+
+			selectedLanguage: 'Русский',
+
 			temperature: 23,
 			now: 'Now',
 			dailyCards: [
@@ -143,6 +149,9 @@ export default {
 		this.initScrollableSnap()
 		gsap.from(
 			'.header-container, .CurrentForecast, .CurrentForecastDetails, .hourly-scroll-container, .dailyContainer, .footer',
+
+			'.header-container, .CurrentForecast, .CurrentForecastDetails, .hourly-scroll-container, .dailyContainer',
+
 			{
 				opacity: 0,
 				y: 30,
@@ -246,6 +255,7 @@ export default {
 							},
 							'-=0.2'
 						)
+
 						.from(
 							'.footer',
 							{
@@ -587,8 +597,10 @@ export default {
 				:language="card.language"
 			/>
 		</div>
+		<<<<<<< HEAD
 		<Footer :language="selectedLanguage" :selectedTheme="selectedTheme" />
 
+		======= >>>>>>> d30dc054337fcf4a0d8b79854c7adc01787f9f59
 		<LoadingScreen
 			:show="showLoader"
 			:theme="selectedTheme"

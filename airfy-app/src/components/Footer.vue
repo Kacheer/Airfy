@@ -68,16 +68,16 @@ export default {
 
 <style scoped>
 .footer {
-	width: 100%; /* Занимает всю ширину */
-	padding: 150px 158px; /* Отступы сверху/снизу и по бокам */
+	width: 100%;
+	padding: 150px 158px;
 	font-family: 'Montserrat', sans-serif;
-	position: relative; /* ВАЖНО: родитель должен быть относительно позиционирован */
+	position: relative;
 	overflow: hidden;
 	box-sizing: border-box;
 }
 
 .footer-content {
-	position: relative; /* чтобы элементы были поверх */
+	position: relative;
 	z-index: 1;
 	display: flex;
 	justify-content: space-between;
@@ -98,7 +98,7 @@ export default {
 
 .footer-text {
 	display: flex;
-	gap: 250px; /* Больше расстояние между блоками Support и Information */
+	gap: 250px;
 }
 
 .footer-text ul {
@@ -120,9 +120,9 @@ export default {
 }
 .cloud-background {
 	position: absolute;
-	top: 50%; /* Центр по вертикали */
-	right: 20px; /* Чуть отступ от правого края */
-	transform: translateY(-50%); /* Чуть ниже центра */
+	top: 50%;
+	right: 20px;
+	transform: translateY(-50%);
 	width: 500px;
 	height: auto;
 	opacity: 0.35;
