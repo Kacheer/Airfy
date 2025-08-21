@@ -597,10 +597,9 @@ export default {
 				:language="card.language"
 			/>
 		</div>
-		<<<<<<< HEAD
+
 		<Footer :language="selectedLanguage" :selectedTheme="selectedTheme" />
 
-		======= >>>>>>> d30dc054337fcf4a0d8b79854c7adc01787f9f59
 		<LoadingScreen
 			:show="showLoader"
 			:theme="selectedTheme"
