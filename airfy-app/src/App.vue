@@ -14,7 +14,9 @@ import DataService from './services/DataService'
 import apiLocation from './api/apiLocation'
 import Convert from './services/Convert.js'
 import { useServerStore } from './store/Serverstore'
+import pinia from './store/index.js'
 import LoadingScreen from './components/LoadingScreen.vue'
+import { useUserStore } from './store/userStore'
 
 import Footer from './components/Footer.vue'
 
@@ -169,9 +171,18 @@ export default {
 			this.loaderStage = 'fetching'
 			try {
 				this.loaderStage = 'requesting'
-				const userPos = await apiBrowser.getPos()
-				DataService.addPosToStore(userPos.lat, userPos.long)
-				this.currentCity = await apiLocation.getCityNameByStore()
+				let userPos
+				try {
+					userPos = await apiLocation.getCoordinatesByCity(this.currentCity)
+					if (!userPos) throw new Error('Город не найден')
+					DataService.addPosToStore(userPos.lat, userPos.long)
+				} catch (err) {
+					console.warn('[APP] Город не найден, используем позицию браузера')
+					userPos = await apiBrowser.getPos()
+					DataService.addPosToStore(userPos.lat, userPos.long)
+					this.currentCity = await apiLocation.getCityNameByStore()
+				}
+
 				await apiForecast.fetchForecast()
 				this.loaderStage = 'showing'
 				const data = DataService.getAllData()
@@ -286,9 +297,7 @@ export default {
 			this.setStore()
 		},
 		setStore() {
-			const userStore = require('./store/userStore').useUserStore(
-				require('./store/index')
-			)
+			const userStore = useUserStore(pinia)
 			userStore.setUserPos(null, null)
 			apiForecast.fetchForecast(true)
 		},
@@ -488,6 +497,15 @@ export default {
 				})
 			}
 		},
+		updateCity(newCity) {
+			if (!newCity) return
+			this.currentCity = newCity
+			console.log('[APP] Обновлён город пользователем:', newCity)
+
+			// Обновляем данные для нового города
+			this.setStore()
+			this.fetchData()
+		},
 	},
 	computed: {
 		currentTranslations() {
@@ -551,6 +569,7 @@ export default {
 			:theme="selectedTheme"
 			@update:language="updateLanguage"
 			@update:theme="updateTheme"
+			@update:city="updateCity"
 		/>
 		<div class="forecast-row">
 			<CurrentForecast

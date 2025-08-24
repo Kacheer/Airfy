@@ -250,7 +250,7 @@ body:not(.dark-mode) .dropdown {
 	transition: transform 0.3s ease, background-color 0.3s ease;
 }
 body:not(.dark-mode) .header-button:hover {
-	background-color: #535bf2;
+	background-color: #535bf23a;
 	color: white;
 	transform: translateY(-10px);
 }
@@ -264,7 +264,7 @@ body:not(.dark-mode) #weatherDesc {
 	color: #7c7c7c;
 }
 body.dark-mode .header-button:hover {
-	background-color: #535bf2;
+	background-color: #535bf23a;
 	color: white;
 	transform: translateY(-10px);
 }
