@@ -150,9 +150,9 @@ export default {
 
 		this.initScrollableSnap()
 		gsap.from(
-			'.header-container, .CurrentForecast, .CurrentForecastDetails, .hourly-scroll-container, .dailyContainer, .footer',
+			'.header-container, .CurrentForecast, .CurrentForecastDetails, .hourly-scroll-container, .dailyContainer, .footer, .line-img',
 
-			'.header-container, .CurrentForecast, .CurrentForecastDetails, .hourly-scroll-container, .dailyContainer',
+			'.header-container, .CurrentForecast, .CurrentForecastDetails, .hourly-scroll-container, .dailyContainer, ',
 
 			{
 				opacity: 0,
@@ -276,6 +276,17 @@ export default {
 								ease: 'power2.out',
 							},
 							'-=0.2'
+						)
+						.from(
+							'.line-img',
+							{
+								y: 30,
+								opacity: 0,
+								duration: 0.5,
+
+								ease: 'power2.out',
+							},
+							'-=0.6'
 						)
 				})
 			} catch (error) {
@@ -616,8 +627,7 @@ export default {
 				:language="card.language"
 			/>
 		</div>
-
-		<Footer :language="selectedLanguage" :selectedTheme="selectedTheme" />
+		<img src="./assets/Line.png" alt="line.png" class="line-img" />
 
 		<LoadingScreen
 			:show="showLoader"
@@ -625,6 +635,7 @@ export default {
 			:stageText="loaderStageText"
 		/>
 	</div>
+	<Footer :language="selectedLanguage" :selectedTheme="selectedTheme" />
 </template>
 
 <style scoped>
@@ -689,5 +700,8 @@ export default {
 .hourly-card {
 	flex: 0 0 auto;
 	width: 223px;
+}
+.line-img {
+	margin-top: 125px;
 }
 </style>

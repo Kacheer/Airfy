@@ -1,36 +1,39 @@
 <template>
 	<div class="footer">
 		<div class="footer-content">
-			<div class="logo">
-				<img
-					:src="currentIcon"
-					alt="Cloud background"
-					class="cloud-background"
-				/>
-			</div>
-			<div class="Airfy">
-				<h1>Airfy</h1>
-			</div>
+			<div class="Airfy-logo">Airfy</div>
 			<div class="footer-text">
 				<ul>
-					<li>{{ translations.footer.Support }}</li>
 					<li>
-						<a href="#">{{ translations.footer.Help }}</a>
+						<a href="#" class="link-text">{{
+							translations.footer.PrivacyPolicy
+						}}</a>
 					</li>
 					<li>
-						<a href="#">{{ translations.footer.Contact }}</a>
-					</li>
-				</ul>
-				<ul>
-					<li>{{ translations.footer.Information }}</li>
-					<li>
-						<a href="#">{{ translations.footer.PrivacyPolicy }}</a>
+						<a href="https://open-meteo.com/" class="link-text">{{
+							translations.footer.OpenMeteoAPI
+						}}</a>
 					</li>
 					<li>
-						<a href="#">{{ translations.footer.OpenMeteoAPI }}</a>
+						<a href="#" class="link-text"
+							>{{ translations.footer.Security }}
+						</a>
 					</li>
 					<li>
-						<a href="#">{{ translations.footer.Security }}</a>
+						<a href="#" class="social-link discord"
+							><img
+								src="../assets/discord.png"
+								class="icon-social"
+								alt="discord.png"
+						/></a>
+					</li>
+					<li>
+						<a href="#" class="social-link telegram">
+							<img
+								src="../assets/telegram.png"
+								class="icon-social"
+								alt="telegram.png"
+						/></a>
 					</li>
 				</ul>
 			</div>
@@ -49,12 +52,6 @@ export default {
 		},
 	},
 	computed: {
-		currentIcon() {
-			if (this.selectedTheme === 'Темная') {
-				return '/src/assets/weather-icons/cloud-dark.svg'
-			}
-			return '/src/assets/weather-icons/cloud-blue.svg'
-		},
 		translations() {
 			return language[this.language] || language['Русский']
 		},
@@ -67,76 +64,39 @@ export default {
 </script>
 
 <style scoped>
-.footer {
-	width: 100%;
-	padding: 150px 158px;
-	font-family: 'Montserrat', sans-serif;
-	position: relative;
-	overflow: hidden;
-	box-sizing: border-box;
-}
+.Airfy-logo {
+	font-family: 'Montserrat';
 
+	font-size: 75px;
+}
 .footer-content {
-	position: relative;
-	z-index: 1;
+	padding: 35px 0px;
 	display: flex;
-	justify-content: space-between;
-	align-items: flex-start;
-	flex-wrap: wrap;
-	width: 100%;
+	justify-content: space-between; /* Это нужно, чтобы логотип и ссылки не пересекались */
+	align-items: center; /* Центрирует по вертикали */
 }
 
-.Airfy {
-	flex-shrink: 0;
-}
-
-.Airfy h1 {
-	font-size: 115px;
-	margin: 0;
-	text-align: left;
-}
-
-.footer-text {
-	display: flex;
-	gap: 250px;
-}
-
-.footer-text ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-
-.footer-text li {
-	font-size: 18px;
-	margin-bottom: 10px;
-	color: #a2a2a2;
-}
-
-.footer-text li:first-child {
-	color: #ffffff;
-	font-weight: bold;
-	font-size: 22px;
-}
-.cloud-background {
-	position: absolute;
-	top: 50%;
-	right: 20px;
-	transform: translateY(-50%);
-	width: 500px;
-	height: auto;
-	opacity: 0.35;
-	z-index: 0;
-	pointer-events: none;
-}
-.footer-text a {
+.link-text {
 	color: #a2a2a2;
 	text-decoration: none;
 	position: relative;
 	transition: color 0.3s ease;
+	display: flex; /* делаем flex-контейнером */
+	align-items: center;
 }
-
-.footer-text a::after {
+ul {
+	font-size: 20px;
+	display: flex;
+	gap: 37px;
+	list-style-type: none;
+	justify-content: flex-end;
+	align-items: center;
+	padding: 0;
+}
+.icon-social {
+	width: 30px;
+}
+.link-text::after {
 	content: '';
 	position: absolute;
 	left: 0;
@@ -149,11 +109,46 @@ export default {
 	transition: transform 0.3s ease;
 }
 
-.footer-text a:hover {
+.link-text:hover {
 	color: #ffffff;
 }
 
-.footer-text a:hover::after {
+.link-text:hover::after {
 	transform: scaleX(1);
+}
+.social-link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%; /* круг */
+	transition: background-color 0.3s ease, transform 0.3s ease,
+		box-shadow 0.3s ease;
+}
+
+.icon-social {
+	width: 30px;
+	transition: transform 0.3s ease;
+}
+
+/* Общий hover-эффект */
+.social-link:hover {
+	transform: scale(1.15); /* больше увеличиваем */
+}
+.social-link:hover .icon-social {
+	transform: scale(1.25);
+}
+
+/* Discord */
+.social-link.discord:hover {
+	background-color: #5865f2;
+	box-shadow: 0 0 20px #5865f2, 0 0 40px #5865f2;
+}
+
+/* Telegram */
+.social-link.telegram:hover {
+	background-color: #0088cc;
+	box-shadow: 0 0 20px #0088cc, 0 0 40px #0088cc;
 }
 </style>
