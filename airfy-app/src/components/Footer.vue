@@ -72,8 +72,8 @@ export default {
 .footer-content {
 	padding: 35px 0px;
 	display: flex;
-	justify-content: space-between; /* Это нужно, чтобы логотип и ссылки не пересекались */
-	align-items: center; /* Центрирует по вертикали */
+	justify-content: space-between;
+	align-items: center;
 }
 
 .link-text {
@@ -81,7 +81,7 @@ export default {
 	text-decoration: none;
 	position: relative;
 	transition: color 0.3s ease;
-	display: flex; /* делаем flex-контейнером */
+	display: flex;
 	align-items: center;
 }
 ul {
@@ -122,7 +122,7 @@ ul {
 	justify-content: center;
 	width: 50px;
 	height: 50px;
-	border-radius: 50%; /* круг */
+	border-radius: 50%;
 	transition: background-color 0.3s ease, transform 0.3s ease,
 		box-shadow 0.3s ease;
 }
@@ -132,21 +132,18 @@ ul {
 	transition: transform 0.3s ease;
 }
 
-/* Общий hover-эффект */
 .social-link:hover {
-	transform: scale(1.15); /* больше увеличиваем */
+	transform: scale(1.15);
 }
 .social-link:hover .icon-social {
 	transform: scale(1.25);
 }
 
-/* Discord */
 .social-link.discord:hover {
 	background-color: #5865f2;
 	box-shadow: 0 0 20px #5865f2, 0 0 40px #5865f2;
 }
 
-/* Telegram */
 .social-link.telegram:hover {
 	background-color: #0088cc;
 	box-shadow: 0 0 20px #0088cc, 0 0 40px #0088cc;
