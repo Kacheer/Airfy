@@ -202,6 +202,7 @@ export default {
 	gap: 50px;
 	border-radius: 10px;
 	font-weight: bold;
+	position: relative;
 }
 
 .header-button {
@@ -257,10 +258,7 @@ export default {
 	cursor: pointer;
 	position: relative;
 }
-.header-container {
-	position: relative;
-	z-index: 10;
-}
+
 .city-autocomplete {
 	position: relative;
 	display: inline-block;
