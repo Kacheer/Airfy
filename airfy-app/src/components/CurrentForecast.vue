@@ -63,10 +63,7 @@ export default {
 		},
 		icon() {
 			const res = Convert.toWeatherIcon(this.weatherCode)
-
 			console.log('ВЫВЕЛО КАРТИНКУ ', res)
-			return res
-
 			return res.endsWith('.svg') ? res : res + '.svg'
 		},
 		weatherDesc() {

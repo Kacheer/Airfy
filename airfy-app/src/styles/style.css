@@ -7,10 +7,7 @@
 
 	color-scheme: light dark;
 	color: rgba(255, 255, 255, 0.87);
-	background-image: url('/airfy-app/src/assets/test-background.png');
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-size: cover;
+	/* Динамический фон теперь обрабатывается компонентом DynamicBackground */
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
@@ -33,6 +30,7 @@ body {
 	place-items: center;
 	min-width: 320px;
 	min-height: 100vh;
+	background: transparent;
 }
 
 h1 {
@@ -149,19 +147,18 @@ body:not(.dark-mode) .hourly-scroll-container::-webkit-scrollbar-track {
 }
 
 .glass-card {
-	background: rgba(255, 255, 255, 0.04);
-	backdrop-filter: blur(3px);
-	-webkit-backdrop-filter: blur(7px); /* 7px = 0.44rem / 0.44em / 1.85cm */
+	background: rgba(255, 255, 255, 0.08);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
 	border-radius: 20px;
-	border: 1px solid rgba(255, 255, 255, 0.3);
-	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
-		inset 0 1px 0 rgba(255, 255, 255, 0.5),
-		inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-		inset 0 0 0px 0px rgba(255, 255, 255, 0);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+		inset 0 1px 0 rgba(255, 255, 255, 0.3),
+		inset 0 -1px 0 rgba(255, 255, 255, 0.1);
 	position: relative;
 	overflow: hidden;
-	color: rgba(255, 255, 255, 0.87);
-	text-shadow: none !important;
+	color: rgba(255, 255, 255, 0.9);
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .glass-card::before {
@@ -280,11 +277,15 @@ body.dark-mode .dropdown {
 	transition: transform 0.3s ease, background-color 0.3s ease;
 }
 body.dark-mode .glass-card {
-	background: rgba(255, 255, 255, 0.05);
-	backdrop-filter: blur(3px);
-	border: 1px solid rgba(255, 255, 255, 0.2);
-	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-	color: rgba(255, 255, 255, 0.87);
+	background: rgba(0, 0, 0, 0.15);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+		inset 0 1px 0 rgba(255, 255, 255, 0.1),
+		inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+	color: rgba(255, 255, 255, 0.9);
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 body.dark-mode select:focus {
 	outline: none;

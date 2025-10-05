@@ -42,22 +42,36 @@ export default {
 		}
 	},
 	async created() {
-		try {
-			let response;
-			if (!this.isWeatherIcons) {
-				response = await fetch(`/src/assets/${this.name}.svg`)
+		await this.loadIcon()
+	},
+	watch: {
+		name: {
+			handler() {
+				this.loadIcon()
+			},
+			immediate: false
+		}
+	},
+	methods: {
+		async loadIcon() {
+			try {
+				let response;
+				if (!this.isWeatherIcons) {
+					response = await fetch(`/src/assets/${this.name}.svg`)
+				}
+				else {
+					// Всегда добавляем .svg для weather-icons
+					const iconName = this.name.endsWith('.svg') ? this.name : this.name + '.svg';
+					console.log('[SvgIcon] Загружаем иконку погоды:', iconName)
+					response = await fetch(`/src/assets/weather-icons/${iconName}`)
+				}
+				console.log('[SvgIcon] Результат загрузки:', response.status, response.url)
+				if (!response.ok) throw new Error('Failed to fetch SVG')
+				const svgText = await response.text()
+				this.icon = svgText
+			} catch (error) {
+				console.error(`[SvgIcon] Иконка "${this.name}" не найдена.`, error)
 			}
-			else {
-				// Всегда добавляем .svg для weather-icons
-				const iconName = this.name.endsWith('.svg') ? this.name : this.name + '.svg';
-				response = await fetch(`/src/assets/weather-icons/${iconName}`)
-			}
-			console.log("РЕЗУЛЬТАТ КАРТИНКА, ",  response)
-			if (!response.ok) throw new Error('Failed to fetch SVG')
-			const svgText = await response.text()
-			this.icon = svgText
-		} catch (error) {
-			console.error(`SVG Icon \"${this.name}\" not found.`, error)
 		}
 	},
 }

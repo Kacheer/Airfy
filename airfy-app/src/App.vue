@@ -19,6 +19,7 @@ import LoadingScreen from './components/LoadingScreen.vue'
 import { useUserStore } from './store/userStore'
 
 import Footer from './components/Footer.vue'
+import SimpleDynamicBackground from './components/SimpleDynamicBackground.vue'
 
 gsap.registerPlugin(ScrollToPlugin)
 
@@ -30,7 +31,7 @@ export default {
 		DailyCard,
 		HourlyCard,
 		LoadingScreen,
-
+		SimpleDynamicBackground,
 		Footer,
 	},
 	data() {
@@ -38,10 +39,8 @@ export default {
 			currentCity: 'London',
 			cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
 
-			selectedLanguage: '',
-			selectedTheme: '', // или 'Светлая'
-
 			selectedLanguage: 'Русский',
+			selectedTheme: 'Светлая', // По умолчанию светлая тема
 
 			temperature: 23,
 			now: 'Now',
@@ -98,9 +97,12 @@ export default {
 	},
 	created() {
 		const savedTheme = localStorage.getItem('theme')
+		console.log('[APP] Загружаем тему из localStorage:', savedTheme)
 		if (savedTheme) {
 			this.selectedTheme = savedTheme
 			this.applyTheme(savedTheme)
+		} else {
+			console.log('[APP] Тема не найдена в localStorage, используем по умолчанию:', this.selectedTheme)
 		}
 
 		// Определение языка пользователя
@@ -320,6 +322,7 @@ export default {
 			return Math.round(number)
 		},
 		updateTheme(newTheme) {
+			console.log('[APP] Обновляем тему с', this.selectedTheme, 'на', newTheme)
 			this.selectedTheme = newTheme
 			localStorage.setItem('theme', newTheme)
 			this.applyTheme(newTheme)
@@ -446,7 +449,7 @@ export default {
 
 			container.addEventListener('scroll', onScroll)
 
-			this.$once('hook:beforeDestroy', () => {
+			this.$once('hook:beforeUnmount', () => {
 				container.removeEventListener('mousedown', startDrag)
 				container.removeEventListener('mousemove', onDrag)
 				container.removeEventListener('mouseup', stopDrag)
@@ -574,6 +577,12 @@ export default {
 
 <template>
 	<div class="main-container">
+		<SimpleDynamicBackground 
+			:weatherCode="current.weather_code || 0"
+			:theme="selectedTheme"
+			:interactive="true"
+			:key="selectedTheme"
+		/>
 		<Header
 			:city="currentCity"
 			:language="selectedLanguage"
