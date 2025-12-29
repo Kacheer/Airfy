@@ -1,92 +1,99 @@
 <template>
-	<div class="glass-card" id="card">
-		<p id="hour">{{ convertedTime }}</p>
+	<div class="hourly-card">
+		<p id="hour" class="card-time">{{ convertedTime }}</p>
 		<SvgIcon
 			:name="weatherIcon"
 			:width="80"
 			:height="80"
 			:isWeatherIcons="true"
+			class="card-icon"
 		/>
-		<p id="temperature">{{ temperature }} °C</p>
-		<p class="feelsLike">{{ feelsLike }} °C</p>
+		<p id="temperature" class="card-temp">{{ temperature }} °C</p>
+		<p class="feelsLike card-description">{{ feelsLike }} °C</p>
 	</div>
 </template>
 
-<script>
+<script setup>
 import SvgIcon from '../../public/SvgIcon.vue'
 import Convert from '../services/Convert.js'
 
-export default {
-	name: 'HourlyCard',
-	components: { SvgIcon },
-	props: {
-		time: {
-			type: Number, // Теперь time — это Unix-время
-			required: true,
-		},
-		temperature: {
-			type: Number,
-			required: true,
-		},
-		feelsLike: {
-			type: Number,
-			required: true,
-		},
-		weatherCode: {
-			type: Number, // Добавлено для погодного кода
-			required: true,
-		},
-		language: {
-			// Добавлено для совместимости с языком
-			type: String,
-			required: true,
-		},
+defineProps({
+	time: {
+		type: Number, // Теперь time — это Unix-время
+		required: true,
 	},
-	computed: {
-		convertedTime() {
-			const time = Convert.toTime(this.time)
-			console.log(`[HOURLY] Converted time for ${this.time}: ${time}`)
-			return time
-		},
-		weatherIcon() {
-			return Convert.toWeatherIcon(this.weatherCode) // Получаем иконку погоды
-		},
+	temperature: {
+		type: Number,
+		required: true,
 	},
-}
+	feelsLike: {
+		type: Number,
+		required: true,
+	},
+	weatherCode: {
+		type: Number, // Добавлено для погодного кода
+		required: true,
+	},
+	language: {
+		// Добавлено для совместимости с языком
+		type: String,
+		required: true,
+	},
+})
+
+const convertedTime = computed(() => {
+	const time = Convert.toTime(props.time)
+	console.log(`[HOURLY] Converted time for ${props.time}: ${time}`)
+	return time
+})
+const weatherIcon = computed(() => {
+	return Convert.toWeatherIcon(props.weatherCode) // Получаем иконку погоды
+})
 </script>
 
 <style scoped>
-#temperature {
-	font-size: 1.5rem;
-	font-weight: 600;
-	text-align: center;
-	width: fit-content;
+.hourly-card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  min-width: 100px;
+  transition: transform 0.3s ease;
 }
-.feelsLike {
-	font-size: 1.1875rem;
-	font-weight: 600;
-	text-align: center;
-	color: rgba(255, 255, 255, 0.85);
-	width: fit-content;
+
+.hourly-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.12);
 }
-p {
-	margin: 0;
-	padding: 0;
-	text-align: center;
-	width: fit-content;
+
+.card-time {
+  color: #667eea;
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 8px;
 }
-#card {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: start;
-	gap: 5px;
-	width: 223px;
+
+.card-icon {
+  margin: 8px 0;
 }
-#hour {
-	font-size: 2rem;
-	font-weight: 400;
-	text-align: center;
-	width: fit-content;
+
+.card-icon img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+}
+
+.card-temp {
+  color: #333333;
+  font-weight: 700;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+.card-description {
+  color: #888888;
+  font-size: 11px;
+  margin-top: 5px;
 }
 </style>

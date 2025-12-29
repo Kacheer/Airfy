@@ -576,141 +576,117 @@ export default {
 </script>
 
 <template>
-	<div class="main-container">
-		<SimpleDynamicBackground 
-			:weatherCode="current.weather_code || 0"
-			:theme="selectedTheme"
-			:interactive="true"
-			:key="selectedTheme"
-		/>
-		<Header
-			:city="currentCity"
-			:language="selectedLanguage"
-			:theme="selectedTheme"
-			@update:language="updateLanguage"
-			@update:theme="updateTheme"
-			@update:city="updateCity"
-		/>
-		<div class="forecast-row">
+	<div id="app">
+		<Header :language="language" @change-language="changeLanguage" />
+		<main class="main-content">
 			<CurrentForecast
 				:temperature="round(current.temperature)"
 				:now="now"
 				:language="selectedLanguage"
-				:weatherCode="current.weather_code ?? 0"
+				:weather-code="current.weather_code"
 			/>
-			<CurrentForecastDetails
-				:humidity="daily[0]?.humidity"
-				:precipitation_probability="daily[0]?.precipitation_probability"
-				:pressure_min="convertMinPressure"
-				:pressure_max="convertMaxPressure"
-				:wind_speed="daily[0]?.wind_speed"
-				:visibility="convertVisibility"
-				:sunrise="convertSunriseTime"
-				:sunset="convertSunsetTime"
-				:language="selectedLanguage"
-			/>
-		</div>
-		<div class="hourly-scroll-container" ref="scrollContainer">
-			<HourlyCard
-				v-for="(hour, idx) in hourlyForecast"
-				:key="idx"
-				:time="hour.time"
-				:temperature="hour.temperature"
-				:feelsLike="hour.feelsLike"
-				:weatherCode="hour.weatherCode"
-				:language="selectedLanguage"
-				class="hourly-card"
-			/>
-		</div>
-		<h2 class="forecast-title">
-			{{ currentTranslations.DailyCard.forecastTitle }}
-		</h2>
-		<div class="dailyContainer">
-			<DailyCard
-				v-for="(card, idx) in translatedDailyCards"
-				:key="idx"
-				:time="card.time"
-				:temperature="card.temperature"
-				:feelsLike="card.feelsLike"
-				:weatherCode="card.weatherCode"
-				:language="card.language"
-			/>
-		</div>
-		<img src="./assets/Line.png" alt="line.png" class="line-img" />
+			<div class="forecast-container">
+				<div class="daily-forecast">
+					<div class="forecast-title">{{ translations.DailyForecast }}</div>
+					<div class="cards-container">
+						<DailyCard
+							v-for="(day, index) in dailyForecasts"
+							:key="index"
+							:date="day.date"
+							:temp-max="day.tempMax"
+							:temp-min="day.tempMin"
+							:weather-code="day.weatherCode"
+							:language="language"
+							:precipitation="day.precipitation"
+							:wind-speed="day.windSpeed"
+						/>
+					</div>
+				</div>
 
-		<LoadingScreen
-			:show="showLoader"
-			:theme="selectedTheme"
-			:stageText="loaderStageText"
-		/>
+				<div class="hourly-forecast">
+					<div class="forecast-title">{{ translations.HourlyForecast }}</div>
+					<div class="cards-container-hourly">
+						<HourlyCard
+							v-for="(hour, index) in hourlyForecasts"
+							:key="index"
+							:time="hour.time"
+							:temperature="hour.temperature"
+							:weather-code="hour.weatherCode"
+							:language="language"
+						/>
+					</div>
+				</div>
+			</div>
+		</main>
+		<footer class="app-footer">
+			<div class="footer-content">
+				<p>&copy; 2024 Airfy - Weather Forecast Application</p>
+				<p>Data provided by <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a></p>
+				<p>Made with ❤️ by <a href="https://github.com/Kacheer" target="_blank" rel="noopener noreferrer">Kacheer</a></p>
+			</div>
+		</footer>
 	</div>
-	<Footer :language="selectedLanguage" :selectedTheme="selectedTheme" />
 </template>
 
 <style scoped>
-.logo {
-	height: 6em;
-	padding: 1.5em;
-	will-change: filter;
-	transition: filter 300ms;
-}
-.logo:hover {
-	filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-	filter: drop-shadow(0 0 2em #42b883aa);
-}
-.main-container {
+#app {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
-	width: 100%;
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 0 20px;
+	min-height: 100vh;
 }
-.forecast-row {
-	display: flex;
-	flex-direction: row;
-	gap: 38px;
-	width: 100%;
-	justify-content: space-between;
-}
-.forecast-row > *:last-child {
-	min-width: 200px;
-	flex: 0 1 475px;
-}
-.forecast-row > *:first-child {
+
+.main-content {
 	flex: 1;
+	padding: 20px;
 }
-.dailyContainer {
-	margin-top: 50px;
+
+.forecast-container {
 	display: flex;
-	flex-direction: row;
-	gap: 39px;
+	flex-direction: column;
+	gap: 30px;
+}
+
+.forecast-title {
+	font-size: 24px;
+	font-weight: 700;
+	margin-bottom: 15px;
+	color: #333;
+}
+
+.cards-container,
+.cards-container-hourly {
+	display: flex;
+	gap: 15px;
+	flex-wrap: wrap;
 	justify-content: flex-start;
-	width: 100%;
 }
-.hourly-scroll-container {
-	display: flex;
-	overflow-x: auto;
-	gap: 20px;
-	padding: 10px 0;
-	scroll-behavior: auto;
-	width: 100%;
-	max-width: 1280px;
+
+.app-footer {
+	background-color: #f5f5f5;
+	padding: 30px 20px;
+	border-top: 1px solid #e0e0e0;
+	text-align: center;
+	margin-top: 40px;
+}
+
+.footer-content {
+	max-width: 1200px;
 	margin: 0 auto;
-	margin-top: 20px;
 }
-.hourly-scroll-container.dragging {
-	cursor: grabbing;
-	user-select: none;
+
+.footer-content p {
+	margin: 8px 0;
+	color: #666;
+	font-size: 14px;
 }
-.hourly-card {
-	flex: 0 0 auto;
-	width: 223px;
+
+.footer-content a {
+	color: #667eea;
+	text-decoration: none;
+	font-weight: 600;
 }
-.line-img {
-	margin-top: 125px;
+
+.footer-content a:hover {
+	text-decoration: underline;
 }
 </style>

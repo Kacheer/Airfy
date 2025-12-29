@@ -1,13 +1,13 @@
 <template>
-	<div class="CurrentForecast glass-card">
+	<div class="current-forecast">
 		<div class="group">
 			<div class="text-wrapper">{{ translations.Today }}</div>
 			<div class="div">
 				<SvgIcon
 					class="cloud-icon"
 					:name="icon"
-					width="400"
-					height="125"
+					width="200"
+					height="126"
 					:is-weather-icons="true"
 				/>
 				<div class="group-2">
@@ -58,12 +58,10 @@ export default {
 	},
 	computed: {
 		translations() {
-			console.log('language in CurrentForecast:', language)
 			return language[this.language] || language['Русский']
 		},
 		icon() {
 			const res = Convert.toWeatherIcon(this.weatherCode)
-			console.log('ВЫВЕЛО КАРТИНКУ ', res)
 			return res.endsWith('.svg') ? res : res + '.svg'
 		},
 		weatherDesc() {
@@ -73,67 +71,100 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .div {
 	display: flex;
 	align-items: center;
-	gap: 0px;
+	gap: 30px;
 }
-.CurrentForecast {
-	width: 800px;
-	height: auto;
-	border-radius: 8px;
+
+.current-forecast {
+	background-color: #f0f0f0;
+	border-radius: 12px;
 	padding: 30px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	margin-bottom: 20px;
+	width: 100%;
+	max-width: 800px;
 	display: flex;
-	border-radius: 20px;
 	flex-direction: column;
 	box-sizing: border-box;
 	justify-content: space-between;
 }
 
-.CurrentForecast .group {
+.current-forecast .group {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	width: 100%;
-	height: auto;
 }
-.CurrentForecast .text-wrapper {
-	color: #ffffff;
+
+.current-forecast .text-wrapper {
+	color: #333333;
 	font-family: 'Inter-Bold', Helvetica;
 	font-size: 64px;
 	font-weight: 700;
 	height: 76px;
 	text-align: center;
-	font-size: 64px;
 	margin-bottom: 20px;
 	letter-spacing: 0;
 	line-height: normal;
 	white-space: nowrap;
-	width: 626px;
 }
-.CurrentForecast .cloud-icon {
-	height: 126.07px;
-	position: relative;
-	width: 200.95px;
-	transform: scale(1.5);
+
+.cloud-icon {
+	height: 126px;
+	width: 200px;
 }
+
 .group-2 {
 	display: flex;
 	align-items: flex-start;
 }
+
 .temperature {
 	font-size: 128px;
+	color: #333333;
+	font-weight: 700;
 }
+
 .text-wrapper-2 {
 	font-size: 64px;
+	color: #333333;
 	margin-top: 10px;
 }
+
 .text-wrapper-3 {
 	text-align: center;
 	font-size: 36px;
 	margin-top: 20px;
-	color: #ffffffbf;
+	color: #666666;
+}
+
+@media (max-width: 768px) {
+	.current-forecast {
+		padding: 20px;
+	}
+
+	.text-wrapper {
+		font-size: 48px;
+	}
+
+	.temperature {
+		font-size: 96px;
+	}
+
+	.text-wrapper-2 {
+		font-size: 48px;
+	}
+
+	.text-wrapper-3 {
+		font-size: 24px;
+	}
+
+	.div {
+		gap: 15px;
+	}
 }
 </style>
