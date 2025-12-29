@@ -1,66 +1,26 @@
 <template>
 	<div id="app">
 		<LoadingScreen v-if="showLoader" :stage="loaderStage" :language="selectedLanguage" />
-		
-		<Header 
-			:language="selectedLanguage" 
-			:city="currentCity"
-			@change-language="updateLanguage"
-			@change-theme="updateTheme"
-			@change-city="updateCity"
-		/>
-
+		<Header :language="selectedLanguage" @change-language="updateLanguage" @change-theme="updateTheme" @change-city="updateCity" />
 		<main class="main-content">
-			<CurrentForecast
-				v-if="current.temperature !== null"
-				:temperature="round(current.temperature)"
-				:now="now"
-				:language="selectedLanguage"
-				:weather-code="current.weather_code"
-			/>
-
-			<CurrentForecastDetails
-				v-if="daily.length > 0"
-				:sunrise="convertSunriseTime"
-				:sunset="convertSunsetTime"
-				:visibility="convertVisibility"
-				:min-pressure="convertMinPressure"
-				:max-pressure="convertMaxPressure"
-				:language="selectedLanguage"
-			/>
-
+			<CurrentForecast v-if="current.temperature !== null" :temperature="round(current.temperature)" :now="now" :language="selectedLanguage" :weather-code="current.weather_code" />
+			<CurrentForecastDetails v-if="daily.length > 0" :sunrise="convertSunriseTime" :sunset="convertSunsetTime" :visibility="convertVisibility" :min-pressure="convertMinPressure" :max-pressure="convertMaxPressure" :language="selectedLanguage" />
 			<div class="forecast-container">
 				<div class="hourly-forecast">
 					<div class="forecast-title">{{ currentTranslations.HourlyForecast }}</div>
 					<div class="hourly-scroll-container" ref="scrollContainer">
-						<HourlyCard
-							v-for="(hour, index) in hourlyForecast"
-							:key="index"
-							:time="hour.time"
-							:temperature="hour.temperature"
-							:weather-code="hour.weatherCode"
-							:language="selectedLanguage"
-						/>
+						<HourlyCard v-for="(hour, index) in hourlyForecast" :key="index" :time="hour.time" :temperature="hour.temperature" :weather-code="hour.weatherCode" :language="selectedLanguage" />
 					</div>
 				</div>
 
 				<div class="daily-forecast">
 					<div class="forecast-title">{{ currentTranslations.DailyForecast }}</div>
 					<div class="dailyContainer">
-						<DailyCard
-							v-for="(day, index) in translatedDailyCards"
-							:key="index"
-							:date="day.time"
-							:temp-max="day.temperature"
-							:temp-min="day.feelsLike"
-							:weather-code="day.weatherCode"
-							:language="selectedLanguage"
-						/>
+						<DailyCard v-for="(day, index) in translatedDailyCards" :key="index" :date="day.time" :temp-max="day.temperature" :temp-min="day.feelsLike" :weather-code="day.weatherCode" :language="selectedLanguage" />
 					</div>
 				</div>
 			</div>
 		</main>
-
 		<Footer />
 	</div>
 </template>
@@ -84,7 +44,9 @@ import { useServerStore } from './store/Serverstore'
 import pinia from './store/index.js'
 import LoadingScreen from './components/LoadingScreen.vue'
 import { useUserStore } from './store/userStore'
+
 import Footer from './components/Footer.vue'
+import SimpleDynamicBackground from './components/SimpleDynamicBackground.vue'
 
 gsap.registerPlugin(ScrollToPlugin)
 
@@ -96,16 +58,57 @@ export default {
 		DailyCard,
 		HourlyCard,
 		LoadingScreen,
+		SimpleDynamicBackground,
 		Footer,
 	},
 	data() {
 		return {
 			currentCity: 'London',
-			selectedLanguage: 'English',
+			cities: ['Paris', 'New York', 'Tokyo', 'Moscow', 'Berlin'],
+
+			selectedLanguage: 'Русский',
 			selectedTheme: 'Светлая',
 
 			temperature: 23,
 			now: 'Now',
+			dailyCards: [
+				{
+					time: Date.now() / 1000 + 86400,
+					temperature: 23,
+					feelsLike: 19,
+					weatherCode: 1,
+				},
+				{
+					time: Date.now() / 1000 + 2 * 86400,
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+				{
+					time: Date.now() / 1000 + 3 * 86400,
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+				{
+					time: Date.now() / 1000 + 4 * 86400,
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+				{
+					time: Date.now() / 1000 + 5 * 86400,
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+				{
+					time: Date.now() / 1000 + 6 * 86400,
+					temperature: 25,
+					feelsLike: 20,
+					weatherCode: 2,
+				},
+			],
 			units: null,
 			current: {
 				temperature: null,
@@ -121,12 +124,17 @@ export default {
 	},
 	created() {
 		const savedTheme = localStorage.getItem('theme')
+		console.log('[APP] Загружаем тему из localStorage:', savedTheme)
 		if (savedTheme) {
 			this.selectedTheme = savedTheme
 			this.applyTheme(savedTheme)
+		} else {
+			console.log('[APP] Тема не найдена в localStorage, используем по умолчанию:', this.selectedTheme)
 		}
 
 		const browserLanguage = navigator.language.split('-')[0]
+		console.log('[APP] Язык браузера:', browserLanguage)
+
 		const languageMap = {
 			ru: 'Русский',
 			en: 'English',
@@ -135,8 +143,10 @@ export default {
 		const mappedLanguage = languageMap[browserLanguage]
 		if (mappedLanguage && language[mappedLanguage]) {
 			this.selectedLanguage = mappedLanguage
+			console.log('[APP] Установлен язык из браузера:', mappedLanguage)
 		} else {
 			this.selectedLanguage = 'English'
+			console.log('[APP] Язык браузера не поддерживается, установлен English по умолчанию')
 		}
 	},
 	mounted() {
@@ -151,17 +161,26 @@ export default {
 			this.applyTheme(this.selectedTheme)
 			this.$nextTick(() => {
 				this.waitUntilAllLoaded()
-				this.animateOnLoad()
 			})
+			console.log('[APP] Данные загружены из localStorage:', data)
 		}
 
 		this.fetchData()
 
 		setInterval(() => {
+			console.log('[APP] Запуск автоматического обновления данных')
 			this.fetchData()
 		}, 10 * 60 * 1000)
 
 		this.initScrollableSnap()
+		gsap.from('.header-container, .CurrentForecast, .CurrentForecastDetails, .hourly-scroll-container, .dailyContainer, .footer, .line-img', {
+			opacity: 0,
+			y: 30,
+			duration: 2,
+			ease: 'power3.out',
+			stagger: 0.3,
+			delay: 0.3,
+		})
 	},
 	methods: {
 		async fetchData() {
@@ -173,10 +192,10 @@ export default {
 				let userPos
 				try {
 					userPos = await apiLocation.getCoordinatesByCity(this.currentCity)
-					if (!userPos) throw new Error('City not found')
+					if (!userPos) throw new Error('Город не найден')
 					DataService.addPosToStore(userPos.lat, userPos.long)
 				} catch (err) {
-					console.warn('[APP] City not found, using browser position')
+					console.warn('[APP] Город не найден, используем позицию браузера')
 					userPos = await apiBrowser.getPos()
 					DataService.addPosToStore(userPos.lat, userPos.long)
 					this.currentCity = await apiLocation.getCityNameByStore()
@@ -191,10 +210,68 @@ export default {
 				this.applyTheme(this.selectedTheme)
 				this.$nextTick(() => {
 					this.waitUntilAllLoaded()
-					this.animateOnLoad()
+
+					const timeline = gsap.timeline({ delay: 0 })
+
+					timeline
+						.from('.header-container', {
+							y: 30,
+							opacity: 0,
+							duration: 0.8,
+							ease: 'power2.out',
+						})
+						.from('.CurrentForecast', {
+							y: 30,
+							opacity: 0,
+							duration: 0.8,
+							ease: 'power2.out',
+						}, '-=0.3')
+						.from('.CurrentForecastDetails', {
+							y: 30,
+							opacity: 0,
+							duration: 0.8,
+							ease: 'power2.out',
+						}, '-=0.3')
+						.from('.hourly-card', {
+							y: 20,
+							opacity: 0,
+							duration: 0.2,
+							stagger: 0.015,
+							ease: 'power2.out',
+						}, '-=2')
+						.from('.hourly-scroll-container', {
+							y: 30,
+							opacity: 0,
+							duration: 0.5,
+							ease: 'power2.out',
+						}, '-=0.2')
+						.from('.forecast-title', {
+							y: 30,
+							opacity: 0,
+							duration: 0.5,
+							ease: 'power2.out',
+						}, '-=0.2')
+						.from('.dailyContainer > *', {
+							y: 30,
+							opacity: 0,
+							duration: 0.5,
+							stagger: 0.1,
+							ease: 'power2.out',
+						}, '-=0.2')
+						.from('.footer', {
+							y: 30,
+							opacity: 0,
+							duration: 0.5,
+							ease: 'power2.out',
+						}, '-=0.2')
+						.from('.line-img', {
+							y: 30,
+							opacity: 0,
+							duration: 0.5,
+							ease: 'power2.out',
+						}, '-=0.6')
 				})
 			} catch (error) {
-				console.error('[APP] Error:', error)
 				this.loaderStage = 'showing'
 				this.currentCity = 'Moscow'
 				await apiForecast.fetchForecast(true)
@@ -205,14 +282,27 @@ export default {
 				this.applyTheme(this.selectedTheme)
 				this.$nextTick(() => {
 					this.waitUntilAllLoaded()
-					this.animateOnLoad()
 				})
 			}
 		},
+		increment(index) {
+			this.currentCity = this.cities[index]
+			this.setStore()
+		},
+		setStore() {
+			const userStore = useUserStore(pinia)
+			userStore.setUserPos(null, null)
+			apiForecast.fetchForecast(true)
+		},
 		updateLanguage(newLang) {
+			console.log('[APP] Updated language:', newLang)
 			this.selectedLanguage = newLang
 		},
+		round(number) {
+			return Math.round(number)
+		},
 		updateTheme(newTheme) {
+			console.log('[APP] Обновляем тему с', this.selectedTheme, 'на', newTheme)
 			this.selectedTheme = newTheme
 			localStorage.setItem('theme', newTheme)
 			this.applyTheme(newTheme)
@@ -222,16 +312,6 @@ export default {
 			if (theme === 'Темная') {
 				document.body.classList.add('dark-mode')
 			}
-		},
-		updateCity(newCity) {
-			if (!newCity) return
-			this.currentCity = newCity
-			const userStore = useUserStore(pinia)
-			userStore.setUserPos(null, null)
-			this.fetchData()
-		},
-		round(number) {
-			return Math.round(number)
 		},
 		initScrollableSnap() {
 			const container = this.$refs.scrollContainer
@@ -245,7 +325,8 @@ export default {
 				if (this.isSnapping) return
 				isDragging = true
 				this.isDragging = true
-				startX = (e.pageX || (e.touches?.[0].pageX)) - container.offsetLeft
+				container.classList.add('dragging')
+				startX = (e.pageX || (e.touches && e.touches[0].pageX)) - container.offsetLeft
 				scrollLeft = container.scrollLeft
 				gsap.killTweensOf(container)
 			}
@@ -253,7 +334,7 @@ export default {
 			const onDrag = e => {
 				if (!isDragging) return
 				e.preventDefault()
-				const x = (e.pageX || (e.touches?.[0].pageX)) - container.offsetLeft
+				const x = (e.pageX || (e.touches && e.touches[0].pageX)) - container.offsetLeft
 				const walk = (x - startX) * 2
 				container.scrollLeft = scrollLeft - walk
 			}
@@ -262,6 +343,7 @@ export default {
 				if (!isDragging) return
 				isDragging = false
 				this.isDragging = false
+				container.classList.remove('dragging')
 				this.snapToNearestCard()
 			}
 
@@ -273,6 +355,54 @@ export default {
 				}, 150)
 			}
 
+			this.snapToNearestCard = () => {
+				if (this.isSnapping) return
+				this.isSnapping = true
+
+				const cards = container.querySelectorAll('.hourly-card')
+				if (cards.length === 0) {
+					this.isSnapping = false
+					return
+				}
+
+				const containerRect = container.getBoundingClientRect()
+				let closestCard = null
+				let minDistance = Infinity
+				let closestCardIndex = 0
+
+				cards.forEach((card, index) => {
+					const cardRect = card.getBoundingClientRect()
+					const cardLeftRelative = cardRect.left - containerRect.left
+					const distance = Math.abs(cardLeftRelative)
+					if (distance < minDistance) {
+						minDistance = distance
+						closestCard = card
+						closestCardIndex = index
+					}
+				})
+
+				if (closestCard) {
+					let targetScrollLeft
+					if (closestCardIndex === 0 && container.scrollLeft < 50) {
+						targetScrollLeft = 0
+					} else {
+						targetScrollLeft = closestCard.offsetLeft
+					}
+
+					gsap.to(container, {
+						scrollLeft: targetScrollLeft,
+						duration: 0.3,
+						ease: 'power2.out',
+						onComplete: () => {
+							this.isSnapping = false
+							console.log('[APP] Snapped to card', closestCardIndex, 'at scrollLeft:', targetScrollLeft)
+						},
+					})
+				} else {
+					this.isSnapping = false
+				}
+			}
+
 			container.addEventListener('mousedown', startDrag)
 			container.addEventListener('mousemove', onDrag)
 			container.addEventListener('mouseup', stopDrag)
@@ -281,128 +411,80 @@ export default {
 			container.addEventListener('touchmove', onDrag)
 			container.addEventListener('touchend', stopDrag)
 			container.addEventListener('scroll', onScroll)
-		},
-		snapToNearestCard() {
-			const container = this.$refs.scrollContainer
-			if (!container || this.isSnapping) return
 
-			this.isSnapping = true
-			const cards = container.querySelectorAll('.hourly-card')
-			if (cards.length === 0) {
-				this.isSnapping = false
-				return
-			}
-
-			const containerRect = container.getBoundingClientRect()
-			let closestCard = null
-			let minDistance = Infinity
-
-			cards.forEach(card => {
-				const cardRect = card.getBoundingClientRect()
-				const distance = Math.abs(cardRect.left - containerRect.left)
-				if (distance < minDistance) {
-					minDistance = distance
-					closestCard = card
-				}
+			this.$once('hook:beforeUnmount', () => {
+				container.removeEventListener('mousedown', startDrag)
+				container.removeEventListener('mousemove', onDrag)
+				container.removeEventListener('mouseup', stopDrag)
+				container.removeEventListener('mouseleave', stopDrag)
+				container.removeEventListener('touchstart', startDrag)
+				container.removeEventListener('touchmove', onDrag)
+				container.removeEventListener('touchend', stopDrag)
+				container.removeEventListener('scroll', onScroll)
+				if (this.scrollTimeout) clearTimeout(this.scrollTimeout)
 			})
-
-			if (closestCard) {
-				gsap.to(container, {
-					scrollLeft: closestCard.offsetLeft,
-					duration: 0.3,
-					ease: 'power2.out',
-					onComplete: () => {
-						this.isSnapping = false
-					},
-				})
-			} else {
-				this.isSnapping = false
-			}
 		},
 		waitUntilAllLoaded() {
 			const images = Array.from(document.images)
-			let loaded = 0
-			const total = Math.max(images.length, 1)
-
-			if (images.length === 0) {
+			const svgs = Array.from(document.querySelectorAll('svg'))
+			let total = images.length + svgs.length
+			if (total === 0) {
 				this.showLoader = false
 				return
 			}
-
+			let loaded = 0
+			const check = () => {
+				loaded++
+				if (loaded >= total) {
+					setTimeout(() => {
+						this.showLoader = false
+						this.loaderStage = 'fetching'
+					}, 200)
+				}
+			}
 			images.forEach(img => {
 				if (img.complete) {
-					loaded++
+					check()
 				} else {
-					img.addEventListener('load', () => {
-						loaded++
-						if (loaded >= total) {
-							setTimeout(() => {
-								this.showLoader = false
-							}, 200)
-						}
-					})
-					img.addEventListener('error', () => {
-						loaded++
-						if (loaded >= total) {
-							setTimeout(() => {
-								this.showLoader = false
-							}, 200)
-						}
-					})
+					img.addEventListener('load', check)
+					img.addEventListener('error', check)
 				}
 			})
-
-			if (loaded >= total) {
-				setTimeout(() => {
-					this.showLoader = false
-				}, 200)
+			svgs.forEach(svg => {
+				setTimeout(check, 100)
+			})
+		},
+		scrollToForecast() {
+			const forecast = document.querySelector('.forecast-row')
+			if (forecast) {
+				gsap.to(window, {
+					scrollTo: forecast,
+					duration: 1,
+					ease: 'power2.out',
+				})
 			}
 		},
-		animateOnLoad() {
-			const timeline = gsap.timeline({ delay: 0 })
-
-			timeline
-				.from('.header-container', {
-					y: 30,
-					opacity: 0,
-					duration: 0.6,
+		scrollToDaily() {
+			const targetElement = document.querySelector('.dailyContainer')
+			if (targetElement) {
+				gsap.to(window, {
+					scrollTo: { y: targetElement, offsetY: 80 },
+					duration: 1.2,
 					ease: 'power2.out',
-				}, 0)
-				.from('.CurrentForecast', {
-					y: 30,
-					opacity: 0,
-					duration: 0.6,
-					ease: 'power2.out',
-				}, 0.1)
-				.from('.CurrentForecastDetails', {
-					y: 30,
-					opacity: 0,
-					duration: 0.6,
-					ease: 'power2.out',
-				}, 0.2)
-				.from('.hourly-scroll-container', {
-					y: 30,
-					opacity: 0,
-					duration: 0.6,
-					ease: 'power2.out',
-				}, 0.3)
-				.from('.dailyContainer', {
-					y: 30,
-					opacity: 0,
-					duration: 0.6,
-					ease: 'power2.out',
-				}, 0.4)
-				.from('.footer', {
-					y: 30,
-					opacity: 0,
-					duration: 0.6,
-					ease: 'power2.out',
-				}, 0.5)
+				})
+			}
+		},
+		updateCity(newCity) {
+			if (!newCity) return
+			this.currentCity = newCity
+			console.log('[APP] Обновлён город пользователем:', newCity)
+			this.setStore()
+			this.fetchData()
 		},
 	},
 	computed: {
 		currentTranslations() {
-			return language[this.selectedLanguage] || language['English']
+			return language[this.selectedLanguage] || language['Русский']
 		},
 		translatedDailyCards() {
 			if (!this.daily || this.daily.length < 7) return []
@@ -441,38 +523,19 @@ export default {
 					language: this.selectedLanguage,
 				}))
 		},
+		loaderStageText() {
+			const lang = this.selectedLanguage || 'Русский'
+			return language[lang]?.loadingStages?.[this.loaderStage] || 'Загрузка...'
+		},
 	},
 }
 </script>
 
 <style>
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
-
-body {
-	background-color: #ffffff;
-	color: #333333;
-	font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	transition: background-color 0.3s ease;
-}
-
-body.dark-mode {
-	background-color: #1a1a1a;
-	color: #ffffff;
-}
-
 #app {
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
-	background-color: #ffffff;
-}
-
-body.dark-mode #app {
-	background-color: #1a1a1a;
 }
 
 .main-content {
@@ -494,11 +557,7 @@ body.dark-mode #app {
 	font-size: 24px;
 	font-weight: 700;
 	margin-bottom: 20px;
-	color: #333333;
-}
-
-body.dark-mode .forecast-title {
-	color: #ffffff;
+	color: #333;
 }
 
 .hourly-scroll-container {
@@ -509,48 +568,9 @@ body.dark-mode .forecast-title {
 	scroll-behavior: smooth;
 }
 
-.hourly-scroll-container::-webkit-scrollbar {
-	height: 8px;
-}
-
-.hourly-scroll-container::-webkit-scrollbar-track {
-	background: #f1f1f1;
-	border-radius: 10px;
-}
-
-.hourly-scroll-container::-webkit-scrollbar-thumb {
-	background: #888;
-	border-radius: 10px;
-}
-
-.hourly-scroll-container::-webkit-scrollbar-thumb:hover {
-	background: #555;
-}
-
 .dailyContainer {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 	gap: 15px;
-}
-
-@media (max-width: 768px) {
-	.main-content {
-		padding: 10px;
-	}
-
-	.forecast-container {
-		gap: 20px;
-		margin-top: 20px;
-	}
-
-	.forecast-title {
-		font-size: 20px;
-		margin-bottom: 15px;
-	}
-
-	.dailyContainer {
-		grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-		gap: 10px;
-	}
 }
 </style>
